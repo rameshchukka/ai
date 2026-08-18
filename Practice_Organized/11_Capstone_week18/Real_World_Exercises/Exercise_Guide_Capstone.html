@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capstone Scoping Exercise — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Section 11 · Capstone</span>
+    <h1>Capstone Scoping Exercise</h1>
+    <p class="subtitle">EX_Capstone_Scoping_Exercise.ipynb — turning a vague ask into a shippable MVP</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>Why scoping is a skill</h3><p>Real stakeholder requests are almost always vague ('build something with AI to help'). Translating that into a scoped, buildable project — before writing any code — is the difference between a project that ships and one that drifts forever.</p></div><div class="concept-block"><h3>Discovery questions</h3><p>Good discovery questions surface volume, current process, success metrics, risk tolerance, and integration constraints — the things that determine feasibility and scope, not just 'what do you want it to do'.</p></div><div class="concept-block"><h3>The MVP cut</h3><p>An MVP isn't a smaller, worse version of the final product — it's the smallest slice that proves or disproves the core idea, deliberately excluding nice-to-haves.</p></div><div class="concept-block"><h3>Naming risks up front</h3><p>Every AI project has unknowns (data quality, cost at scale, integration surprises). Naming them explicitly with a mitigation, rather than discovering them mid-build, is what separates a plan from a wish.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Can list discovery questions before jumping to a solution</li><li>Distinguishes must-have from nice-to-have features</li><li>Writes a one-paragraph MVP scope for a given ask</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Identifies concrete risks and pairs each with a mitigation</li><li>Chooses success metrics tied to business outcomes, not vanity metrics</li><li>Sketches a basic architecture (ingestion → processing → serving)</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Runs a full stakeholder discovery conversation and synthesizes it into a scoping doc</li><li>Balances technical feasibility against business urgency in scope decisions</li><li>Plans evaluation/guardrails work into the project timeline from day one</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>Write discovery questions</h4>
+          <p class="why"><strong>Why it matters:</strong> Skipping this step is the #1 cause of scope creep and rework.</p>
+          <p class="concept"><strong>Concept check:</strong> Ask about volume, current process, success metric, risk tolerance, and integration constraints.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>e.g. 'How many tickets/day and top 3 categories?' 'What does success look like in 3 months?'</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 2</div>
+          <h4>Write the MVP cut</h4>
+          <p class="why"><strong>Why it matters:</strong> A written MVP scope is what keeps a project from growing indefinitely.</p>
+          <p class="concept"><strong>Concept check:</strong> Name exactly what's in scope, what's explicitly out of scope, and what the success metric is.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>e.g. 'classify tickets into 4 categories, route them — no auto-response generation yet'</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 3</div>
+          <h4>Name risks and mitigations</h4>
+          <p class="why"><strong>Why it matters:</strong> Unnamed risks become surprises mid-build; named risks become manageable plan items.</p>
+          <p class="concept"><strong>Concept check:</strong> For each risk, write a concrete, actionable mitigation, not just 'be careful'.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>e.g. Risk: no labeled training data. Mitigation: start with a keyword/few-shot baseline, collect corrections over time.</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>Ask about failure cases and edge cases in discovery, not after building.</li><li>Write the MVP cut before writing any code — it's a scoping tool, not an afterthought.</li><li>Budget for evaluation and guardrails work in your plan, not just the 'happy path' build.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Scope creep from skipping a clear MVP cut.</li><li>Underestimating integration/data-cleaning work vs. the 'interesting' modeling work.</li><li>No plan for how you'll know the system is working after launch.</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>Scoping an internal AI assistant for a specific business function</li><li>Turning a rough stakeholder ask into a concrete, buildable spec</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>

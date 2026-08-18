@@ -1,0 +1,14 @@
+Data Privacy Policy
+
+Customer data is retained for the duration of an active account, plus 90 days after
+account closure, after which it is permanently deleted unless required to be retained
+longer for legal or tax purposes.
+
+Customers may request a full export of their data at any time via the account
+settings page; exports are generated within 48 hours and made available for download
+for 7 days.
+
+Data deletion requests ("right to be forgotten") are processed within 30 days and
+cannot be reversed once completed. Support staff cannot process data deletion
+requests directly - these must be submitted through the official data request form
+and are handled by the Data Privacy team, not general support.

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transformers &amp; Attention: Zero to Hero — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Section 04b · Zero to Hero</span>
+    <h1>Transformers &amp; Attention: Zero to Hero</h1>
+    <p class="subtitle">Tokenization, embeddings, Q/K/V, scaled dot-product attention, multi-head attention, and a from-scratch mini-GPT.</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>Attention replaces a shrinking memory with direct access</h3><p>Older sequence models (RNNs) squeeze the whole sentence through one fixed-size hidden state, losing early information over long sequences. Attention lets every word directly look at every other word at once, so nothing has to survive a long relay race.</p></div><div class="concept-block"><h3>Query, Key, Value is a search metaphor</h3><p>Query is what a word is looking for, Key is what every word advertises about itself, and Value is the actual content offered. Comparing a word's Query against every Key produces attention scores that weight how much of each Value to gather.</p></div><div class="concept-block"><h3>The attention formula in one line</h3><p>softmax(QK^T / sqrt(d_k)) V: dot-product similarity between queries and keys, scaled to keep softmax stable, turned into weights that sum to 1, then used to compute a weighted average of values.</p></div><div class="concept-block"><h3>Causal masking is what makes GPT generate left-to-right</h3><p>Setting future positions' attention scores to -infinity before softmax (so they become 0) stops a generating model from cheating by looking at words it hasn't produced yet. This is the core difference between GPT-style and BERT-style models.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Explains why attention beats a fixed-size memory bottleneck</li><li>Tokenizes and embeds a sentence</li><li>States what Query, Key, and Value each represent</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Computes scaled dot-product attention by hand and in code</li><li>Builds multi-head attention and explains why heads specialize</li><li>Assembles a full Transformer block with residuals and layer norm</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Implements causal masking and verifies future positions are blocked</li><li>Runs the autoregressive generation loop</li><li>Builds a complete MiniGPT class end to end</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>Attention without scaling</h4>
+          <p class="why"><strong>Why it matters:</strong> Seeing why /sqrt(d_k) matters makes an easy-to-miss production bug concrete.</p>
+          <p class="concept"><strong>Concept check:</strong> Unscaled dot products push softmax toward a near one-hot distribution, stalling learning.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Compare softmax(Q@K.T)@V to the scaled version and look at how peaked the weights are.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 2</div>
+          <h4>Verify the causal mask</h4>
+          <p class="why"><strong>Why it matters:</strong> Confirms the mechanism that makes GPT-style left-to-right generation possible.</p>
+          <p class="concept"><strong>Concept check:</strong> Every attention weight above the diagonal must be numerically zero.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>np.allclose(causal_weights[np.triu_indices(n, k=1)], 0)</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 3</div>
+          <h4>Capstone: MiniGPT</h4>
+          <p class="why"><strong>Why it matters:</strong> This is, at toy scale, the literal architecture behind every LLM used elsewhere in this course.</p>
+          <p class="concept"><strong>Concept check:</strong> Embed+position -&gt; stacked causal Transformer blocks -&gt; output projection -&gt; autoregressive sampling.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Feed the growing token list back through forward() each generation step.</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>Say the shapes out loud at each step — attention is 90% shape bookkeeping.</li><li>Residual connections aren't polish — they're what makes deep stacks trainable.</li><li>BERT and GPT differ mainly by presence/absence of the causal mask.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Forgetting positional encoding (attention alone can't tell word order).</li><li>Skipping the /sqrt(d_k) scale factor.</li><li>Missing the causal mask when building a text generator (lets it see the future).</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>Understanding what GPT/Claude/Gemini are actually computing</li><li>A foundation for fine-tuning or modifying Transformer architectures</li><li>Debugging attention-based models from first principles</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>

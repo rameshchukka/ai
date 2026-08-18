@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Embedding Model Training: Zero to Hero — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Section 18 · Zero to Hero</span>
+    <h1>Embedding Model Training: Zero to Hero</h1>
+    <p class="subtitle">Contrastive loss, triplet loss, in-batch negatives, and hard negative mining — how meaning becomes geometry.</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>Training an embedding means learning a mapping, not hand-designing one</h3><p>Earlier labs used fixed, hand-built embeddings (TF-IDF, concept maps). Real models learn text-&gt;vector via gradient descent with a special similarity-based loss, so that meaning becomes geometry: similar things end up close, different things end up far apart.</p></div><div class="concept-block"><h3>Contrastive and triplet loss both encode the same goal differently</h3><p>Contrastive loss pulls positive pairs together and pushes negative pairs apart past a margin. Triplet loss makes it relative: the negative must be further from the anchor than the positive, by at least a margin. Both directly optimize for the retrieval behavior you want.</p></div><div class="concept-block"><h3>In-batch negatives make large-scale training practical</h3><p>Rather than hand-labeling negative examples, treat every OTHER pair's partner in the same batch as a free negative. A batch of N positive pairs yields N x (N-1) negatives for free — this is why embedding training uses large batch sizes.</p></div><div class="concept-block"><h3>Hard negatives make training actually work</h3><p>Random negatives are often already far apart, giving a weak learning signal. Hard negative mining deliberately finds confusingly-similar wrong matches, forcing the model to learn finer distinctions — and production pipelines refresh this mining as the model improves.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Explains what makes embedding training different from fixed embeddings</li><li>Builds positive and negative training pairs</li><li>Computes contrastive loss and interprets it</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Computes triplet loss and explains the margin's role</li><li>Understands in-batch negatives and why batch size matters</li><li>Runs the full training loop for an embedding model</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Evaluates embeddings with retrieval-style top-1/top-k accuracy</li><li>Mines hard negatives from a model's own current embeddings</li><li>Trains a model on a new task and measures before/after improvement</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>Contrastive loss on a near-boundary negative</h4>
+          <p class="why"><strong>Why it matters:</strong> Seeing a negative pair that's still 'too close' relative to the margin makes the loss function's behavior concrete.</p>
+          <p class="concept"><strong>Concept check:</strong> Loss is positive whenever a negative pair's similarity still exceeds the margin.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Try a negative pair around 0.5 cosine similarity with margin=0.3 — loss should be &gt; 0.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 2</div>
+          <h4>Before/after retrieval accuracy</h4>
+          <p class="why"><strong>Why it matters:</strong> Comparing to an untrained baseline isolates how much the model actually learned.</p>
+          <p class="concept"><strong>Concept check:</strong> top1_accuracy on an untrained vs a trained model on the same pairs.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Build a second, untrained ToyEncoder and compare its accuracy to the trained one.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 3</div>
+          <h4>Capstone: train on a new domain</h4>
+          <p class="why"><strong>Why it matters:</strong> This before/after training pipeline is exactly how a domain-specific embedding model gets fine-tuned in production.</p>
+          <p class="concept"><strong>Concept check:</strong> Measure top-1 accuracy before training, train 300 epochs with in-batch contrastive loss, measure after.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Expect near-random accuracy before training and near-perfect after, on this small toy dataset.</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>Larger batches give more free in-batch negatives — a real efficiency lever.</li><li>Refresh hard-negative mining periodically as the model improves during training.</li><li>Normalize embeddings to unit length so cosine similarity reduces to a simple dot product.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Random negatives that are already far apart give near-zero learning signal.</li><li>Setting the margin too small (weak push) or too large (wasted effort).</li><li>Forgetting to compare against an untrained baseline when reporting accuracy.</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>Fine-tuning a domain-specific embedding model (legal, medical, support tickets)</li><li>Understanding why Sentence-BERT/OpenAI embeddings behave the way they do</li><li>Building custom retrieval models for RAG systems</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>

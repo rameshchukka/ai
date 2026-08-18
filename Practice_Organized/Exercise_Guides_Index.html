@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise Guides — Index</title>
+<style>
+  :root {
+    --bg: #0f1117; --panel: #171a23; --text: #e6e8ef; --muted: #9aa1b5;
+    --accent: #7c9eff; --accent2: #6ee7c3; --border: #2a2f42; --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%); color: var(--text); line-height: 1.6;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 48px 24px 80px; }
+  h1 { font-size: 30px; margin: 0 0 8px; }
+  p.lede { color: var(--muted); font-size: 16px; margin: 0 0 36px; max-width: 640px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .card {
+    display: block; text-decoration: none; color: var(--text);
+    background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    border-radius: var(--radius); padding: 18px 20px; transition: border-color .15s, transform .15s;
+  }
+  .card:hover { border-color: var(--accent2); transform: translateY(-2px); }
+  .card-label {
+    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent2); margin-bottom: 8px;
+  }
+  .card-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .card-sub { font-size: 13px; color: var(--muted); }
+  h2.divider { font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 40px 0 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📚 Exercise Guides Index</h1>
+  <p class="lede">One HTML guide per exercise notebook: concept notes, a beginner → expert roadmap,
+  an exercise-by-exercise walkthrough with hints, tips/pitfalls, and real-world use cases.
+  Click any card to open it in your browser.</p>
+  <h2 class="divider">Core Course (Sections 03–19)</h2>
+  <div class="grid">
+    <a class="card" href="03_Data_Science_NumPy_Pandas/Real_World_Exercises/Exercise_Guide_NumPy.html">
+      <div class="card-label">Section 03 · NumPy</div>
+      <div class="card-title">NumPy Real-World Exercises</div>
+      <div class="card-sub">EX13_NumPy_RealWorld_Exercises.ipynb — vectorization, broadcasting, masking, aggregation</div>
+    </a>
+    <a class="card" href="03_Data_Science_NumPy_Pandas/Real_World_Exercises/Exercise_Guide_Pandas.html">
+      <div class="card-label">Section 03 · Pandas</div>
+      <div class="card-title">Pandas Real-World Exercises</div>
+      <div class="card-sub">EX14_Pandas_RealWorld_Exercises.ipynb — cleaning, filtering, groupby, merging, time series</div>
+    </a>
+    <a class="card" href="04_Deep_Learning_PyTorch/Real_World_Exercises/Exercise_Guide_PyTorch.html">
+      <div class="card-label">Section 04 · PyTorch</div>
+      <div class="card-title">PyTorch Real-World Exercises</div>
+      <div class="card-sub">EX01_Tensors_Autograd_Training_Loop.ipynb — tensors, autograd, DataLoader, a full training loop</div>
+    </a>
+    <a class="card" href="05_LLM_APIs_and_Prompting/Real_World_Exercises/Exercise_Guide_LLM_APIs.html">
+      <div class="card-label">Section 05 · LLM APIs &amp; Prompting</div>
+      <div class="card-title">LLM API &amp; Prompting Real-World Exercises</div>
+      <div class="card-sub">EX_LLM_API_Prompting_RealWorld.ipynb — structured output, few-shot, context management, retries</div>
+    </a>
+    <a class="card" href="06_Embeddings_and_Search/Real_World_Exercises/Exercise_Guide_Embeddings.html">
+      <div class="card-label">Section 06 · Embeddings &amp; Search</div>
+      <div class="card-title">Embeddings &amp; Semantic Search Real-World Exercises</div>
+      <div class="card-sub">EX_Embeddings_Search_RealWorld.ipynb — build a search engine from scratch</div>
+    </a>
+    <a class="card" href="07_RAG_Retrieval_Augmented_Generation/Real_World_Exercises/Exercise_Guide_RAG.html">
+      <div class="card-label">Section 07 · RAG</div>
+      <div class="card-title">Retrieval-Augmented Generation Real-World Exercise</div>
+      <div class="card-sub">EX_RAG_Pipeline_RealWorld.ipynb — chunk, embed, retrieve, ground, guard</div>
+    </a>
+    <a class="card" href="08_LangChain/Real_World_Exercises/Exercise_Guide_LangChain.html">
+      <div class="card-label">Section 08 · LangChain</div>
+      <div class="card-title">LangChain Real-World Exercises</div>
+      <div class="card-sub">EX_LangChain_RealWorld.ipynb — PromptTemplate, LCEL chains, memory, tools</div>
+    </a>
+    <a class="card" href="09_Agents_and_Orchestration_week16/Real_World_Exercises/Exercise_Guide_Agents.html">
+      <div class="card-label">Section 09 · Agents &amp; Orchestration</div>
+      <div class="card-title">Agents &amp; Orchestration Real-World Exercise</div>
+      <div class="card-sub">EX_Agent_Loop_RealWorld.ipynb — a ReAct loop built from scratch</div>
+    </a>
+    <a class="card" href="10_Evaluation_and_Guardrails_week17/Real_World_Exercises/Exercise_Guide_Eval_Guardrails.html">
+      <div class="card-label">Section 10 · Evaluation &amp; Guardrails</div>
+      <div class="card-title">Evaluation &amp; Guardrails Real-World Exercises</div>
+      <div class="card-sub">EX_Eval_Guardrails_RealWorld.ipynb — eval harness, LLM-as-judge, input/output guardrails</div>
+    </a>
+    <a class="card" href="11_Capstone_week18/Real_World_Exercises/Exercise_Guide_Capstone.html">
+      <div class="card-label">Section 11 · Capstone</div>
+      <div class="card-title">Capstone Scoping Exercise</div>
+      <div class="card-sub">EX_Capstone_Scoping_Exercise.ipynb — turning a vague ask into a shippable MVP</div>
+    </a>
+    <a class="card" href="15_AI_Mastery_Full_Track_00to09/Real_World_Exercises/Exercise_Guide_Integration.html">
+      <div class="card-label">Section 15 · AI Mastery</div>
+      <div class="card-title">End-to-End Pipeline Integration Exercise</div>
+      <div class="card-sub">EX_EndToEnd_Pipeline_Integration.ipynb — tying retrieval, generation, guardrails, and caching together</div>
+    </a>
+    <a class="card" href="16_Machine_Learning_Fundamentals/Exercise_Guide_ML_Fundamentals.html">
+      <div class="card-label">Section 16 · Machine Learning Fundamentals</div>
+      <div class="card-title">Machine Learning Fundamentals Real-World Exercises</div>
+      <div class="card-sub">EX_ML_Fundamentals_RealWorld.ipynb — churn prediction with logistic regression and random forest</div>
+    </a>
+    <a class="card" href="17_Neural_Networks_Deep_Dive/01_Forward_Pass/Exercise_Guide_Forward_Pass.html">
+      <div class="card-label">Section 17 · Forward Pass</div>
+      <div class="card-title">Forward Pass From Scratch</div>
+      <div class="card-sub">EX_Forward_Pass_From_Scratch.ipynb — implementing a network's prediction step by hand</div>
+    </a>
+    <a class="card" href="17_Neural_Networks_Deep_Dive/02_Backpropagation/Exercise_Guide_Backpropagation.html">
+      <div class="card-label">Section 17 · Backpropagation</div>
+      <div class="card-title">Backpropagation From Scratch</div>
+      <div class="card-sub">EX_Backpropagation_From_Scratch.ipynb — deriving and verifying gradients by hand</div>
+    </a>
+    <a class="card" href="17_Neural_Networks_Deep_Dive/03_CNN/Exercise_Guide_CNN.html">
+      <div class="card-label">Section 17 · CNN</div>
+      <div class="card-title">CNN Real-World Exercise</div>
+      <div class="card-sub">EX_CNN_Image_Classification.ipynb — building and training a small image classifier</div>
+    </a>
+    <a class="card" href="17_Neural_Networks_Deep_Dive/04_RNN/Exercise_Guide_RNN.html">
+      <div class="card-label">Section 17 · RNN</div>
+      <div class="card-title">RNN Real-World Exercise</div>
+      <div class="card-sub">EX_RNN_Sequence_Classification.ipynb — classifying sequences with an LSTM</div>
+    </a>
+    <a class="card" href="18_Generative_AI_Fundamentals/Exercise_Guide_GenAI_Fundamentals.html">
+      <div class="card-label">Section 18 · Generative AI Fundamentals</div>
+      <div class="card-title">Generative AI Fundamentals Real-World Exercises</div>
+      <div class="card-sub">EX_GenAI_Fundamentals_RealWorld.ipynb — tokenization, self-attention, sampling</div>
+    </a>
+    <a class="card" href="19_Algorithms_and_Data_Structures/Exercise_Guide_Algorithms.html">
+      <div class="card-label">Section 19 · Algorithms &amp; Data Structures</div>
+      <div class="card-title">Algorithms &amp; Data Structures Real-World Exercises</div>
+      <div class="card-sub">EX_Algorithms_RealWorld.ipynb — hash maps, binary search, graph traversal, dynamic programming</div>
+    </a></div>
+  <h2 class="divider">Extended Topics (Sections 20–25)</h2>
+  <div class="grid">
+    <a class="card" href="20_Math_and_Statistics_Foundations/Exercise_Guide_Math_Stats.html">
+      <div class="card-label">Section 20 · Math &amp; Statistics</div>
+      <div class="card-title">Math &amp; Statistics Foundations Real-World Exercises</div>
+      <div class="card-sub">EX_Math_Stats_RealWorld.ipynb — linear algebra, probability, hypothesis testing, gradients, A/B testing</div>
+    </a>
+    <a class="card" href="21_Classical_ML_Advanced/Exercise_Guide_Classical_ML_Advanced.html">
+      <div class="card-label">Section 21 · Classical ML Advanced</div>
+      <div class="card-title">Classical ML Advanced Real-World Exercises</div>
+      <div class="card-sub">EX_Classical_ML_Advanced_RealWorld.ipynb — SVM, Naive Bayes, Gradient Boosting, PCA, tuning, time series</div>
+    </a>
+    <a class="card" href="22_Deep_Learning_Advanced/Exercise_Guide_Deep_Learning_Advanced.html">
+      <div class="card-label">Section 22 · Deep Learning Advanced</div>
+      <div class="card-title">Deep Learning Advanced Real-World Exercises</div>
+      <div class="card-sub">EX_DeepLearning_Advanced_RealWorld.ipynb + EX_ReinforcementLearning_QLearning.ipynb — Transformers, regularization, autoencoders, GANs, RL</div>
+    </a>
+    <a class="card" href="23_GenAI_LLM_Advanced/Exercise_Guide_GenAI_LLM_Advanced.html">
+      <div class="card-label">Section 23 · GenAI &amp; LLM Advanced</div>
+      <div class="card-title">GenAI &amp; LLM Advanced Real-World Exercises</div>
+      <div class="card-sub">EX_GenAI_LLM_Advanced_RealWorld.ipynb — FAISS, re-ranking, observability, prompt injection, knowledge graphs</div>
+    </a>
+    <a class="card" href="24_Data_Engineering_and_MLOps/Exercise_Guide_Data_Engineering_MLOps.html">
+      <div class="card-label">Section 24 · Data Engineering &amp; MLOps</div>
+      <div class="card-title">Data Engineering &amp; MLOps Real-World Exercises</div>
+      <div class="card-sub">EX_DataEngineering_MLOps_RealWorld.ipynb — ETL, DAG orchestration, model registry, visualization, SQL window functions</div>
+    </a>
+    <a class="card" href="25_Software_Engineering_Tooling/Exercise_Guide_Software_Engineering_Tooling.html">
+      <div class="card-label">Section 25 · Software Engineering Tooling</div>
+      <div class="card-title">Software Engineering Tooling Real-World Exercises</div>
+      <div class="card-sub">EX_SoftwareEngineering_Tooling_RealWorld.ipynb — REST design, caching, queues, design patterns, data structures, regex</div>
+    </a></div>
+</div>
+</body>
+</html>

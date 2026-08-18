@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NumPy &amp; Pandas — Zero to Master Lab — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Section 03 · Guided Lab</span>
+    <h1>NumPy &amp; Pandas — Zero to Master Lab</h1>
+    <p class="subtitle">A complete guided course: theory, real datasets, exercises, and solutions inside the notebooks</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>What this lab is</h3><p>Two self-contained notebooks that take you from total beginner to confident, job-ready use of NumPy and Pandas. Every concept has theory, a worked example, an exercise, and a solution — all inside the .ipynb files, using real bundled datasets.</p></div><div class="concept-block"><h3>Why NumPy first, then Pandas</h3><p>Pandas is built directly on top of NumPy. The vectorization, broadcasting, and indexing ideas you learn in the NumPy lab are the exact foundation Pandas uses — so doing NumPy first makes Pandas click far faster.</p></div><div class="concept-block"><h3>Learn on messy, real data</h3><p>The Pandas lab uses a 1,010-row retail sales dataset with deliberate real-world problems: missing values, duplicate rows, and inconsistent text casing. You'll clean it and analyze it as you learn — not toy data that's already perfect.</p></div><div class="concept-block"><h3>The split-apply-combine mindset</h3><p>The single most important Pandas skill is groupby: split data into groups, apply a summary to each, combine the results. It answers every 'X by Y' business question and is covered in depth in Chapter 9 of the Pandas lab.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Runs every code cell and understands the output</li><li>Creates arrays/DataFrames and inspects them (shape, dtype, info, describe)</li><li>Selects and filters data with masks, .loc, and .iloc</li><li>Completes the early 'Your Turn' exercises without peeking</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Uses broadcasting and the axis parameter correctly and confidently</li><li>Cleans messy data: missing values, duplicates, text, and types</li><li>Builds multi-metric groupby reports with named aggregation</li><li>Merges tables and resamples time series</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Completes both capstone projects end-to-end without hints</li><li>Chooses the right tool (vectorization vs apply, merge how=, fill vs drop) deliberately</li><li>Reads a raw messy CSV and produces a clean business analysis unprompted</li><li>Explains WHY each step works, not just how — ready for PyTorch and ML sections</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>NumPy Lab — 12 chapters + capstone</h4>
+          <p class="why"><strong>Why it matters:</strong> Builds the array-thinking foundation every ML library relies on.</p>
+          <p class="concept"><strong>Concept check:</strong> Arrays, indexing, boolean masking, vectorized math, broadcasting, aggregations, reshaping, sorting, linear algebra, random simulation.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Open NumPy_Zero_to_Master.ipynb and work top to bottom. The capstone analyzes student_scores.csv using only NumPy.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 2</div>
+          <h4>Pandas Lab — 12 chapters + capstone</h4>
+          <p class="why"><strong>Why it matters:</strong> This is the day-to-day toolkit of real data analysts and ML engineers.</p>
+          <p class="concept"><strong>Concept check:</strong> Series/DataFrame, loading, selection, filtering, missing data, cleaning, new columns, sorting, groupby, merging, datetime, pivots.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Open Pandas_Zero_to_Master.ipynb after finishing NumPy. The capstone is a full business analysis of retail_sales.csv.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 3</div>
+          <h4>Attempt every 'Your Turn' before the solution</h4>
+          <p class="why"><strong>Why it matters:</strong> Struggling briefly with an exercise is where real learning happens — reading solutions alone doesn't build skill.</p>
+          <p class="concept"><strong>Concept check:</strong> Each chapter has a hands-on exercise with a solution revealed immediately after.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Cover the solution, write your own answer in the empty code cell, run it, then compare.</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>Type the code yourself — don't just read it. Muscle memory matters.</li><li>If you're about to write a for-loop over an array/column, pause: there's almost always a vectorized way.</li><li>Run the inspection ritual (info, describe, isna().sum()) the moment you load any dataset.</li><li>Do NumPy before Pandas — the second builds directly on the first.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Skipping the 'Your Turn' exercises and only reading solutions — you won't retain it.</li><li>Confusing .loc (label-based, inclusive slice) with .iloc (position-based, exclusive slice).</li><li>Forgetting .copy() on a filtered slice, then being surprised the original changed.</li><li>Forgetting parse_dates when loading CSVs, so date columns stay as strings.</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>Cleaning and analyzing any real-world CSV/spreadsheet data</li><li>Building the data-prep step of any machine learning pipeline</li><li>Business reporting: revenue by region/product/time with groupby and pivots</li><li>The foundation for PyTorch tensors and every ML library in later sections</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>

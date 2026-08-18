@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agents &amp; Orchestration Real-World Exercise — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Section 09 · Agents &amp; Orchestration</span>
+    <h1>Agents &amp; Orchestration Real-World Exercise</h1>
+    <p class="subtitle">EX_Agent_Loop_RealWorld.ipynb — a ReAct loop built from scratch</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>The ReAct pattern</h3><p>Reason (decide what to do) → Act (call a tool) → Observe (read the result) → repeat until a final answer is ready. This loop is what 'agent' means in most frameworks — the framework just automates the reasoning step with an LLM call.</p></div><div class="concept-block"><h3>Why a step limit is mandatory</h3><p>An agent that's confused or stuck in ambiguous reasoning can loop forever without a hard cap — every real agent implementation needs a max_steps guard and a fallback message.</p></div><div class="concept-block"><h3>Human-in-the-loop approval</h3><p>Irreversible or costly actions (refunds, purchases, sending messages) should never fire automatically — gate them behind an explicit approval step, human or otherwise.</p></div><div class="concept-block"><h3>Handling ambiguity</h3><p>A good agent asks a clarifying question rather than guessing when required information (like an order number) is missing — guessing produces confidently wrong actions.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Explains the Reason → Act → Observe loop in their own words</li><li>Traces through a simple agent loop step-by-step on paper</li><li>Understands why an unbounded loop is dangerous</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Adds an approval gate before an irreversible action</li><li>Handles missing/ambiguous input with a clarifying question instead of guessing</li><li>Writes tool functions with intent-specific descriptions</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Designs multi-agent systems (planner + specialist workers)</li><li>Adds observability/logging across every reasoning step for production debugging</li><li>Builds retry/fallback strategies for tool failures within the loop</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>Test refund vs. ambiguous requests</h4>
+          <p class="why"><strong>Why it matters:</strong> Confirms the agent asks for missing information instead of guessing an order number.</p>
+          <p class="concept"><strong>Concept check:</strong> Compare a message with a clear order ID against one without — the agent's behavior should differ.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>run_agent('I want my money back for order 12345') vs. run_agent('I need a refund')</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>Give the agent a maximum step count and a fallback message — never let it run unbounded.</li><li>Make tool errors return a clear string the model can read and react to, not a raw stack trace.</li><li>Log every reasoning/action/observation step during development.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Ambiguous tool descriptions causing the wrong tool to be picked.</li><li>No approval gate before an irreversible action.</li><li>Treating agent output as ground truth without a verification step.</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>An eligibility/approval workflow that gathers data via tools then asks a human to confirm</li><li>A research agent that searches, retrieves, and drafts a report</li><li>A multi-agent pipeline: planner agent delegates to specialist agents</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>

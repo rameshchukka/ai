@@ -1,0 +1,18 @@
+Billing Policy
+
+Monthly subscriptions are billed on the same calendar day each month as the original
+signup date. If a customer signs up on the 31st of a month, billing occurs on the
+last day of shorter months.
+
+Failed payments trigger 3 retry attempts over 7 days. If all retries fail, the
+account is downgraded to a free/limited tier but is not deleted; account data is
+retained for 90 days before permanent deletion.
+
+Plan upgrades take effect immediately and are billed as a prorated charge for the
+remainder of the current billing cycle. Plan downgrades take effect at the start of
+the next billing cycle; no prorated refund is issued for the difference.
+
+Duplicate charges due to a processing error are automatically flagged by the billing
+system within 24 hours and refunded without requiring a customer support ticket. If a
+customer reports a duplicate charge that has not yet been auto-flagged, support should
+verify via the billing dashboard before promising a refund.

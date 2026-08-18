@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Embeddings &amp; Search: Zero to Hero — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Section 06 · Zero to Hero</span>
+    <h1>Embeddings &amp; Search: Zero to Hero</h1>
+    <p class="subtitle">From bag-of-words to BM25 to semantic and hybrid search — built from first principles and evaluated with real metrics.</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>Every search method is a scoring function</h3><p>Search means ranking documents by relevance. Each method (TF-IDF, BM25, embeddings) is just a different score(query, doc) function; everything else is plumbing around sorting by that score.</p></div><div class="concept-block"><h3>Cosine similarity compares direction, not length</h3><p>Cosine similarity measures the angle between two vectors, ignoring magnitude. That's why a short and a long document on the same topic still score as similar — they point the same way in vector space.</p></div><div class="concept-block"><h3>Keyword vs semantic</h3><p>TF-IDF/BM25 match shared spellings (great for exact terms, codes, names). Embeddings match meaning, so 'money back' finds a 'refund' document with zero shared words. Hybrid search fuses both strengths.</p></div><div class="concept-block"><h3>Chunking and evaluation are not optional</h3><p>Real documents must be chunked (with overlap) before embedding. And 'looks good' is not a metric — measure precision@k, recall@k, and MRR against a small labeled set to actually know if your search works.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Turns text into bag-of-words vectors</li><li>Computes cosine similarity between documents</li><li>Runs a basic top-k keyword search</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Implements TF-IDF and BM25 scoring</li><li>Builds semantic search and sees it match synonyms</li><li>Fuses keyword+semantic into hybrid search</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Chunks documents with sentence-aware overlap</li><li>Evaluates methods with precision@k / recall@k / MRR</li><li>Builds a reusable SearchEngine class and tunes hybrid alpha</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>Compute IDF for common vs rare words</h4>
+          <p class="why"><strong>Why it matters:</strong> IDF is the core idea that makes keyword search smart instead of naive.</p>
+          <p class="concept"><strong>Concept check:</strong> Rare words carry more information, so they get higher IDF.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>idf = log((1+N)/(1+doc_freq[word])) + 1; camera &gt; my</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 2</div>
+          <h4>Semantic search finds synonyms</h4>
+          <p class="why"><strong>Why it matters:</strong> This is the whole reason embeddings beat keyword search for natural language.</p>
+          <p class="concept"><strong>Concept check:</strong> 'cannot sign in' should retrieve the password/credentials docs with no shared words.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Run search_semantic and observe the concept-based match.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 3</div>
+          <h4>Capstone: SearchEngine class</h4>
+          <p class="why"><strong>Why it matters:</strong> Packaging keyword/semantic/hybrid into one indexed engine is exactly how real retrieval libraries are structured.</p>
+          <p class="concept"><strong>Concept check:</strong> Index once, support method='keyword'|'semantic'|'hybrid' with a tunable alpha.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Normalize each score set to [0,1] before fusing in hybrid mode.</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>TF-IDF/BM25 is a strong, fast baseline — start there.</li><li>BM25 defaults k1=1.5, b=0.75 are battle-tested.</li><li>Always eyeball top-k results before trusting a metric.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Bag-of-words ignores word order and meaning.</li><li>Comparing embeddings from two different models (different spaces).</li><li>Chunking mid-sentence and destroying meaning.</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>Knowledge-base / FAQ semantic search</li><li>'Find similar products/documents' features</li><li>The retrieval stage of a RAG pipeline</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>

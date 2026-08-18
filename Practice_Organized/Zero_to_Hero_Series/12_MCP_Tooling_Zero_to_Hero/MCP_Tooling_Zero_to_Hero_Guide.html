@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP &amp; Tooling: Zero to Hero — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Section 12 · Zero to Hero</span>
+    <h1>MCP &amp; Tooling: Zero to Hero</h1>
+    <p class="subtitle">The open standard for connecting LLMs to tools, data, and prompts — built from first principles.</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>MCP solves the N×M integration problem</h3><p>Before MCP, every app needed custom glue for every tool — N apps times M integrations. MCP standardizes the interface: build one server per capability and any MCP-compatible client can use it, turning N×M into N+M.</p></div><div class="concept-block"><h3>Host, client, server</h3><p>The host is the LLM app the user talks to. Inside it, one client maintains a dedicated connection per server. Each server is a separate program exposing one capability. Servers are isolated, so a problem in one doesn't affect the others.</p></div><div class="concept-block"><h3>Three primitives: tools, resources, prompts</h3><p>Tools are model-callable functions (verbs/actions). Resources are readable data addressed by URI (nouns). Prompts are reusable parameterized templates (recipes). Every MCP server exposes some combination of these three.</p></div><div class="concept-block"><h3>Discovery then invocation</h3><p>A client first discovers what a server offers (list tools/resources/prompts) and hands that list to the LLM. Then it invokes specific capabilities per request. Discovery is cached and done once; invocation happens per call.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Explains the N×M problem and how MCP fixes it</li><li>Names the host/client/server roles</li><li>Classifies a capability as tool, resource, or prompt</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Builds a server and registers tools with schemas</li><li>Exposes data as resources addressed by URI</li><li>Serves reusable prompt templates</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Implements a client that discovers and invokes capabilities</li><li>Wires an MCP client into an agent loop</li><li>Builds a complete server (tools+resources+prompts) end to end</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>Register tools on a server</h4>
+          <p class="why"><strong>Why it matters:</strong> Tools with clear schemas are how an LLM safely calls your code through MCP.</p>
+          <p class="concept"><strong>Concept check:</strong> A @server.tool decorator storing name, description, input schema, and function.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Return structured error objects for unknown tools/bad args; never crash.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 2</div>
+          <h4>Expose data as resources</h4>
+          <p class="why"><strong>Why it matters:</strong> Resources let the model READ context (files, DB rows) through a uniform URI interface.</p>
+          <p class="concept"><strong>Concept check:</strong> Register a URI -&gt; function; the client lists and reads resources by URI.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Add a config://app resource returning a small dict, then read_resource it.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 3</div>
+          <h4>Capstone: WeatherServer + agent</h4>
+          <p class="why"><strong>Why it matters:</strong> A server with all three primitives plus an agent is the full MCP picture in miniature.</p>
+          <p class="concept"><strong>Concept check:</strong> get_weather tool, weather://cities resource, weather_report prompt, driven by a client + agent.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Discover tools via the client, route the goal, then client.call_tool.</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>Invest in tool descriptions and schemas — they're the model's only clues.</li><li>Discover once and cache; invoke per request.</li><li>Return structured errors so clients can handle failures gracefully.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Crashing the server on bad input instead of returning an error object.</li><li>Re-discovering capabilities on every call.</li><li>Confusing tools (actions) with resources (readable data).</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>Giving Claude Desktop/IDEs access to your tools and data</li><li>Building reusable, swappable integrations once per capability</li><li>Standardized tool layer under an agent</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>

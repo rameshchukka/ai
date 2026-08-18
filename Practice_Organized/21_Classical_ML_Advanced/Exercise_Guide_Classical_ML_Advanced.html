@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classical ML Advanced Real-World Exercises — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Section 21 · Classical ML Advanced</span>
+    <h1>Classical ML Advanced Real-World Exercises</h1>
+    <p class="subtitle">EX_Classical_ML_Advanced_RealWorld.ipynb — SVM, Naive Bayes, Gradient Boosting, PCA, tuning, time series</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>Kernel trick (SVM)</h3><p>SVMs find the maximum-margin boundary between classes. The 'kernel trick' lets them do this in a higher-dimensional space implicitly, without ever computing that space directly — enabling non-linear boundaries efficiently.</p></div><div class="concept-block"><h3>Why Naive Bayes still works well</h3><p>Despite assuming features are independent (rarely true), Naive Bayes is fast, needs little data, and performs surprisingly well — especially for text, where word-independence is 'wrong but useful'.</p></div><div class="concept-block"><h3>Boosting vs. bagging</h3><p>Random forest (bagging) trains many independent trees and averages them. Gradient boosting trains trees sequentially, each one correcting the previous ensemble's errors — usually more accurate but more prone to overfitting if untuned.</p></div><div class="concept-block"><h3>Cross-validated tuning</h3><p>GridSearchCV/RandomizedSearchCV split the training set internally (cross-validation) to evaluate each hyperparameter combination — this keeps your true test set untouched until final evaluation.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Fits SVM, Naive Bayes, and Gradient Boosting models and compares accuracy</li><li>Explains why SVM needs scaled features and tree models don't</li><li>Runs PCA and reads explained_variance_ratio_</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Tunes hyperparameters with GridSearchCV using cross-validation</li><li>Determines how many PCA components are needed for a variance threshold</li><li>Fits a basic ARIMA model and compares it to a moving-average baseline</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Diagnoses overfitting in gradient boosting and applies regularization (learning rate, max_depth, subsampling)</li><li>Chooses the right kernel and tunes SVM's C/gamma deliberately</li><li>Builds a full time-series pipeline with stationarity checks and proper backtesting</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>Compare three model families</h4>
+          <p class="why"><strong>Why it matters:</strong> Comparing baselines side-by-side is standard practice before committing to a model family.</p>
+          <p class="concept"><strong>Concept check:</strong> Fit SVM, Naive Bayes, and Gradient Boosting on the same split, compare accuracy.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>results = {'SVM': acc1, 'NaiveBayes': acc2, 'GradientBoosting': acc3}; best = max(results, key=results.get)</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 2</div>
+          <h4>Find components needed for 90% variance</h4>
+          <p class="why"><strong>Why it matters:</strong> This tells you how much you can compress your data while keeping most of its information.</p>
+          <p class="concept"><strong>Concept check:</strong> Cumulative sum of explained_variance_ratio_ crossing 0.9 gives the answer.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>cumulative = np.cumsum(ratios); n = np.argmax(cumulative &gt;= 0.9) + 1</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 3</div>
+          <h4>Fit ARIMA and compare to moving average</h4>
+          <p class="why"><strong>Why it matters:</strong> ARIMA captures trend/autocorrelation structure that a simple moving average ignores.</p>
+          <p class="concept"><strong>Concept check:</strong> ARIMA(1,1,1) models autoregression, differencing, and moving-average terms together.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>ARIMA(series, order=(1,1,1)).fit(); .forecast(steps=5)</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>Always scale features before SVM.</li><li>Gradient boosting usually beats random forest on tabular data but needs more careful tuning.</li><li>Use GridSearchCV/RandomizedSearchCV, not manual tuning against the test set.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Tuning hyperparameters against the test set (leakage).</li><li>Using PCA components as if they were still interpretable original features.</li><li>Applying ARIMA to non-stationary data without differencing.</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>Text classification with Naive Bayes</li><li>High-accuracy tabular prediction with gradient boosting</li><li>Demand/sales forecasting with classical time-series models</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>

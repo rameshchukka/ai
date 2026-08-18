@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TensorFlow &amp; Keras: Zero to Hero — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Add-on · Zero to Hero</span>
+    <h1>TensorFlow &amp; Keras: Zero to Hero</h1>
+    <p class="subtitle">Two ways to build models (Sequential &amp; Functional), the compile/fit/evaluate workflow, callbacks, and persistence.</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>Keras is the friendly layer on TensorFlow</h3><p>TensorFlow provides low-level tensors and autodiff; Keras is the high-level API that turns model building into stacking layers. You'll use Keras 95% of the time and drop to raw TF only when you need custom behavior.</p></div><div class="concept-block"><h3>GradientTape is TF's autograd</h3><p>Where PyTorch tracks gradients automatically on tensors, TF uses an explicit tf.GradientTape recording context. Inside the tape, operations on tf.Variables are recorded; tape.gradient replays them backward.</p></div><div class="concept-block"><h3>compile -&gt; fit -&gt; evaluate</h3><p>Keras hides the training loop. compile() configures optimizer/loss/metrics, fit() runs the whole training loop for you, evaluate()/predict() test and use the model. This is the entire Keras workflow.</p></div><div class="concept-block"><h3>Sequential vs Functional</h3><p>Sequential stacks layers in a straight line. The Functional API wires layers as a graph, enabling multiple inputs/outputs, branches, and shared layers. Sequential is a special case of Functional.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Creates tensors and uses GradientTape for a simple derivative</li><li>Builds a Sequential model and reads model.summary()</li><li>Runs compile -&gt; fit -&gt; evaluate on a dataset</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Chooses the correct loss for integer/one-hot/binary labels</li><li>Builds the same model with the Functional API</li><li>Reads learning curves to spot over/underfitting</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Uses EarlyStopping with restore_best_weights</li><li>Completes the capstone unaided with &gt;95% accuracy</li><li>Saves/loads .keras models and knows how it differs from PyTorch</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>GradientTape derivative</h4>
+          <p class="why"><strong>Why it matters:</strong> Understanding the tape makes every Keras training run less magical.</p>
+          <p class="concept"><strong>Concept check:</strong> f=w^2+3w+1, derivative 2w+3 = 11 at w=4.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>with tf.GradientTape() as tape: f=...; tape.gradient(f, w)</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 2</div>
+          <h4>Pick the right loss</h4>
+          <p class="why"><strong>Why it matters:</strong> Using the wrong crossentropy variant is a very common silent bug.</p>
+          <p class="concept"><strong>Concept check:</strong> integer labels -&gt; sparse_categorical_crossentropy; one-hot -&gt; categorical; binary -&gt; binary_crossentropy.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Our labels are integers 0/1/2, so use sparse_categorical_crossentropy.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 3</div>
+          <h4>Capstone: cancer classifier</h4>
+          <p class="why"><strong>Why it matters:</strong> The full compile/fit/evaluate/save pipeline with EarlyStopping is exactly real Keras work.</p>
+          <p class="concept"><strong>Concept check:</strong> 30 features -&gt; 32 relu -&gt; 16 relu -&gt; 1 sigmoid, binary_crossentropy, EarlyStopping.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>restore_best_weights=True keeps the best epoch, not the last.</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>model.summary() is your first architecture-debugging tool.</li><li>restore_best_weights=True keeps the best model, not the last.</li><li>.numpy() converts any tensor for inspection/plotting.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Mixing int and float tensors without tf.cast.</li><li>Wrong crossentropy variant for your label format.</li><li>Confusing Keras model.save (saves everything) with PyTorch's weights-only convention.</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>Fast prototyping of tabular/image/text classifiers</li><li>Production deployment (TF Serving, TFLite, TF.js)</li><li>Any regression/classification task with a clean high-level API</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>

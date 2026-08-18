@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "tmux": {
+      "command": "npx",
+      "args": ["-y", "tmux-mcp"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "filesystem-docs": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/me/projects/docs"
+      ]
+    },
+    "internal-api": {
+      "url": "https://mcp.iservebetter.idfcfirstbank.com/sse"
+    }
+  }
+}

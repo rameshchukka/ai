@@ -1,0 +1,7 @@
+streamlit>=1.35
+chromadb>=0.5.20
+pandas
+numpy
+scikit-learn
+plotly
+umap-learn   # optional, only needed for the UMAP reduction option

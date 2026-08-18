@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generative AI Fundamentals Real-World Exercises — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Section 18 · Generative AI Fundamentals</span>
+    <h1>Generative AI Fundamentals Real-World Exercises</h1>
+    <p class="subtitle">EX_GenAI_Fundamentals_RealWorld.ipynb — tokenization, self-attention, sampling</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>Tokens, not words</h3><p>Text is broken into tokens (often sub-word pieces) before an LLM processes it. Token count drives both cost and context-window usage, and doesn't map 1:1 to word count — this trips up beginners constantly.</p></div><div class="concept-block"><h3>Self-attention, intuitively</h3><p>For each token, self-attention computes how much it should 'attend to' (be influenced by) every other token, based on learned similarity between Query and Key vectors, then produces a weighted average of Value vectors — this is how a Transformer builds contextual meaning.</p></div><div class="concept-block"><h3>Sampling and temperature</h3><p>After scoring candidate next-tokens, the model converts scores to a probability distribution (softmax) and samples from it. Temperature reshapes that distribution: low temperature sharpens it toward the top choice (deterministic); high temperature flattens it (more random/diverse).</p></div><div class="concept-block"><h3>Adaptation strategies</h3><p>You can adapt a pretrained model to a task via prompting (cheapest, fastest to iterate), RAG (grounds it in your data), or fine-tuning (most expensive, usually a last resort) — try them roughly in that order.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Explains the difference between tokens and words</li><li>Describes what self-attention computes, in plain language</li><li>Explains what temperature does to output randomness</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Estimates prompt cost from token count</li><li>Modifies a toy self-attention example and predicts the effect before running it</li><li>Chooses prompting vs. RAG vs. fine-tuning for a given adaptation need</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Reasons about attention patterns in real model outputs to debug prompting issues</li><li>Designs token-budget-aware prompts for long-context applications</li><li>Understands diffusion models' high-level denoising process for image generation</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>Estimate prompt cost</h4>
+          <p class="why"><strong>Why it matters:</strong> Cost scales with tokens, not words — this is essential for budgeting any LLM-powered feature.</p>
+          <p class="concept"><strong>Concept check:</strong> Tokenize the text, divide by 1000, multiply by price-per-1k-tokens.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>n_tokens = len(naive_tokenize(text)); cost = (n_tokens/1000) * price_per_1k_tokens</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 2</div>
+          <h4>Modify attention and observe the effect</h4>
+          <p class="why"><strong>Why it matters:</strong> Seeing attention weights shift when you make two tokens similar makes the mechanism concrete instead of abstract.</p>
+          <p class="concept"><strong>Concept check:</strong> If token 0's embedding becomes similar to token 2's, token 0's attention row should weight token 2 more heavily.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>X2[0] = X2[2] + small noise; recompute Q,K,V and softmax(Q@K.T); compare attention row 0 before/after</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 3</div>
+          <h4>Explain temperature's effect</h4>
+          <p class="why"><strong>Why it matters:</strong> Being able to explain this to a teammate is a strong signal you actually understand sampling, not just the parameter name.</p>
+          <p class="concept"><strong>Concept check:</strong> Low temperature sharpens the softmax distribution toward the highest-scoring token; high temperature flattens it.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Compare the printed probability arrays across temperature=0.2, 1.0, 2.0 and describe the trend in your own words.</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>'Attention' is just a learned weighting of how much each token should influence each other token.</li><li>More tokens in context isn't free — cost and sometimes accuracy both suffer with very long contexts.</li><li>Try prompting and RAG before fine-tuning; they're cheaper and faster to iterate on.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Treating token count and word count as the same thing.</li><li>Assuming a bigger/newer model automatically fixes a prompting or architecture problem.</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>Everything in sections 05-11 of this course (LLM APIs, RAG, agents) is applied Generative AI.</li><li>Image generation tools (diffusion models) for design/marketing content.</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>

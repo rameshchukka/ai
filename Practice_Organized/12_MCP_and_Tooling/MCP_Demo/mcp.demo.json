@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "bitbucket": {
+      "command": "npx",
+      "args": ["-y", "mcp-bitbucket@latest"],
+      "env": {
+        "BITBUCKET_URL": "${BITBUCKET_URL}",
+        "BITBUCKET_TOKEN": "${BITBUCKET_TOKEN}"
+      }
+    }
+  }
+}

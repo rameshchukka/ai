@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micrograd: Visual Forward Pass &amp; Backprop — Exercise Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel2: #1d2130;
+    --text: #e6e8ef;
+    --muted: #9aa1b5;
+    --accent: #7c9eff;
+    --accent2: #6ee7c3;
+    --warn: #ffb454;
+    --border: #2a2f42;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(180deg, #0f1117 0%, #12141d 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #1d2130 0%, #232842 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(110,231,195,0.1);
+    border: 1px solid rgba(110,231,195,0.3);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 {
+    font-size: 20px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3 { font-size: 16px; color: var(--accent); margin: 0 0 6px; }
+  h4 { font-size: 15px; margin: 0 0 8px; }
+  p { color: var(--text); margin: 0 0 8px; }
+  .concept-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .roadmap-col {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    position: relative;
+  }
+  .roadmap-badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .lvl-beginner .roadmap-badge { background: rgba(124,158,255,0.18); color: var(--accent); }
+  .lvl-intermediate .roadmap-badge { background: rgba(255,180,84,0.18); color: var(--warn); }
+  .lvl-expert .roadmap-badge { background: rgba(110,231,195,0.18); color: var(--accent2); }
+  .roadmap-col ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .roadmap-col li { margin-bottom: 6px; }
+  .exercise-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .exercise-num {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .why, .concept { font-size: 14px; color: var(--muted); }
+  .why strong, .concept strong { color: var(--text); }
+  details.hint { margin-top: 10px; }
+  details.hint summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  details.hint p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: rgba(110,231,195,0.06);
+    border: 1px solid rgba(110,231,195,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  ul.plain { margin: 0; padding-left: 20px; }
+  ul.plain li { margin-bottom: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .box.tips { border-left: 3px solid var(--accent2); }
+  .box.pitfalls { border-left: 3px solid var(--warn); }
+  footer { margin-top: 48px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 700px) {
+    .roadmap { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="section-label">Section 21 · Zero to Hero</span>
+    <h1>Micrograd: Visual Forward Pass &amp; Backprop</h1>
+    <p class="subtitle">Build a real autograd engine from scratch, rendering the computation graph at every step -- inspired by Andrej Karpathy's micrograd.</p>
+  </header>
+
+  <h2>📘 Concept Notes</h2>
+  <div class="concept-block"><h3>Forward pass is just evaluating an expression, remembering every step</h3><p>Nothing about a neural network's forward pass is conceptually different from evaluating a small arithmetic expression left to right. The only extra ingredient is remembering intermediate values -- which is exactly what wrapping numbers in a Value class does.</p></div><div class="concept-block"><h3>A Value is a number that remembers its own computation graph</h3><p>Plain Python numbers forget where they came from. A Value stores which operation and which inputs produced it, so the entire history of a computation becomes a traversable graph -- which is what makes backpropagation possible at all.</p></div><div class="concept-block"><h3>Backprop is local rules plus one global algorithm</h3><p>Each operation only needs to know its OWN local derivative (+  gives 1, * gives the other input). The global part -- topological sort, then walk in reverse -- is a real, general graph algorithm, not something special to neural networks.</p></div><div class="concept-block"><h3>Values used more than once must ADD their gradient contributions</h3><p>The single most common backprop bug, done by hand or in code: overwriting a gradient instead of accumulating it when a value feeds into more than one place. This is exactly why every _backward() function uses += rather than =.</p></div>
+
+  <h2>🧭 Beginner → Expert Roadmap</h2>
+  <div class="roadmap"><div class="roadmap-col lvl-beginner">
+            <div class="roadmap-badge">1</div>
+            <h4>Beginner</h4>
+            <ul><li>Computes a forward pass by hand for a small expression</li><li>Explains why a Value needs to remember its own history</li><li>Reads a rendered computation graph and identifies operations vs values</li></ul>
+        </div><div class="roadmap-col lvl-intermediate">
+            <div class="roadmap-badge">2</div>
+            <h4>Intermediate</h4>
+            <ul><li>Manually backprops through a two-step expression using the chain rule</li><li>Writes a local derivative rule for a new operation</li><li>Explains why gradient contributions must be added, not overwritten</li></ul>
+        </div><div class="roadmap-col lvl-expert">
+            <div class="roadmap-badge">3</div>
+            <h4>Expert</h4>
+            <ul><li>Implements topological sort to order backward() correctly</li><li>Builds a Neuron/Layer/MLP entirely out of Value operations</li><li>Verifies a from-scratch engine against real PyTorch to 1e-6 precision</li></ul>
+        </div></div>
+
+  <h2>🛠️ Exercise Walkthrough</h2>
+  <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">
+    Open the companion notebook in this folder and work through these in order.
+    Try each one yourself before revealing the hint — struggling a little is where
+    the learning actually happens.
+  </p>
+  
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 1</div>
+          <h4>Manual chain rule on a 2-step expression</h4>
+          <p class="why"><strong>Why it matters:</strong> This is the exact moment backprop stops being a formula and starts being something you can trace by hand.</p>
+          <p class="concept"><strong>Concept check:</strong> A value used in two places contributes gradient along BOTH paths, summed.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>d = c + a where c = a*b -- a affects d directly AND through c.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 2</div>
+          <h4>Render a graph and predict its shape first</h4>
+          <p class="why"><strong>Why it matters:</strong> Predicting the picture before seeing it is how you know you actually understand the graph, not just the code.</p>
+          <p class="concept"><strong>Concept check:</strong> A value used multiple times has multiple outgoing edges in the rendered graph.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Build L = (a*b + c) * (a - b) and predict whether 'a' has more than one arrow leaving it.</p>
+          </details>
+        </div>
+        <div class="exercise-card">
+          <div class="exercise-num">TODO 3</div>
+          <h4>Capstone: match real PyTorch exactly</h4>
+          <p class="why"><strong>Why it matters:</strong> This is the proof that what you built isn't a toy approximation -- it's the same mathematics production frameworks run.</p>
+          <p class="concept"><strong>Concept check:</strong> Run the identical expression through your Value class and torch.Tensor, compare every gradient.</p>
+          <details class="hint">
+            <summary>Show hint</summary>
+            <p>Use .double() on the PyTorch tensors for matching float precision.</p>
+          </details>
+        </div>
+
+  <h2>💡 Tips &amp; Pitfalls</h2>
+  <div class="grid-2">
+    <div class="box tips">
+      <h4>Tips</h4>
+      <ul class="plain"><li>Render the graph after EVERY new concept -- the picture is the point of this lab.</li><li>Use numerical gradient checking (tiny epsilon nudge) to sanity-check any new operation you add.</li><li>Rewatch Karpathy's video after finishing -- every line will now be familiar.</li></ul>
+    </div>
+    <div class="box pitfalls">
+      <h4>Common Pitfalls</h4>
+      <ul class="plain"><li>Overwriting a gradient with = instead of accumulating with += when a value is reused.</li><li>Running _backward() in the wrong order (must be reverse topological order).</li><li>Forgetting to zero gradients between training steps -- they accumulate by design.</li></ul>
+    </div>
+  </div>
+
+  <h2>🌍 Real-World Use Cases</h2>
+  <div class="box">
+    <ul class="plain"><li>Building real intuition for what PyTorch/TensorFlow's autograd does internally</li><li>Debugging 'why is my gradient wrong' in any framework, from first principles</li><li>A rock-solid foundation before tackling attention/Transformers' more complex graphs</li></ul>
+  </div>
+
+  <footer>Part of the Python &amp; AI Course — Real-World Exercises series</footer>
+</div>
+</body>
+</html>
