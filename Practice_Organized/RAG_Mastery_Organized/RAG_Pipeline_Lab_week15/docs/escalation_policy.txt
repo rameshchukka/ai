@@ -1,0 +1,14 @@
+Escalation Policy
+
+Support tickets should be escalated to a Tier 2 specialist if any of the following
+apply: the customer has contacted support 3 or more times about the same issue, the
+issue involves a potential data loss or security concern, or the customer explicitly
+requests to speak with a manager.
+
+Tier 2 specialists have authority to approve refund exceptions outside the standard
+policy window, up to $200 in value, without further approval. Exceptions above $200
+require sign-off from a Support Team Lead.
+
+Any ticket mentioning legal action, regulatory complaints, or media/press inquiries
+must be escalated immediately to the Legal & Compliance team and should NOT be
+handled directly by support staff, regardless of ticket urgency classification.

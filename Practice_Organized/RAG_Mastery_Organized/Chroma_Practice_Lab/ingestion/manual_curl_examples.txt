@@ -1,0 +1,124 @@
+#!/bin/bash
+# ============================================================================
+# Manual curl walkthrough for Chroma's v2 REST API + your REAL Jina embedding
+# endpoint (now known exactly from inhouse_llm.py -- no more guessing).
+#
+# DO NOT just run this whole file. Copy-paste ONE command block at a time into
+# your terminal and read the actual JSON response before moving to the next —
+# that's the entire point of doing this manually instead of scripting it.
+#
+# Edit these for your environment first (or source them from inhouse_llm.py's
+# values directly):
+# ============================================================================
+HOST="localhost"
+PORT="8000"
+TENANT="default_tenant"
+DATABASE="default_database"
+COLLECTION_NAME="practice_dataset"
+
+# These two come straight from your inhouse_llm.py:
+JINA_BASE="https://llm-api.iservebetter.idfcfirstbank.com/jina-embeddings-v3/v1"
+API_KEY="<paste the real value of API_KEY from inhouse_llm.py / your .env>"
+
+BASE="http://${HOST}:${PORT}/api/v2"
+
+# ----------------------------------------------------------------------------
+# STEP 0: sanity check the Chroma server is up at all
+# ----------------------------------------------------------------------------
+curl -s "${BASE}/../v1/heartbeat" ; echo
+curl -s "${BASE}/tenants/${TENANT}" | jq .
+
+# ----------------------------------------------------------------------------
+# STEP 1a: create the collection (run once — will error harmlessly if it already exists)
+# ----------------------------------------------------------------------------
+curl -s -X POST "${BASE}/tenants/${TENANT}/databases/${DATABASE}/collections" \
+  -H "Content-Type: application/json" \
+  -d "{\"name\": \"${COLLECTION_NAME}\", \"configuration_json\": {\"hnsw\": {\"space\": \"cosine\"}}}" \
+  | jq .
+
+# ----------------------------------------------------------------------------
+# STEP 1b: list collections, find ours, grab its UUID
+# (v2 add/query calls need this UUID, not the name)
+# ----------------------------------------------------------------------------
+curl -s "${BASE}/tenants/${TENANT}/databases/${DATABASE}/collections" | jq .
+
+# Save the UUID for the collection whose "name" matches COLLECTION_NAME above:
+COLLECTION_ID="PASTE_THE_UUID_HERE"
+
+# ----------------------------------------------------------------------------
+# STEP 2: embed one row of text via the REAL Jina endpoint
+#
+# This is the exact shape get_embeddings() in inhouse_llm.py sends:
+# POST {JINA_BASE}/embeddings, body has "input" (a LIST, even for one text),
+# "dimension" (1024 for Jina v3), and "embedding_type": "float".
+# Response is OpenAI-style: {"data": [{"embedding": [...]}, ...]}
+# ----------------------------------------------------------------------------
+curl -s -X POST "${JINA_BASE}/embeddings" \
+  -H "Authorization: Bearer ${API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{"input": ["Sauteing vegetables over high heat caramelizes their natural sugars quickly."], "dimension": 1024, "embedding_type": "float"}' \
+  | jq .
+
+# Extract just the vector from that real response shape:
+EMBEDDING=$(curl -s -X POST "${JINA_BASE}/embeddings" \
+  -H "Authorization: Bearer ${API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{"input": ["Sauteing vegetables over high heat caramelizes their natural sugars quickly."], "dimension": 1024, "embedding_type": "float"}' \
+  | jq -c '.data[0].embedding')
+
+echo "Vector length: $(echo $EMBEDDING | jq 'length')"
+
+# ----------------------------------------------------------------------------
+# STEP 3: add that one row to the Chroma collection
+# ----------------------------------------------------------------------------
+curl -s -X POST "${BASE}/tenants/${TENANT}/databases/${DATABASE}/collections/${COLLECTION_ID}/add" \
+  -H "Content-Type: application/json" \
+  -d "{
+        \"ids\": [\"coo_01\"],
+        \"embeddings\": [${EMBEDDING}],
+        \"documents\": [\"Sauteing vegetables over high heat caramelizes their natural sugars quickly.\"],
+        \"metadatas\": [{\"topic\": \"cooking\", \"type\": \"core\"}]
+      }" | jq .
+
+# ----------------------------------------------------------------------------
+# STEP 3b: do steps 2-3 again for a second row, to confirm you can repeat it
+# (try a near-duplicate, e.g. dup_01, so you can sanity-check similarity next)
+# ----------------------------------------------------------------------------
+EMBEDDING2=$(curl -s -X POST "${JINA_BASE}/embeddings" \
+  -H "Authorization: Bearer ${API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{"input": ["Cooking vegetables quickly on high heat browns the natural sugars inside them."], "dimension": 1024, "embedding_type": "float"}' \
+  | jq -c '.data[0].embedding')
+
+curl -s -X POST "${BASE}/tenants/${TENANT}/databases/${DATABASE}/collections/${COLLECTION_ID}/add" \
+  -H "Content-Type: application/json" \
+  -d "{
+        \"ids\": [\"dup_01\"],
+        \"embeddings\": [${EMBEDDING2}],
+        \"documents\": [\"Cooking vegetables quickly on high heat browns the natural sugars inside them.\"],
+        \"metadatas\": [{\"topic\": \"cooking\", \"type\": \"near_duplicate\"}]
+      }" | jq .
+
+# ----------------------------------------------------------------------------
+# STEP 4: query — embed a question, search, confirm coo_01/dup_01 both come back
+# close together (this is your first real "nearest neighbor" observation)
+# ----------------------------------------------------------------------------
+QUERY_EMBEDDING=$(curl -s -X POST "${JINA_BASE}/embeddings" \
+  -H "Authorization: Bearer ${API_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{"input": ["How does high heat affect vegetables when cooking?"], "dimension": 1024, "embedding_type": "float"}' \
+  | jq -c '.data[0].embedding')
+
+curl -s -X POST "${BASE}/tenants/${TENANT}/databases/${DATABASE}/collections/${COLLECTION_ID}/query" \
+  -H "Content-Type: application/json" \
+  -d "{
+        \"query_embeddings\": [${QUERY_EMBEDDING}],
+        \"n_results\": 2
+      }" | jq .
+
+# Expect: both coo_01 and dup_01 returned, with very close distances to each other —
+# that's the near-duplicate design working as intended, observed at the raw HTTP level.
+#
+# NOTE: this whole embedding section (steps 2-4's curl calls) is exactly what
+# get_embeddings()/get_embedding() in inhouse_llm.py do FOR you in Python --
+# you've now seen the raw HTTP underneath the function call.
