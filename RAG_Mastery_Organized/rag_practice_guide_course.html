@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG Practice — Implementation Guide</title>
+<style>
+  :root{
+    --bg:#0d1218; --panel:#141c26; --panel2:#101822; --ink:#e8eef4; --muted:#8fa0b2;
+    --line:#233140;
+    --plain:#57a6f0; --hybrid:#e6a54b; --graph:#54c39a; --danger:#e5687a;
+    --code:#0a0f16; --maxw:940px;
+    --mono:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  code,pre,.mono{font-family:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace}
+  a{color:var(--plain);text-decoration:none} a:hover{text-decoration:underline}
+
+  header{padding:60px 24px 44px;border-bottom:1px solid var(--line);
+    background:radial-gradient(1200px 300px at 20% -10%,#17222f,#0d1218)}
+  header .wrap{max-width:var(--maxw);margin:0 auto}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:14px}
+  h1{margin:0 0 14px;font-size:40px;line-height:1.08;letter-spacing:-0.02em}
+  header p{color:var(--muted);max-width:64ch;margin:0}
+  .track{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap}
+  .track .step{flex:1;min-width:180px;background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;padding:14px 16px}
+  .track .step .k{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+  .track .step small{color:var(--muted);display:block;margin-top:3px;font-size:12.5px}
+  .step.p{border-top:3px solid var(--plain)} .step.p .k{color:var(--plain)}
+  .step.h{border-top:3px solid var(--hybrid)} .step.h .k{color:var(--hybrid)}
+  .step.g{border-top:3px solid var(--graph)} .step.g .k{color:var(--graph)}
+
+  nav.toc{position:sticky;top:0;z-index:20;background:rgba(13,18,24,.93);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);padding:11px 24px}
+  nav.toc .wrap{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:5px 16px;font-size:13.5px}
+  nav.toc a{color:var(--muted)} nav.toc a:hover{color:var(--ink);text-decoration:none}
+
+  main{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{padding:40px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:27px;letter-spacing:-0.01em;margin:0 0 4px;display:flex;gap:12px;align-items:baseline}
+  h2 .n{font-size:13px;font-weight:700;color:var(--muted);font-family:var(--mono)}
+  h3{font-size:18px;margin:26px 0 8px}
+  h4{font-size:15px;margin:20px 0 6px;color:var(--ink)}
+  p,li{color:#d3dde7}
+  .lead{color:var(--muted);font-size:17px}
+
+  .concept{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--plain);
+    border-radius:8px;padding:16px 18px;margin:16px 0}
+  .concept h4{margin:0 0 6px;color:var(--plain)}
+  .concept.h{border-left-color:var(--hybrid)} .concept.h h4{color:var(--hybrid)}
+  .concept.g{border-left-color:var(--graph)} .concept.g h4{color:var(--graph)}
+
+  .danger{background:#241318;border:1px solid #48232c;border-left:3px solid var(--danger);
+    border-radius:8px;padding:16px 18px;margin:18px 0}
+  .danger h4{margin:0 0 6px;color:var(--danger)}
+
+  pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:14px 16px;
+    overflow-x:auto;font-size:13px;line-height:1.55;color:#cfe0f0}
+  p code,li code,td code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:#bcd7ef}
+
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:14px 0}
+  ol.steps>li{counter-increment:s;position:relative;padding:10px 0 10px 44px;border-bottom:1px solid var(--line)}
+  ol.steps>li:last-child{border-bottom:none}
+  ol.steps>li::before{content:counter(s);position:absolute;left:0;top:9px;width:28px;height:28px;
+    background:var(--plain);color:#04121f;border-radius:7px;display:grid;place-items:center;font-weight:700;font-size:14px}
+  section.hy ol.steps>li::before{background:var(--hybrid);color:#231802}
+  section.gr ol.steps>li::before{background:var(--graph);color:#042018}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+  tr:last-child td{border-bottom:none}
+
+  .obs{background:#0f1a22;border:1px dashed #2a3f4f;border-radius:8px;padding:12px 16px;margin:14px 0}
+  .obs b{color:var(--graph)}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:18px 0}
+  .ex .tag{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+    padding:2px 9px;border-radius:20px;margin-bottom:8px}
+  .tag.t1{background:#12304a;color:#6bb6f0} .tag.t2{background:#3a2a12;color:#e6a54b}
+  .tag.t3{background:#123028;color:#54c39a} .tag.t4{background:#2a1230;color:#c07be0}
+  .pill{display:inline-block;background:#182432;border:1px solid var(--line);border-radius:20px;
+    padding:2px 10px;font-size:12px;color:var(--muted);margin:2px 3px 2px 0}
+  footer{max-width:var(--maxw);margin:0 auto;padding:34px 24px 70px;color:var(--muted);font-size:13.5px}
+  @media(max-width:640px){h1{font-size:31px}.track{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">RAG Practice · Plain → Hybrid → Graph</div>
+    <h1>RAG Practice Implementation Guide</h1>
+    <p class="lead">Concepts, step-by-step setup, and extra exercises for three practice
+    builds — plain RAG on Chroma, hybrid RAG on Pinecone, and graph-database RAG on Neo4j.
+    All three query the same health-care economics PDF, so you can compare them directly.</p>
+    <div class="track">
+      <div class="step p"><div class="k">01 · Plain</div>Chroma + SentenceTransformer + LLM<small>See every moving part</small></div>
+      <div class="step h"><div class="k">02 · Hybrid</div>Pinecone + dense &amp; sparse (BM25)<small>The alpha knob</small></div>
+      <div class="step g"><div class="k">03 · Graph DB</div>Neo4j + local embeddings + Gradio<small>A real app to run</small></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#security">⚠ Security first</a>
+  <a href="#concepts">Core concepts</a>
+  <a href="#phase1">1 · Plain RAG</a>
+  <a href="#phase2">2 · Hybrid RAG</a>
+  <a href="#phase3">3 · Graph-DB RAG</a>
+  <a href="#neo4j">Neo4j setup</a>
+  <a href="#practice">Extra practice</a>
+  <a href="#reference">Reference</a>
+</div></nav>
+
+<main>
+
+<section id="security">
+  <h2><span class="n">⚠</span> Security — do this before running anything</h2>
+  <div class="danger">
+    <h4>The plain-RAG notebook contains live API keys</h4>
+    <p><code>Building_Conversational_RAG.ipynb</code> has two API keys hardcoded in code
+    cells — an OpenAI-style key and a Google key. A notebook with real keys in it is a
+    credential leak the moment it's shared or committed.</p>
+    <p style="margin-bottom:0"><strong>Fix, in order:</strong> (1) rotate both keys — revoke
+    the exposed ones and generate new; assume the old ones are compromised. (2) Replace them
+    with environment reads. (3) Keep keys in a git-ignored <code>.env</code>.</p>
+  </div>
+  <pre>import os
+openai_key = os.getenv("OPENAI_API_KEY")
+google_key = os.getenv("GOOGLE_API_KEY")</pre>
+  <p>The Pinecone and GraphRAG artifacts already do this correctly (<code>os.getenv</code> +
+  <code>.env</code>) — copy their pattern. Same lesson as any credential leak: rotate,
+  remove, and tell whoever owns the accounts if they're organizational.</p>
+</section>
+
+<section id="concepts">
+  <h2><span class="n">00</span> Core concepts (know these before you build)</h2>
+  <p class="lead">Each exercise leans on one big idea. Understand these four and the code
+  reads like prose.</p>
+
+  <div class="concept">
+    <h4>Retrieval-Augmented Generation (all three)</h4>
+    <p>An LLM only knows its training data. RAG fixes that by <em>retrieving</em> relevant
+    text from your documents and putting it in the prompt, so the model answers from your
+    content, not its memory. The pipeline is always the same:
+    <strong>ingest → chunk → embed → store → retrieve → generate</strong>. Everything else
+    is variation on where you store vectors and how you retrieve them.</p>
+  </div>
+
+  <div class="concept">
+    <h4>Chunking &amp; embeddings (all three)</h4>
+    <p>Documents are split into <strong>chunks</strong> (passages) because you retrieve
+    pieces, not whole files. Each chunk becomes an <strong>embedding</strong> — a list of
+    numbers capturing its meaning, so "refund a payment" lands near "get my money back"
+    even with no shared words. Retrieval = find the chunks whose embeddings are closest to
+    the question's embedding (cosine similarity).</p>
+  </div>
+
+  <div class="concept h">
+    <h4>Hybrid search: dense + sparse + alpha (exercise 2)</h4>
+    <p><strong>Dense</strong> vectors (from a neural model) capture <em>meaning</em>.
+    <strong>Sparse</strong> vectors (BM25) capture <em>exact keywords</em>. Hybrid search
+    fuses both, weighted by <code>alpha</code>: <code>alpha=1</code> pure meaning,
+    <code>alpha=0</code> pure keywords, <code>0.5</code> a blend. Conceptual questions want
+    high alpha; exact-term lookups (a code, an acronym) want low alpha. Tuning alpha is the
+    core skill exercise 2 teaches.</p>
+  </div>
+
+  <div class="concept g">
+    <h4>Graph databases as vector stores (exercise 3)</h4>
+    <p>Neo4j stores data as <strong>nodes</strong> and <strong>relationships</strong>.
+    Exercise 3 stores each chunk as a <code>:Chunk</code> node with an embedding property and
+    a <strong>vector index</strong> for fast similarity search. Note: storing isolated nodes
+    with no relationships is "RAG on a graph database," <em>not</em> true GraphRAG — real
+    GraphRAG links entities across chunks and traverses those links at query time. The extra
+    practice includes turning this into the real thing.</p>
+  </div>
+
+  <div class="concept">
+    <h4>Evaluation with RAGAS (exercises 2 &amp; 3)</h4>
+    <p>How do you know an answer is good without a human checking? RAGAS uses an LLM as judge:
+    <strong>Faithfulness</strong> (is every claim grounded in the retrieved context?) and
+    <strong>Answer Relevancy</strong> (does it address the question?), mostly without needing
+    labelled ground truth. It turns "looks fine" into a number you can track across changes.</p>
+  </div>
+</section>
+
+<!-- ============ PHASE 1 ============ -->
+<section id="phase1">
+  <h2><span class="n">01</span> Plain RAG on Chroma</h2>
+  <p class="lead"><code>Building_Conversational_RAG.ipynb</code> — the no-framework version.
+  Read file → chunk → embed → store in Chroma → search → feed the LLM. Nothing hidden.</p>
+
+  <h3>Setup</h3>
+  <pre>lab                     # activate your venv (chroma_lab_env)
+pip install chromadb PyPDF2 python-docx sentence-transformers google-genai openai
+export GOOGLE_API_KEY="your-rotated-key"     # after the security fix</pre>
+
+  <h3>Run it, cell by cell</h3>
+  <ol class="steps">
+    <li><strong>Install &amp; imports</strong> — libraries load; confirm no import errors.</li>
+    <li><strong>Read the PDF</strong> — <code>PyPDF2</code> extracts text from
+      <code>ERP-2008-chapter4.pdf</code>.</li>
+    <li><strong>Chunk</strong> — text split into passages. Look at a couple to see their size.</li>
+    <li><strong>Set up Chroma</strong> — <code>PersistentClient(path="./chroma_db")</code>.</li>
+    <li><strong>Insert</strong> — each chunk embedded (SentenceTransformer) and stored.</li>
+    <li><strong>Semantic search</strong> — a question is embedded; top-K chunks returned.</li>
+    <li><strong>RAG answer</strong> — those chunks go into a prompt; the LLM answers from them.</li>
+  </ol>
+
+  <div class="obs"><b>Observe:</b> after insert, the collection count equals your chunk count.
+  Searching <em>"demand for health"</em> returns the passage from page 2 of the PDF. The final
+  answer uses that content — not invented facts.</div>
+
+  <div class="concept">
+    <h4>Tie-in</h4>
+    <p>This is the notebook form of your Chroma Studio datasets — same loop. Afterward, open
+    <code>./chroma_db</code> in <strong>Chroma Studio</strong> and browse/visualize exactly
+    what the notebook stored.</p>
+  </div>
+</section>
+
+<!-- ============ PHASE 2 ============ -->
+<section id="phase2" class="hy">
+  <h2><span class="n">02</span> Hybrid RAG on Pinecone</h2>
+  <p class="lead"><code>Building_Conversational_HybridRAG_Pinecone.ipynb</code> — the strongest
+  exercise. Dense + sparse fusion, conversational memory, and a RAGAS finish.</p>
+
+  <h3>Setup</h3>
+  <pre>pip install pinecone pinecone-text sentence-transformers PyPDF2 google-genai python-dotenv
+pip install ragas langchain-google-genai langchain-huggingface datasets   # RAGAS section</pre>
+  <p>Sign up at <span class="mono">pinecone.io</span> (free starter tier), create an API key,
+  and put keys in a git-ignored <code>.env</code>:</p>
+  <pre>PINECONE_API_KEY=your-pinecone-key
+GOOGLE_API_KEY=your-gemini-key</pre>
+  <p><strong>Org-network note:</strong> Pinecone is cloud-hosted. If your org blocks it, run
+  this exercise from a personal machine.</p>
+
+  <h3>Work through the steps</h3>
+  <ol class="steps">
+    <li><strong>Load &amp; chunk</strong> the PDF (steps 2–3 in the notebook).</li>
+    <li><strong>Dense embeddings</strong> — SentenceTransformer vectors (meaning).</li>
+    <li><strong>Sparse embeddings</strong> — BM25 vectors (keywords).</li>
+    <li><strong>Create the Pinecone index</strong> and <strong>upsert</strong> hybrid vectors.</li>
+    <li><strong>Hybrid search with alpha</strong> — the heart of the exercise (see below).</li>
+    <li><strong>Conversational memory</strong> — a follow-up resolves using prior turns.</li>
+    <li><strong>RAGAS validation</strong> — faithfulness + answer relevancy scores.</li>
+  </ol>
+
+  <div class="concept h">
+    <h4>Spend your time on the alpha knob</h4>
+    <p>Run the <em>same</em> query at <code>alpha = 0.0</code>, <code>0.5</code>, and
+    <code>1.0</code> and watch the retrieved chunks change. Keyword-heavy queries (an exact
+    term like "Medicare Part D") do better at low alpha; conceptual queries ("why do costs
+    rise?") do better at high alpha. This trade-off is the whole point.</p>
+  </div>
+
+  <div class="obs"><b>Observe:</b> at step 8, alpha visibly reorders results. At step 10, the
+  bot answers a follow-up ("what about its cost?") by remembering the prior question. At step
+  11, faithfulness near 1.0 means the answer is grounded.</div>
+
+  <div class="concept">
+    <h4>Tie-in</h4>
+    <p>The dense+sparse fusion is the hybrid-search concept from Specialist Track Phase 5 and
+    <code>hybrid_search.py</code> in your Week 15 pipeline. The RAGAS section is your
+    <code>ragas_guide</code> applied live.</p>
+  </div>
+</section>
+
+<!-- ============ PHASE 3 ============ -->
+<section id="phase3" class="gr">
+  <h2><span class="n">03</span> Graph-DB RAG on Neo4j</h2>
+  <p class="lead"><code>GraphRAG/</code> — a full multi-file app with a Gradio UI. The most
+  "real project" of the three. Clean separation: config / pdf_processor / embeddings /
+  vector_store / response_generator / validator / orchestrator / app.</p>
+
+  <div class="concept g">
+    <h4>Read the honest label</h4>
+    <p>Despite the name, this stores isolated <code>:Chunk</code> nodes with embeddings and
+    does cosine search — <strong>no relationships between nodes</strong>. It's an excellent way
+    to learn Neo4j + vector indexes, but it's not relationship-aware GraphRAG. Extra-practice
+    exercise 4 turns it into the real thing.</p>
+  </div>
+
+  <h3>Python setup</h3>
+  <pre>lab
+cd GraphRAG
+pip install -r requirements.txt</pre>
+  <p><strong>First-run HuggingFace note:</strong> <code>all-mpnet-base-v2</code> (~420 MB)
+  downloads from HuggingFace on first use. If your org blocks HF, download it once on a
+  personal network (it caches to <code>~/.cache/huggingface</code>) — the same HF-blocking
+  issue you hit with ChromaFlowStudio.</p>
+
+  <h3>Run</h3>
+  <ol class="steps">
+    <li>Set up Neo4j (next section) and fill in <code>.env</code>.</li>
+    <li><code>python app.py</code> → Gradio prints a local URL (usually
+      <code>http://127.0.0.1:7860</code>).</li>
+    <li><strong>Upload tab</strong> — upload the PDF; watch the console chunk → embed → store.</li>
+    <li><strong>Query tab</strong> — ask <em>"What is the demand for health?"</em></li>
+    <li><strong>Validate tab</strong> — RAGAS scores the answer.</li>
+    <li><strong>Manage tab</strong> — document/chunk counts; delete a document.</li>
+  </ol>
+
+  <div class="obs"><b>Observe:</b> the Manage-tab chunk count matches what you uploaded. An
+  off-topic question should get "I can't find that in the documents," not a hallucination.
+  Faithfulness is high for grounded answers.</div>
+</section>
+
+<!-- ============ NEO4J SETUP ============ -->
+<section id="neo4j" class="gr">
+  <h2><span class="n">3·db</span> Neo4j setup (the graph database)</h2>
+  <p class="lead">The one piece of infrastructure exercise 3 needs. Pick whichever option
+  fits — Desktop is easiest for local practice.</p>
+
+  <h3>Option A — Neo4j Desktop (recommended for local)</h3>
+  <ol class="steps">
+    <li>Download from <span class="mono">neo4j.com/download</span>, install, open.</li>
+    <li>New project → <strong>Add a Local DBMS</strong>; set a password (goes in
+      <code>.env</code>); pick a 5.x version (needed for the vector index).</li>
+    <li>Click <strong>Start</strong>. It listens on <code>bolt://localhost:7687</code>.</li>
+    <li>Optionally open <strong>Neo4j Browser</strong> to run Cypher and watch your data.</li>
+  </ol>
+
+  <h3>Option B — Docker (clean &amp; reproducible)</h3>
+  <pre>docker run -d --name neo4j-rag \
+  -p 7474:7474 -p 7687:7687 \
+  -e NEO4J_AUTH=neo4j/your-password-here \
+  -e NEO4J_PLUGINS='["apoc"]' \
+  neo4j:5.23</pre>
+  <p><code>7474</code> = Neo4j Browser (http://localhost:7474); <code>7687</code> = Bolt (what
+  the app connects to).</p>
+
+  <h3>Option C — Neo4j Aura (free cloud)</h3>
+  <p>If you can't install locally: create a free instance at
+  <span class="mono">neo4j.com/cloud/aura</span> and use the URI/credentials it gives you.
+  Cloud, so same org-network caveat as Pinecone.</p>
+
+  <h3>The database-name gotcha</h3>
+  <p>The app defaults to a database named <code>graphragdb</code>, but Neo4j Community Edition
+  only gives you the default <code>neo4j</code> database. Easiest fix: set
+  <code>NEO4J_DATABASE=neo4j</code> in <code>.env</code>. (On Enterprise/Aura you can
+  <code>CREATE DATABASE graphragdb</code> in the browser instead.)</p>
+
+  <h3>Fill in <code>.env</code></h3>
+  <pre>NEO4J_URI=bolt://localhost:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=your-password-here
+NEO4J_DATABASE=neo4j
+GEMINI_API_KEY=your-gemini-key
+HF_TOKEN=your-hf-token          # optional; only for gated HF models</pre>
+
+  <h3>See your data (the fun part)</h3>
+  <p>After uploading a PDF, run this in Neo4j Browser — the graph-DB equivalent of Chroma
+  Studio's Browse tab:</p>
+  <pre>MATCH (c:Chunk) RETURN c.source, c.chunk_index, c.text LIMIT 25;
+MATCH (c:Chunk) RETURN count(c);</pre>
+
+  <div class="concept g">
+    <h4>The vector index</h4>
+    <p>On startup, <code>vector_store.py</code> creates a vector index on
+    <code>Chunk.embedding</code> (768-dim, cosine). This needs Neo4j <strong>5.11+</strong>;
+    on older versions it silently falls back to manual cosine in Cypher (works, slower). Use
+    5.x to get the real index.</p>
+  </div>
+</section>
+
+<!-- ============ EXTRA PRACTICE ============ -->
+<section id="practice">
+  <h2><span class="n">+</span> Extra practice exercises</h2>
+  <p class="lead">Each targets a concept the three files don't fully exercise. Ordered
+  roughly easy → ambitious. Do them on the same PDF so results are comparable.</p>
+
+  <div class="ex">
+    <span class="tag t1">Exercise A · Chunking</span>
+    <h4>Compare three chunking strategies</h4>
+    <p>The plain-RAG notebook uses one chunking method. Re-ingest the PDF three ways —
+    <strong>fixed-size</strong> (e.g. 200 words), <strong>sentence-based</strong>, and
+    <strong>fixed-size with 20% overlap</strong> — into three Chroma collections. Ask the same
+    question against each and compare which returns the cleanest supporting chunk.</p>
+    <p><strong>What you learn:</strong> chunking decides retrieval quality more than any other
+    single factor. Overlap rescues answers that sit on a chunk boundary.
+    <span class="pill">ties to Specialist Track Phase 2</span></p>
+  </div>
+
+  <div class="ex">
+    <span class="tag t2">Exercise B · Hybrid tuning</span>
+    <h4>Turn the alpha knob into a scored sweep</h4>
+    <p>The Pinecone notebook lets you set alpha by hand. Instead, write 5 test questions (some
+    keyword-y like "Medicare Part D", some conceptual like "why do costs rise"), then loop
+    <code>alpha</code> over <code>[0, 0.25, 0.5, 0.75, 1.0]</code> and score each with RAGAS
+    faithfulness + answer relevancy. Plot score vs alpha.</p>
+    <p><strong>What you learn:</strong> the best alpha isn't a guess — it's measurable, and it
+    differs by query type. This is data-driven tuning.
+    <span class="pill">ties to ragas_guide</span></p>
+  </div>
+
+  <div class="ex">
+    <span class="tag t1">Exercise C · Metadata-filtered RAG</span>
+    <h4>Filter by section before retrieving</h4>
+    <p>Tag each chunk with the PDF section it came from (e.g. "Health Insurance",
+    "Moral Hazard", "Medicare") as metadata. Then answer a question <em>restricted to one
+    section</em> using Chroma's <code>where</code> filter before semantic search.</p>
+    <p><strong>What you learn:</strong> metadata filtering scopes retrieval and kills
+    cross-section noise — exactly the Chroma Studio filtering you built, applied to RAG.
+    <span class="pill">ties to Chroma Studio metadata features</span></p>
+  </div>
+
+  <div class="ex">
+    <span class="tag t3">Exercise D · Cross-store comparison</span>
+    <h4>Same query, Chroma vs Neo4j</h4>
+    <p>Ingest the identical chunks + embeddings into both Chroma (exercise 1) and Neo4j
+    (exercise 3). Run the same five questions against each and compare the top-K retrieved.
+    They should mostly agree — where they differ, dig into why (index type, similarity
+    computation).</p>
+    <p><strong>What you learn:</strong> the vector store is swappable; retrieval quality comes
+    from embeddings + chunking, not the database brand.
+    <span class="pill">systems intuition</span></p>
+  </div>
+
+  <div class="ex">
+    <span class="tag t4">Exercise E · Real GraphRAG</span>
+    <h4>Add entities and relationships to the Neo4j app</h4>
+    <p>Turn the graph-DB app into genuine GraphRAG: (1) extract entities from each chunk
+    (Medicare, HSA, moral hazard, …) into <code>:Entity</code> nodes; (2) link them —
+    <code>(:Chunk)-[:MENTIONS]->(:Entity)</code> and
+    <code>(:Entity)-[:RELATED_TO]->(:Entity)</code>; (3) at query time, retrieve by vector
+    <em>and</em> traverse relationships to pull in connected context (multi-hop).</p>
+    <p><strong>What you learn:</strong> what "graph" actually adds over plain vector RAG —
+    relationship-aware, multi-hop retrieval. This is the real thing.
+    <span class="pill">the ambitious one · ties to Specialist Track multi-hop</span></p>
+  </div>
+
+  <div class="ex">
+    <span class="tag t2">Exercise F · RAGAS-driven tuning loop</span>
+    <h4>Change one thing, measure, repeat</h4>
+    <p>Pick any single knob — chunk size, top-K, or alpha — and run a controlled experiment:
+    baseline RAGAS scores, change the knob, re-score, compare. Never ship a change you can't
+    show helped.</p>
+    <p><strong>What you learn:</strong> the professional RAG workflow — measure → change →
+    re-measure — rather than tweaking on vibes.
+    <span class="pill">the meta-skill</span></p>
+  </div>
+</section>
+
+<section id="reference">
+  <h2><span class="n">§</span> Quick reference</h2>
+  <table>
+    <tr><th></th><th>Vector store</th><th>Embeddings</th><th>LLM</th><th>Extra setup</th><th>Org-network risk</th></tr>
+    <tr><td><strong>Plain</strong></td><td>Chroma (local)</td><td>SentenceTransformer (local)</td>
+      <td>OpenAI / Gemini</td><td>none</td><td>LLM API only</td></tr>
+    <tr><td><strong>Hybrid</strong></td><td>Pinecone (cloud)</td><td>ST dense + BM25 sparse</td>
+      <td>Gemini</td><td>Pinecone account</td><td>Pinecone + Gemini</td></tr>
+    <tr><td><strong>Graph DB</strong></td><td>Neo4j (local/cloud)</td><td>all-mpnet (HF, local)</td>
+      <td>Gemini</td><td>Neo4j install + HF download</td><td>HF download + Gemini</td></tr>
+  </table>
+  <p><strong>Recurring theme for your org:</strong> local pieces (Chroma, Neo4j, local ST
+  models) run fine; anything reaching HuggingFace, Pinecone, or Google may be blocked and need
+  a personal-network first run or a locally-cached model — plan around it the same way you have
+  throughout.</p>
+
+  <h3>Suggested sequence</h3>
+  <ol class="steps">
+    <li>Fix the leaked keys in the plain-RAG notebook (rotate + <code>os.getenv</code>).</li>
+    <li>Phase 1 end to end; open <code>./chroma_db</code> in Chroma Studio afterward.</li>
+    <li>Phase 2, focusing on the alpha experiments.</li>
+    <li>Phase 3: install Neo4j, run the app, explore nodes in Neo4j Browser.</li>
+    <li>Extra practice A→F as time allows; E (real GraphRAG) is the capstone.</li>
+  </ol>
+</section>
+
+</main>
+
+<footer>
+  Practice guide for three RAG exercises on the ERP-2008 health-care chapter. Local components
+  favor your in-house/offline constraints; cloud components (Pinecone, Gemini, Aura) and
+  HuggingFace downloads may need a personal network. Fix the exposed keys before running the
+  plain-RAG notebook.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chroma Studio — User Guide</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#151f2b; --ink:#e7edf3; --muted:#93a4b5;
+    --line:#243244; --accent:#4bc0a8; --accent2:#f0a03c; --code:#0b1119;
+    --maxw:900px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  code,pre,.mono{font-family:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;}
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+
+  header{padding:56px 24px 40px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#132030,#0f1720);}
+  header .wrap{max-width:var(--maxw);margin:0 auto}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--accent);
+    font-weight:600;margin-bottom:14px}
+  h1{margin:0 0 12px;font-size:38px;line-height:1.1;letter-spacing:-0.02em}
+  header p{color:var(--muted);max-width:60ch;margin:0}
+
+  .layout{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  nav.toc{position:sticky;top:0;background:rgba(15,23,32,.92);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);padding:12px 24px;z-index:10;margin-bottom:8px}
+  nav.toc .wrap{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px}
+  nav.toc a{color:var(--muted)} nav.toc a:hover{color:var(--ink);text-decoration:none}
+
+  section{padding:34px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:25px;letter-spacing:-0.01em;margin:0 0 6px;display:flex;align-items:baseline;gap:12px}
+  h2 .num{font-size:13px;color:var(--accent);font-weight:700;font-family:var(--mono)}
+  h3{font-size:17px;margin:26px 0 8px;color:var(--ink)}
+  p,li{color:#d4dee8}
+  .lead{color:var(--muted)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0}
+  .card.accent{border-left:3px solid var(--accent)}
+  .card.warn{border-left:3px solid var(--accent2)}
+  .card h3{margin-top:0}
+
+  pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:14px 16px;
+    overflow-x:auto;font-size:13.5px;line-height:1.55;color:#cfe6df}
+  p code,li code,td code{background:#1b2836;border:1px solid var(--line);border-radius:4px;
+    padding:1px 6px;font-size:13px;color:#bfe6db}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--accent);font-weight:600;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase}
+  tr:last-child td{border-bottom:none}
+
+  .tab-row{display:grid;grid-template-columns:120px 1fr;gap:2px 18px;margin:10px 0}
+  .tab-row .t{color:var(--accent2);font-weight:600}
+  .steps{counter-reset:s;list-style:none;padding:0}
+  .steps li{counter-increment:s;position:relative;padding:6px 0 6px 40px;margin:0}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:6px;width:26px;height:26px;
+    background:var(--accent);color:#06120e;border-radius:50%;display:grid;place-items:center;
+    font-size:13px;font-weight:700}
+
+  .pill{display:inline-block;background:#1b2836;border:1px solid var(--line);border-radius:20px;
+    padding:2px 11px;font-size:12.5px;color:var(--muted);margin:2px 4px 2px 0}
+  .pill.on{background:#12352d;border-color:#1f5a4b;color:var(--accent)}
+
+  footer{max-width:var(--maxw);margin:0 auto;padding:34px 24px 70px;color:var(--muted);font-size:14px}
+  .kbd{background:#1b2836;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;
+    padding:1px 7px;font-size:12.5px;font-family:var(--mono)}
+  @media(max-width:620px){h1{font-size:30px}.tab-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Chroma Studio · chromadb 1.5.9</div>
+    <h1>Chroma Studio — User Guide</h1>
+    <p class="lead">A local tool to create, edit, filter, and visualize a Chroma vector
+    database — built for your environment (in-house Jina embeddings, no forced
+    HuggingFace download). This guide walks every feature using the datasets you
+    already have, ending with the API-discovery use case.</p>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#start">Getting started</a>
+    <a href="#connect">Connect</a>
+    <a href="#tabs">The five tabs</a>
+    <a href="#metadata">Metadata &amp; filtering</a>
+    <a href="#visualize">Visualize</a>
+    <a href="#datasets">Datasets</a>
+    <a href="#api">API discovery</a>
+    <a href="#workflow">Analyze → decide → act</a>
+    <a href="#trouble">Troubleshooting</a>
+  </div>
+</nav>
+
+<div class="layout">
+
+<section id="start">
+  <h2><span class="num">01</span> Getting started</h2>
+  <p class="lead">Chroma Studio is a Streamlit app. It reads and writes a local Chroma
+  database folder (the one containing <code>chroma.sqlite3</code>), and only one process
+  may use that folder at a time.</p>
+
+  <h3>Install &amp; run</h3>
+  <pre># from inside your chroma_lab_env (the venv with chromadb 1.5.9)
+pip install -r requirements.txt
+streamlit run app.py</pre>
+
+  <div class="card warn">
+    <h3>One process at a time</h3>
+    <p>Because it uses a local <code>PersistentClient</code>, close anything else that
+    holds the same folder open — another notebook, or ChromaFlowStudio — before running
+    Studio. A lock error almost always means a second process is already attached.</p>
+  </div>
+</section>
+
+<section id="connect">
+  <h2><span class="num">02</span> Connect &amp; pick an embedding source</h2>
+  <p>Everything is set in the left sidebar.</p>
+  <ol class="steps">
+    <li><strong>Local Chroma folder</strong> — the path to your database folder, e.g.
+      <code>D:\practice_chroma</code> or the path an ingestion notebook printed.</li>
+    <li><strong>Embedding source</strong> — <em>In-house Jina (hosted)</em> is the default
+      for your environment: enter the base URL + API key. Or <em>Local model</em> to point
+      at a downloaded sentence-transformers model folder.</li>
+  </ol>
+  <div class="card accent">
+    <p style="margin:0"><strong>Good to know:</strong> embeddings are only computed when you
+    <em>add</em> or <em>update</em> a document, or run a <em>text search</em>. Browsing,
+    filtering, and deleting never call the embedder — so even if the model is
+    misconfigured, you can still manage existing data.</p>
+  </div>
+</section>
+
+<section id="tabs">
+  <h2><span class="num">03</span> The five tabs</h2>
+  <div class="tab-row"><div class="t">Browse</div><div>Page through documents and their
+    metadata. Includes the metadata summary panel, the structured metadata filter, and a
+    free-text filter.</div></div>
+  <div class="tab-row"><div class="t">Add</div><div>Add documents one at a time (with an
+    optional metadata JSON) or in bulk (one document per line). Embeddings are computed
+    on add.</div></div>
+  <div class="tab-row"><div class="t">Edit / Update</div><div>Change a document's text
+    (re-embeds) or just its metadata (instant, no re-embed). Delete a single document.</div></div>
+  <div class="tab-row"><div class="t">Visualize</div><div>Project the embedding space to
+    2D or 3D with PCA, t-SNE, or UMAP; color by metadata or KMeans cluster; filter the
+    plot by metadata; drill into clusters.</div></div>
+  <div class="tab-row"><div class="t">Manage</div><div>Create a collection (choose cosine
+    / l2 / ip distance) or delete one.</div></div>
+</section>
+
+<section id="metadata">
+  <h2><span class="num">04</span> Metadata &amp; filtering</h2>
+  <p class="lead">Metadata is what turns a pile of vectors into something you can slice,
+  audit, and scope. Studio surfaces it in three ways.</p>
+
+  <h3>See metadata per document</h3>
+  <p>In <strong>Browse</strong>, each metadata field appears as its own column
+  (<code>meta.domain</code>, <code>meta.method</code>, …). If you only see
+  <code>meta.chunk</code> and <code>meta.source</code>, that's because the documents were
+  ingested with only those two fields — the fix is to ingest richer metadata (see the
+  datasets below, which carry fields like <code>domain</code>, <code>method</code>,
+  <code>topic</code>, <code>type</code>).</p>
+
+  <h3>Metadata summary panel</h3>
+  <p>Open <em>Metadata summary</em> in Browse to see counts per value for every field —
+  e.g. <code>domain: payments (6), cards (5), auth (5)…</code>. This is your first read on
+  a collection's shape: imbalance, unexpected values, or a lone deprecated entry all show
+  up here.</p>
+
+  <h3>Structured filter (a real <span class="mono">where</span> clause)</h3>
+  <p>Pick a field, then choose which values to keep. Studio builds an actual Chroma filter,
+  not a text match:</p>
+  <pre>one value   → where = {"domain": "payments"}
+several     → where = {"domain": {"$in": ["payments", "cards"]}}</pre>
+  <p>It defaults to <em>all values selected</em>, so it only narrows once you deselect
+  something — it never hides data by surprise. Collections with no metadata simply don't
+  show the filter.</p>
+</section>
+
+<section id="visualize">
+  <h2><span class="num">05</span> Visualize</h2>
+  <p>Three controls sit in a row: <strong>Projection</strong>, <strong>Dimensions</strong>,
+  and <strong>Color points by</strong>.</p>
+
+  <table>
+    <tr><th>Control</th><th>Options</th><th>Use it to…</th></tr>
+    <tr><td>Projection</td><td>PCA · t-SNE · UMAP</td><td>PCA first (fast, deterministic).
+      t-SNE / UMAP when PCA looks like one blob and you want tighter clusters.</td></tr>
+    <tr><td>Dimensions</td><td>2D · 3D</td><td>2D to read and judge. 3D (rotatable) only to
+      spot-check clusters that look merged in 2D.</td></tr>
+    <tr><td>Color points by</td><td>(none) · KMeans cluster · any metadata field</td>
+      <td>Color by a metadata field to see if it matches how the data actually groups;
+      color by KMeans to discover groups the metadata doesn't name.</td></tr>
+  </table>
+
+  <div class="card">
+    <h3>2D or 3D — which is required?</h3>
+    <p style="margin:0">2D is enough to become expert. It can occasionally make truly
+    separate clusters look merged, so when you're unsure whether two groups are distinct,
+    the reliable check is the <em>silhouette score</em> (a number on the full-dimensional
+    vectors), not a third visual axis. Use 3D as an optional rotate-and-look, not as your
+    judgment tool.</p>
+  </div>
+
+  <h3>Filter the plot</h3>
+  <p>The Visualize tab has the same metadata filter as Browse — restrict the scatter to,
+  say, <code>method = GET</code> to see only the read endpoints, or one domain at a time.</p>
+</section>
+
+<section id="datasets">
+  <h2><span class="num">06</span> Datasets to practice on</h2>
+  <p class="lead">Five prepared datasets, organized in <code>Chroma_Studio_Datasets/</code>
+  as numbered folders in learning order. Each folder has the dataset, an
+  ingestion+examination notebook, and a README covering ingestion → examination →
+  enrichment. Work through them in order.</p>
+
+  <table>
+    <tr><th>#</th><th>Folder / dataset</th><th>What it teaches</th><th>Metadata to filter on</th></tr>
+    <tr><td>01</td><td><code>01_practice_topics</code><br><span class="mono">practice_dataset.xlsx</span></td>
+      <td>What a <em>healthy</em> embedding space looks like — 8 topics with planted
+      near-duplicates, bridges, outliers</td>
+      <td><code>topic</code>, <code>type</code></td></tr>
+    <tr><td>02</td><td><code>02_support_flaws</code><br><span class="mono">support_kb.csv</span></td>
+      <td>Diagnosing a <em>messy</em> corpus — the analyze→decide→act loop on 6 planted flaws</td>
+      <td><code>category</code>, <code>product</code></td></tr>
+    <tr><td>03</td><td><code>03_support_metadata</code><br><span class="mono">support_docs.csv</span></td>
+      <td>Verifying metadata ingestion &amp; every filter type works end to end</td>
+      <td><code>topic</code>, <code>type</code>, <code>product</code>, <code>priority</code></td></tr>
+    <tr><td>04</td><td><code>04_api_discovery</code> ★<br><span class="mono">api_catalog.csv</span></td>
+      <td>The real use case, part 1 — discover <em>which</em> API does X</td>
+      <td><code>domain</code>, <code>method</code>, <code>status</code></td></tr>
+    <tr><td>05</td><td><code>05_api_schema</code> ★<br><span class="mono">api_schema_chunks.csv</span></td>
+      <td>The real use case, part 2 — <em>how</em> to call an endpoint (params/body/response/errors)</td>
+      <td><code>aspect</code>, <code>endpoint</code>, <code>domain</code></td></tr>
+  </table>
+  <p class="lead">★ The two API datasets are the ones for your project — 04 discovers the
+  endpoint, 05 answers schema questions about it. Their own section is next.</p>
+</section>
+
+<section id="api">
+  <h2><span class="num">07</span> The API discovery use case</h2>
+  <p class="lead">A developer asks <em>"which API refunds a payment?"</em> in plain
+  language; the system returns the right endpoint. This is Phase 1: discovery by
+  <strong>purpose + endpoint</strong>, filtered by <strong>domain</strong> and
+  <strong>method</strong>.</p>
+
+  <div class="card accent">
+    <h3>The one design idea that makes it work</h3>
+    <p style="margin:0">Embed each endpoint's <strong>purpose in plain language</strong>
+    ("Refund a previously captured payment…"), <em>not</em> its URL. Developers search by
+    intent, not by path — so the purpose is what must live in the embedded text.
+    <code>domain</code> and <code>method</code> are exact-match facets, so they belong in
+    metadata where you can filter on them, not in the embedded text where they'd add noise.</p>
+  </div>
+
+  <h3>Load it</h3>
+  <ol class="steps">
+    <li>Run <code>api_discovery_ingestion_retrieval.ipynb</code> — it ingests the 30
+      endpoints and prints the database folder path.</li>
+    <li>In Studio's sidebar, set the Local Chroma folder to that path and select the
+      <code>api_catalog</code> collection.</li>
+  </ol>
+
+  <h3>Explore it in Studio</h3>
+  <table>
+    <tr><th>In Studio</th><th>Do this</th><th>You should see</th></tr>
+    <tr><td>Browse → summary</td><td>Open the metadata summary</td>
+      <td><code>domain</code> spread across 7 services; one <code>deprecated</code> status</td></tr>
+    <tr><td>Browse → filter</td><td>Keep only <code>domain = payments</code></td>
+      <td>6 endpoints</td></tr>
+    <tr><td>Search</td><td>Search "refund a payment"</td>
+      <td><code>pay_refund_01</code> — <code>POST /v1/payments/{id}/refund</code> — on top</td></tr>
+    <tr><td>Visualize</td><td>Color by <code>domain</code>; then filter <code>method = GET</code></td>
+      <td>Domains cluster; the GET filter isolates the read-only endpoints</td></tr>
+    <tr><td>Visualize</td><td>Look for stacked points</td>
+      <td><code>pay_create_01</code> and <code>pay_create_02</code> (v1/v2) sit together</td></tr>
+  </table>
+
+  <h3>The decisions this surfaces</h3>
+  <ul>
+    <li><strong>Deprecated hygiene:</strong> the legacy <code>/v1/login</code> should be
+      excluded from discovery — filter <code>status = active</code> at query time.</li>
+    <li><strong>Versioning:</strong> v1 and v2 of "create payment" are near-duplicates —
+      decide whether discovery returns both or only the latest.</li>
+    <li><strong>Collisions:</strong> "send a notification" vs "register a webhook" read
+      alike — if the wrong one ranks first, add a discriminating metadata field rather than
+      blaming the model.</li>
+  </ul>
+
+  <div class="card">
+    <p style="margin:0"><strong>Phase 2 (later):</strong> add request/response schemas per
+    endpoint so a developer can ask "what fields does the refund endpoint take?" That's a
+    different chunking design (one endpoint → several schema chunks) and will be its own
+    dataset built on this one.</p>
+  </div>
+</section>
+
+<section id="workflow">
+  <h2><span class="num">08</span> The analyze → decide → act loop</h2>
+  <p class="lead">The habit that makes Studio more than a viewer. Every view maps to a
+  decision, and every decision is one of a small set.</p>
+  <table>
+    <tr><th>What a view shows</th><th>The decision</th></tr>
+    <tr><td>A topic/domain with one lone point</td><td>Enrich content (thin coverage)</td></tr>
+    <tr><td>Points stacked on top of each other</td><td>Dedupe / merge, or filter by version</td></tr>
+    <tr><td>KMeans clusters disagree with a metadata field</td><td>Investigate the labels</td></tr>
+    <tr><td>A point whose label differs from its neighbors</td><td>Fix metadata (no re-embed)</td></tr>
+    <tr><td>A muddy search result</td><td>Re-chunk that document</td></tr>
+    <tr><td>Top-2 results almost tied</td><td>Add a metadata field to filter on</td></tr>
+    <tr><td>Blanks in a metadata column</td><td>Backfill, then review</td></tr>
+  </table>
+  <p>The <code>Chroma_Studio_Playbook.ipynb</code> walks this loop on a deliberately flawed
+  dataset — do it once and this table becomes second nature.</p>
+</section>
+
+<section id="trouble">
+  <h2><span class="num">09</span> Troubleshooting</h2>
+  <table>
+    <tr><th>Symptom</th><th>Cause &amp; fix</th></tr>
+    <tr><td>Lock / connection error on connect</td>
+      <td>Another process holds the folder. Close other notebooks / ChromaFlowStudio; only
+      one process may use a local Chroma folder.</td></tr>
+    <tr><td>Only <code>meta.chunk</code> / <code>meta.source</code> show up</td>
+      <td>The documents were ingested with just those fields. Re-ingest with richer metadata
+      (see the datasets above), or add fields in Edit/Update (metadata-only, no re-embed).</td></tr>
+    <tr><td><code>KeyError: '_type'</code> or schema errors</td>
+      <td>Version mismatch — the database was made by a different Chroma version. Keep your
+      Python on <code>chromadb 1.5.9</code>, and don't open a 1.5.9 database with 0.5.x.</td></tr>
+    <tr><td>UMAP option errors</td>
+      <td><code>pip install umap-learn</code>, or use PCA / t-SNE, which need nothing extra.</td></tr>
+    <tr><td>Add / Search fails on the embedder</td>
+      <td>Check the sidebar embedding source (base URL, API key). Browsing and deleting still
+      work without it.</td></tr>
+  </table>
+</section>
+
+</div>
+
+<footer>
+  Chroma Studio targets chromadb 1.5.9. Embeddings default to your in-house Jina endpoint;
+  no external HuggingFace download is required. This guide pairs with the ingestion
+  notebooks and the Studio Playbook for hands-on practice.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+id,text,topic,type,product,priority
+cook_01,Sauteing vegetables over high heat caramelizes their natural sugars quickly.,cooking,core,platform,low
+cook_02,A classic French baguette relies on long fermentation for its open crumb.,cooking,core,platform,low
+cook_03,Cooking vegetables fast on high heat browns the sugars inside them.,cooking,near_duplicate,platform,low
+fin_01,Refunds are processed within 5 business days to the original payment method.,finance,core,payments,high
+fin_02,"To request a refund, open a ticket with your order number and reason.",finance,core,payments,high
+fin_03,Refunds go back to the original payment method within five business days.,finance,near_duplicate,payments,high
+fin_04,Subscriptions renew monthly on the signup date; invoices are emailed same day.,finance,core,payments,medium
+ship_01,Standard shipping takes 3 to 5 business days; express is next business day.,shipping,core,logistics,medium
+ship_02,Orders placed before 2 PM ship the same day.,shipping,core,logistics,medium
+ship_03,International shipping can take 10 to 20 business days depending on customs.,shipping,edge_case,logistics,low
+api_01,API authentication uses OAuth2 bearer tokens that expire after 60 minutes.,api,core,platform,high
+api_02,The default API rate limit is 100 requests per minute per key.,api,core,platform,high
+api_03,"To rotate an API key, generate a new key, update your client, then revoke the old key.",api,core,platform,medium
+acct_01,"To reset your password, use the 'Forgot password' link; the email is valid for 30 minutes.",account,core,platform,medium
+acct_02,Passwords must be at least 12 characters and include a number and a symbol.,account,core,platform,low
+acct_03,Enterprise SSO via SAML is available on the Business plan and above only.,account,edge_case,platform,low

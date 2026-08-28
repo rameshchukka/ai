@@ -1,0 +1,11 @@
+id,text,topic,type
+coo_01,Sauteing vegetables over high heat caramelizes their natural sugars quickly.,cooking,core
+coo_02,A classic French baguette relies on long fermentation for its open crumb.,cooking,core
+fin_01,Compound interest grows a balance faster the more frequently it's applied.,finance,core
+fin_02,A bond's yield moves inversely to its market price.,finance,core
+pro_01,A binary search halves the search space on every comparison.,programming,core
+pro_02,Garbage collection automatically reclaims memory no longer referenced.,programming,core
+spo_01,A marathon runner's cadence often settles around 170-180 steps per minute.,sports,core
+med_01,Antibiotics target bacterial infections but are ineffective against viruses.,medicine,core
+dup_01,Cooking vegetables quickly on high heat browns the natural sugars inside them.,cooking,near_duplicate
+out_01,Quantum entanglement allows particle states to remain correlated across vast distances.,physics,outlier

@@ -1,0 +1,4 @@
+query_text,query_vector
+"What happens to vegetables when cooked on high heat?","[0.012,-0.034,0.056,0.001,-0.022,0.045,-0.011,0.030]"
+"How does compounding affect investment growth?","[0.018,-0.029,0.041,0.005,-0.019,0.038,-0.009,0.027]"
+"How does binary search reduce comparisons?","[0.015,-0.031,0.049,0.003,-0.025,0.042,-0.013,0.033]"
