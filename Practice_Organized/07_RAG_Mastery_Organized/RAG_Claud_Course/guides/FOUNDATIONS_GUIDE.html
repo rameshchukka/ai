@@ -1,0 +1,207 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG Foundations — Zero to Expert</title>
+<style>
+  :root{--bg:#0d1218;--panel:#141c26;--panel2:#101822;--ink:#e8eef4;--muted:#8fa0b2;--line:#233140;
+    --accent:#5ac8e0;--accent2:#e6a54b;--ok:#54c39a;--danger:#e5687a;--code:#0a0f16;--maxw:940px;
+    --mono:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.66 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  code,pre,.mono{font-family:var(--mono)}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  header{padding:56px 24px 42px;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 12% -10%,#152530,#0d1218)}
+  header .wrap{max-width:var(--maxw);margin:0 auto}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--accent);font-weight:600;margin-bottom:12px}
+  h1{margin:0 0 12px;font-size:40px;line-height:1.08;letter-spacing:-0.02em}header p{color:var(--muted);max-width:66ch;margin:0}
+  nav.toc{position:sticky;top:0;z-index:20;background:rgba(13,18,24,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 24px}
+  nav.toc .wrap{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:5px 14px;font-size:13px}
+  nav.toc a{color:var(--muted)}nav.toc a:hover{color:var(--ink);text-decoration:none}
+  main{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{padding:38px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:26px;margin:0 0 8px;display:flex;gap:12px;align-items:baseline;letter-spacing:-.01em}
+  h2 .n{font-size:13px;font-weight:700;color:var(--accent);font-family:var(--mono)}
+  h3{font-size:18px;margin:24px 0 8px}h4{font-size:14px;margin:16px 0 4px;color:var(--accent2);text-transform:uppercase;letter-spacing:.04em}
+  p,li{color:#d3dde7}.lead{color:var(--muted);font-size:17px}
+  .concept{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:15px 18px;margin:16px 0}.concept h4{margin:0 0 6px;color:var(--accent)}
+  .ascii{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.5;color:#bfe0d6;white-space:pre;margin:14px 0}
+  pre.code{background:var(--code);border:1px solid var(--line);border-left:3px solid var(--accent2);border-radius:8px;padding:13px 16px;overflow-x:auto;font-size:13px;line-height:1.55;color:#cfe0f0;margin:12px 0}
+  p code,li code,td code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:#bcd7ef}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase}tr:last-child td{border-bottom:none}
+  .try{background:#0f1f18;border:1px solid #1f4a3b;border-left:3px solid var(--ok);border-radius:8px;padding:12px 16px;margin:14px 0}.try b{color:var(--ok)}
+  .lab{display:inline-block;background:#12303a;border:1px solid #1f5560;border-radius:20px;padding:3px 12px;font-size:12.5px;color:var(--accent);margin:4px 4px 0 0;font-family:var(--mono)}
+  footer{max-width:var(--maxw);margin:0 auto;padding:34px 24px 70px;color:var(--muted);font-size:13.5px}
+  @media(max-width:640px){h1{font-size:30px}.ascii{font-size:11px}}
+</style></head><body>
+<header><div class="wrap"><div class="eyebrow">RAG Foundations · Theory · Diagrams · Code · Practice</div>
+<h1>RAG Foundations — Zero to Expert</h1>
+<p class="lead">Everything under the hood of Retrieval-Augmented Generation and your deep-learning
+course — each idea explained plainly, drawn as a diagram, shown in code, and practiced in a runnable
+notebook. Read top to bottom; run the labs as you go.</p></div></header>
+<nav class="toc"><div class="wrap"><a href="#use">How to use</a><a href="#rag">1 What is RAG</a><a href="#prompt">2 Prompts</a><a href="#embed">3 Embeddings</a><a href="#retrieve">4 Retrieval</a><a href="#metrics">5 Metrics</a><a href="#chunk">6 Chunking</a><a href="#vdb">7 Vector DBs</a><a href="#params">8 LLM params</a><a href="#pe">9 Prompt eng.</a><a href="#route">10 Routing</a><a href="#obs">11 Tracing</a><a href="#together">12 All together</a></div></nav>
+<main><section id="use"><h2><span class="n">00</span> How to use this guide</h2><p class='lead'>This takes you from zero to expert on the ideas behind RAG and your deep-learning course — each concept explained in plain words, drawn as an ASCII diagram, and shown as a short code snippet, then linked to a runnable practice notebook.</p><div class="concept"><h4>The loop for each concept</h4><p>1) read the idea, 2) look at the diagram, 3) read the code snippet, 4) open the matching notebook in <code>notebooks/</code> and run it. The notebooks run <strong>offline</strong> (no API key) using a simple vectorizer, so you can focus on the mechanics.</p></div><p>Notebooks referenced:</p><span class='lab'>01 llm_and_augmented_prompts</span><span class='lab'>02 embeddings_and_cosine</span><span class='lab'>03 retrieval_bm25_vs_semantic</span><span class='lab'>04 retrieval_metrics</span><span class='lab'>05 chunking</span><span class='lab'>06 routing_multi_source</span></section><section id="rag"><h2><span class="n">01</span> What is RAG, and why</h2><p class='lead'>An LLM only knows what it saw in training — it can't know your documents, and it will confidently make things up. <strong>Retrieval-Augmented Generation</strong> fixes this: fetch relevant text first, then let the model answer using it.</p><h4>The pipeline</h4><div class="ascii">        question
+           |
+           v
+   +----------------+     top-k relevant chunks    +----------------+
+   |   RETRIEVER    | ---------------------------&gt; |    GENERATOR   |
+   | (search index) |                              |     (LLM)      |
+   +----------------+                              +----------------+
+           ^                                                |
+           |                                                v
+     your documents                                  grounded answer
+   (chunked + embedded)
+</div><div class="concept"><h4>Why not just ask the LLM?</h4><p>Three reasons: (1) it doesn't know your private/newer data; (2) it hallucinates when unsure; (3) retrieval lets you <em>cite</em> sources. RAG turns 'the model guesses' into 'the model answers from documents you retrieved'.</p></div><h4>The three stages you'll master</h4><table><tr><th>Stage</th><th>Question it answers</th><th>Concepts</th></tr><tr><td>Indexing (offline)</td><td>how are docs prepared?</td><td>chunking, embeddings, vector store</td></tr><tr><td>Retrieval</td><td>which chunks are relevant?</td><td>BM25, semantic search, metrics</td></tr><tr><td>Generation</td><td>how is the answer written?</td><td>augmented prompts, LLM params</td></tr></table><div class="try"><b>Practice →</b> Open <span class='lab'>01</span> to see the simplest possible RAG prompt built by hand.</div></section><section id="prompt"><h2><span class="n">02</span> LLM calls & augmented prompts</h2><p class='lead'>The 'G' in RAG. Once you've retrieved context, you build a prompt that tells the model to answer <em>from that context</em>.</p><h4>Anatomy of an augmented prompt</h4><div class="ascii">  +-------------------------------------------------------+
+  | INSTRUCTIONS  &#x27;Answer using ONLY the context. If not  |
+  |               in the context, say you dont know.&#x27;     |
+  +-------------------------------------------------------+
+  | CONTEXT       - retrieved chunk 1                     |
+  |               - retrieved chunk 2                     |
+  +-------------------------------------------------------+
+  | QUESTION      &#x27;How long do refunds take?&#x27;             |
+  +-------------------------------------------------------+
+</div><pre class="code">def build_prompt(question, context_docs):
+    context = &quot;\n&quot;.join(f&quot;- {d}&quot; for d in context_docs)
+    return f&quot;&quot;&quot;Answer using ONLY the context below.
+If the answer is not in the context, say you don&#x27;t know.
+
+CONTEXT:
+{context}
+
+QUESTION: {question}&quot;&quot;&quot;</pre><div class="concept"><h4>The 'only the context' instruction is the anti-hallucination switch</h4><p>Without it, the model blends the context with its own (possibly wrong) memory. With it, an answer that isn't supported forces an honest 'I don't know' — which is what you want in a bank or any high-stakes setting.</p></div><div class="try"><b>Practice →</b> <span class='lab'>01</span> builds this prompt and feeds it to a mock model. Swap in a real model later — the prompt code doesn't change.</div></section><section id="embed"><h2><span class="n">03</span> Embeddings & cosine similarity</h2><p class='lead'>To search by <em>meaning</em>, you turn text into a vector (a list of numbers) so that similar meanings sit close together. Closeness is measured by <strong>cosine similarity</strong>.</p><h4>Text becomes a point in space</h4><div class="ascii">   &#x27;refund my order&#x27;   -&gt;  [0.12, 0.88, 0.03, ...]   (a vector)
+   &#x27;get my money back&#x27; -&gt;  [0.10, 0.85, 0.05, ...]   (nearly the same direction)
+   &#x27;track my package&#x27;  -&gt;  [0.77, 0.04, 0.30, ...]   (different direction)
+
+        ^ dimension 2
+        |     * refund
+        |    * money back          &lt;- close together = similar meaning
+        |
+        |                * track
+        +------------------------&gt; dimension 1
+</div><h4>Cosine = the angle between two vectors</h4><div class="ascii">   cos(0deg)  = 1.0   identical direction   (most similar)
+   cos(90deg) = 0.0   unrelated
+   cos(180deg)= -1.0  opposite
+
+                cosine =   A . B  /  (|A| * |B|)
+                         (dot product over magnitudes)
+</div><pre class="code">import numpy as np
+def cosine(a, b):
+    na, nb = np.linalg.norm(a), np.linalg.norm(b)
+    return float(a @ b / (na * nb)) if na and nb else 0.0</pre><div class="concept"><h4>Why cosine and not distance?</h4><p>Cosine ignores magnitude (document length) and looks only at direction (which concepts). A short and a long document about refunds still point the same way — so cosine calls them similar, which is what you want.</p></div><div class="concept"><h4>Bag-of-words vs neural embeddings (important honesty)</h4><p>The practice notebooks use a simple bag-of-words vectorizer so everything runs offline. Its limit: 'refund' and 'money back' share no words, so it scores them low. Real neural embeddings (Jina, OpenAI, sentence-transformers) learn that they <em>mean</em> the same thing and place them close. The cosine math is identical — only the vectors get smarter.</p></div><div class="try"><b>Practice →</b> <span class='lab'>02</span> vectorizes sentences, computes cosine, and proves scaling a vector doesn't change its cosine (direction, not length).</div></section><section id="retrieve"><h2><span class="n">04</span> Retrieval — keyword (BM25) vs semantic</h2><p class='lead'>Two engines find relevant documents. <strong>BM25</strong> matches exact words; <strong>semantic search</strong> matches meaning via embeddings. Experts use both.</p><div class="ascii">   QUERY: &#x27;I want my money back&#x27;
+
+   BM25 (keyword)                    SEMANTIC (embeddings)
+   -------------                     ---------------------
+   looks for the words               embeds the query, finds
+   &#x27;money&#x27;,&#x27;back&#x27; in docs            docs with nearby vectors
+      |                                  |
+      x  misses &#x27;refund&#x27; docs           v  finds &#x27;refund&#x27; docs
+         (no shared words)                 (learned they mean
+                                            the same thing)
+</div><h4>When each wins</h4><table><tr><th></th><th>BM25 (sparse)</th><th>Semantic (dense)</th></tr><tr><td>Best at</td><td>exact terms, codes, names, IDs</td><td>paraphrases, synonyms, questions</td></tr><tr><td>Needs a model?</td><td>no</td><td>yes (an embedder)</td></tr><tr><td>Fails on</td><td>reworded queries</td><td>rare exact strings it never learned</td></tr></table><pre class="code"># semantic: rank documents by cosine to the query vector
+def semantic_search(query, k=3):
+    qv = vectorize(query, vocab)
+    scored = [(doc_id[i], cosine(qv, doc_vecs[i])) for i in range(len(docs))]
+    return sorted(scored, key=lambda x: -x[1])[:k]</pre><div class="concept"><h4>Hybrid search = BM25 + semantic, fused</h4><p>Since each catches what the other misses, production systems run both and combine the scores (often with a weight <code>alpha</code>, or reciprocal-rank fusion). That's the best-of-both approach you'll see in advanced modules.</p></div><div class="try"><b>Practice →</b> <span class='lab'>03</span> runs both engines on the corpus. Try a paraphrased query and watch BM25 struggle where semantic holds up.</div></section><section id="metrics"><h2><span class="n">05</span> Retrieval metrics — is retrieval any good?</h2><p class='lead'>You can't improve what you don't measure. These metrics score retrieval against <strong>labeled queries</strong> (queries where you know the right documents).</p><div class="ascii">  QUERY &#x27;how do I get a refund&#x27;   relevant = {d01, d02, d03}
+
+  ranked results:   rank 1  d03  RELEVANT
+                    rank 2  d01  RELEVANT
+                    rank 3  d21  no
+                    rank 4  d02  RELEVANT
+                    rank 5  d05  no
+</div><h4>The formulas</h4><div class="ascii">  Precision@K = (relevant in top K) / K          -&gt; falls as K grows
+  Recall@K    = (relevant in top K) / (total relevant) -&gt; rises as K grows
+  Reciprocal Rank (RR) = 1 / (rank of first relevant)
+  MRR = average RR over all queries
+
+  From the example above (relevant = 3):
+    P@3 = 2/3 = 0.67     R@3 = 2/3 = 0.67
+    P@5 = 3/5 = 0.60     R@5 = 3/3 = 1.00
+    RR  = 1/1 = 1.00  (first hit at rank 1)
+</div><pre class="code">def precision_at_k(ranked, relevant, k):
+    return sum(1 for d in ranked[:k] if d in relevant) / k
+
+def recall_at_k(ranked, relevant, k):
+    return sum(1 for d in ranked[:k] if d in relevant) / len(relevant)
+
+def reciprocal_rank(ranked, relevant):
+    for i, d in enumerate(ranked, 1):
+        if d in relevant: return 1.0 / i
+    return 0.0</pre><div class="concept"><h4>Which metric when</h4><p><strong>P@1 / MRR</strong> when there's one right answer (did the best doc rank first?). <strong>Recall@K</strong> when several docs are relevant (did we find them all?). <strong>P@K falls, R@K rises</strong> as K grows — that tension is the whole game.</p></div><div class="try"><b>Practice →</b> <span class='lab'>04</span> computes all three from scratch over 10 labeled queries and prints MRR + mean P@K/R@K. Verify one row by hand against the formulas above.</div></section><section id="chunk"><h2><span class="n">06</span> Chunking — how you split matters most</h2><p class='lead'>You retrieve <em>pieces</em>, not whole documents. How you cut them decides retrieval quality more than almost any other choice.</p><h4>Fixed-size, and why overlap helps</h4><div class="ascii">  no overlap:  [====chunk A====][====chunk B====]
+                             ^ an idea split HERE is lost from both
+
+  overlap:     [====chunk A====]
+                        [====chunk B====]   &lt;- B repeats A&#x27;s tail, so the
+                                               boundary idea survives
+</div><h4>Recursive (variable) splitting — respect natural boundaries</h4><div class="ascii">  try to split on the BIGGEST boundary that fits:
+     paragraph  -&gt;  sentence  -&gt;  word  -&gt;  hard cut
+  so chunks end at sentence boundaries, not mid-word.
+</div><pre class="code">def chunk_fixed(text, size, overlap=0):
+    words = text.split(); step = max(1, size - overlap); out = []
+    i = 0
+    while i &lt; len(words):
+        out.append(&quot; &quot;.join(words[i:i+size])); i += step
+    return out</pre><h4>The trade-offs</h4><table><tr><th>Choice</th><th>Effect</th></tr><tr><td>smaller chunks</td><td>precise matches, but may lose surrounding context</td></tr><tr><td>larger chunks</td><td>more context, but noisier retrieval (dilutes the match)</td></tr><tr><td>more overlap</td><td>saves boundary ideas, at the cost of some duplication</td></tr><tr><td>recursive</td><td>coherent chunks (whole sentences), slightly more complex</td></tr></table><div class="try"><b>Practice →</b> <span class='lab'>05</span> shows fixed, overlap, and recursive chunking on the same paragraph. Then re-run <span class='lab'>04</span> with different chunking and compare metrics.</div></section><section id="vdb"><h2><span class="n">07</span> Vector databases</h2><p class='lead'>A vector database stores your embedded chunks and finds the nearest ones to a query <em>fast</em>, even over millions of documents. Chroma, Weaviate, pgvector, FAISS, Pinecone are all vector stores.</p><div class="ascii">  INDEXING (once)                     QUERY TIME (every question)
+  ---------------                     --------------------------
+  chunk -&gt; embed -&gt; store  ------&gt;    embed query -&gt; nearest-vector search
+                    (+ metadata)          |            (approximate, fast)
+                                          v
+                                   top-k chunks (+ optional metadata filter)
+</div><div class="concept"><h4>Metadata filtering — the underrated superpower</h4><p>Besides the vector, you store fields (topic, date, source, method). Then you can filter <em>before</em> or <em>with</em> the semantic search: 'find refund-like chunks WHERE topic=payments'. Exact filters + fuzzy meaning together = precise retrieval. Your course uses Weaviate for this; your other work used Chroma and pgvector — same idea, different engines.</p></div><table><tr><th>Store</th><th>Notes</th></tr><tr><td>Chroma</td><td>local, simple, great for learning/visualizing</td></tr><tr><td>Weaviate</td><td>the course's DB; built-in vectorizer + filters</td></tr><tr><td>pgvector</td><td>vectors inside Postgres — one DB for vectors + relational data</td></tr><tr><td>FAISS</td><td>in-memory, very fast, no persistence by default</td></tr></table><div class="try"><b>Practice →</b> The retrieval you did by hand in <span class='lab'>03</span> is what a vector DB does for you at scale — the concept is identical, the DB just makes it fast and persistent.</div></section><section id="params"><h2><span class="n">08</span> LLM generation parameters</h2><p class='lead'>Once context is in the prompt, these knobs control <em>how</em> the model generates — how random, how focused, how long.</p><h4>Temperature — randomness</h4><div class="ascii">  temperature = 0     always pick the most likely next word  (focused, repeatable)
+  temperature = 1     sample naturally                        (balanced)
+  temperature = 1.5+  flatten probabilities                   (creative, risky)
+</div><h4>top_p (nucleus) and top_k — which words are even allowed</h4><div class="ascii">  next-word probabilities:  the .35  a .20  an .10  cat .08  ... (long tail)
+
+  top_k = 3   -&gt; only consider {the, a, an}         (k most likely)
+  top_p = 0.9 -&gt; consider the smallest set whose
+                 probabilities sum to 0.90          (the &#x27;nucleus&#x27;)
+</div><div class="concept"><h4>How they combine</h4><p><code>top_k</code>/<code>top_p</code> first restrict the candidate words; <code>temperature</code> then controls how randomly you pick among them. For factual RAG answers use <strong>low temperature</strong> (0–0.3) so the model sticks to the retrieved facts; for brainstorming, raise it.</p></div><pre class="code"># typical settings for a factual RAG answer
+params = {&quot;temperature&quot;: 0.0, &quot;top_p&quot;: 1.0, &quot;max_tokens&quot;: 300}
+# the model will answer as deterministically as possible from the context</pre><div class="try"><b>Practice →</b> Your course's <em>Exploring LLM Capabilities</em> lab varies these live. Rule of thumb: RAG answers → low temperature; creative text → higher.</div></section><section id="pe"><h2><span class="n">09</span> Prompt engineering & structured output</h2><p class='lead'>Small changes to the prompt change the output a lot. Two high-value skills: guiding the model with examples, and forcing <em>structured</em> (parseable) output.</p><h4>Zero-shot vs few-shot</h4><div class="ascii">  zero-shot:  &#x27;Classify sentiment: &quot;the shoes are great&quot;&#x27;
+              -&gt; model guesses the format
+
+  few-shot:   &#x27;Review: &quot;awful fit&quot;    -&gt; negative
+               Review: &quot;love these&quot;   -&gt; positive
+               Review: &quot;the shoes are great&quot; -&gt;&#x27;
+              -&gt; model copies the shown format exactly
+</div><h4>Structured output — get JSON, not prose</h4><div class="ascii">  WITHOUT structure:  &#x27;The item is a gift, arrives in 5 days.&#x27;   (must parse text)
+  WITH structure:     {&quot;gift&quot;: true, &quot;delivery_days&quot;: 5}         (already usable)
+</div><pre class="code"># modern models take a schema and RETURN a typed object
+from pydantic import BaseModel
+class Extract(BaseModel):
+    gift: bool
+    delivery_days: int
+result = model.with_structured_output(Extract).invoke(prompt)
+result.delivery_days   # a real int, no manual parsing</pre><div class="concept"><h4>Why structured output matters in RAG</h4><p>When the next step is code (route this query, filter by this field, store this record), you need data, not a paragraph. Structured output turns the LLM into a reliable component in a pipeline instead of a text blob you have to scrape.</p></div><div class="try"><b>Practice →</b> Your course's <em>Prompt Engineering</em> lab shows the old-fashioned parse-the-text way vs the model's structured-output parameter — do both to feel the difference.</div></section><section id="route"><h2><span class="n">10</span> Routing — multiple knowledge sources</h2><p class='lead'>Real assistants have several sources (FAQ, products, policies). <strong>Routing</strong> decides which to search so each query hits the right index.</p><div class="ascii">                    +--&gt; [ FAQ retriever ]     --+
+   query --&gt; ROUTER +--&gt; [ Product retriever ]  --+--&gt; generator --&gt; answer
+                    +--&gt; [ Policy retriever ]   --+
+
+   router = a classifier: &#x27;is this FAQ, product, or policy?&#x27;
+            (an LLM, or similarity to each source&#x27;s description)
+</div><pre class="code">def route(query):
+    qv = vectorize(query, vocab)
+    faq_sim  = max(cosine(qv, v) for v in faq_vecs)
+    prod_sim = max(cosine(qv, v) for v in product_vecs)
+    return &quot;FAQ&quot; if faq_sim &gt;= prod_sim else &quot;PRODUCT&quot;</pre><div class="concept"><h4>Routing = less noise, better answers</h4><p>Searching every source for every query drags in irrelevant chunks. Routing scopes the search — the same idea as metadata filtering, but choosing an entire <em>source</em> rather than a field.</p></div><div class="try"><b>Practice →</b> <span class='lab'>06</span> routes queries between an FAQ and a Product source. Watch a tie (a query similar to both) and decide how you'd break it — that's a real design question.</div></section><section id="obs"><h2><span class="n">11</span> Observability — tracing a RAG system</h2><p class='lead'>In production you must see <em>what happened</em>: which chunks were retrieved, what prompt was sent, how long it took, what it cost. That's <strong>tracing</strong>.</p><h4>Spans and traces</h4><div class="ascii">  a TRACE = one full request, made of nested SPANS (timed steps):
+
+  TRACE: answer(&#x27;how do I get a refund&#x27;)            [ 1.4s ]
+    |-- SPAN retrieve                                [ 0.2s ]  -&gt; 3 chunks
+    |-- SPAN build_prompt                            [ 0.0s ]
+    +-- SPAN llm_generate                            [ 1.2s ]  -&gt; 180 tokens
+</div><div class="concept"><h4>Why it matters</h4><p>When an answer is wrong, tracing tells you WHERE: did retrieval fetch the wrong chunks, or did the model ignore good context? Without traces you're guessing. Tools like <strong>Phoenix</strong> (your course's tool), LangSmith, or OpenTelemetry capture this.</p></div><pre class="code"># conceptually: wrap each stage in a span
+with tracer.start_span(&quot;retrieve&quot;) as s:
+    chunks = retrieve(query); s.set_attribute(&quot;num_chunks&quot;, len(chunks))
+with tracer.start_span(&quot;llm_generate&quot;) as s:
+    answer = llm(prompt); s.set_attribute(&quot;tokens&quot;, count_tokens(answer))</pre><div class="concept"><h4>Cost & latency tracking</h4><p>Spans record token counts and timings, so you can compute cost-per-query and find the slow step. This is how you decide what to optimize — measure, don't guess.</p></div><div class="try"><b>Practice →</b> Your course's <em>Tracing a RAG system</em> lab launches Phoenix and instruments the pipeline. This is the one topic none of your earlier material covered — worth prioritizing.</div></section><section id="together"><h2><span class="n">12</span> Putting it all together — the expert view</h2><p class='lead'>Every concept above is one box in a single, evaluable, observable pipeline.</p><div class="ascii">  INDEX (offline)                RETRIEVE            GENERATE
+  --------------                 --------            --------
+  docs                           query               augmented
+   |-- chunk (05)                 |-- embed (03)       prompt (02)
+   |-- embed (03)                 |-- BM25 + semantic   |-- LLM params (08)
+   +-- store in vector DB (07)    |     (04, hybrid)    +-- structured out (09)
+      (+ metadata)                |-- route (10)             |
+                                  +-- filter (07)            v
+                                                          answer
+        \_______________________  MEASURE (metrics 04)  ______/
+        \_______________________  OBSERVE (tracing 11)  ______/
+</div><div class="concept"><h4>The expert habit: measure → change → re-measure</h4><p>Never ship a change you can't show helped. Fix an eval set of labeled queries, compute P@K/R@K (and answer quality), change one thing (chunking, k, hybrid weight, prompt), re-measure. Tracing tells you which stage to change; metrics tell you if it worked.</p></div><h4>Your learning path through the notebooks</h4><table><tr><th>Order</th><th>Notebook</th><th>Masters</th></tr><tr><td>1</td><td>01 llm_and_augmented_prompts</td><td>the generation half</td></tr><tr><td>2</td><td>02 embeddings_and_cosine</td><td>the vector foundation</td></tr><tr><td>3</td><td>03 retrieval_bm25_vs_semantic</td><td>finding documents</td></tr><tr><td>4</td><td>04 retrieval_metrics</td><td>measuring retrieval</td></tr><tr><td>5</td><td>05 chunking</td><td>preparing documents</td></tr><tr><td>6</td><td>06 routing_multi_source</td><td>multi-source systems</td></tr></table><p>Do them in order, then you'll recognize every concept in your course's Modules 1–5 — and be able to complete the assignments because you understand the machinery underneath.</p></section></main>
+<footer>RAG Foundations. Concepts map 1:1 onto your course Modules 1–5. The practice notebooks run
+offline with a simple vectorizer so the mechanics are clear; swap in a real embedder/LLM to see
+production quality. The math never changes — only the vectors get smarter.</footer>
+</body></html>

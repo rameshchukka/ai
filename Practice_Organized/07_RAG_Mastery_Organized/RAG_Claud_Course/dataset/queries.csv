@@ -1,0 +1,11 @@
+qid,query,relevant_ids
+q1,how do I get a refund,d01 d02 d03
+q2,what credit cards can I use to pay,d04 d05
+q3,how long does delivery take,d07 d08 d09
+q4,I forgot my password,d11
+q5,how do I track my order,d10
+q6,waterproof jacket for hiking,d15
+q7,tell me about the warranty,d21 d23
+q8,how can I contact support,d22 d24
+q9,organic cotton clothing,d20 d17
+q10,cancel my subscription billing,d06

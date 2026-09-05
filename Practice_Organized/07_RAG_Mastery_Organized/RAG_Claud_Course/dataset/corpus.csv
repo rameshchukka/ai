@@ -1,0 +1,25 @@
+id,text,topic
+d01,You can request a refund within 30 days of purchase for a full return.,refunds
+d02,Refunds are processed back to your original payment method in 5 business days.,refunds
+d03,"To get your money back, open a refund request from the orders page.",refunds
+d04,"We accept Visa, Mastercard, and American Express credit cards.",payment
+d05,You can pay using PayPal or a bank transfer at checkout.,payment
+d06,Subscriptions renew automatically each month on your billing date.,payment
+d07,Standard shipping takes three to five business days to arrive.,shipping
+d08,Express delivery arrives the next business day for an extra fee.,shipping
+d09,"We ship internationally, but customs can add one to two weeks.",shipping
+d10,Track your package using the tracking number in your confirmation email.,shipping
+d11,Reset your password using the forgot-password link on the sign-in page.,account
+d12,You can change your email address in the account settings page.,account
+d13,"To delete your account, contact support and confirm by email.",account
+d14,Enable two-factor authentication for extra account security.,account
+d15,"This jacket is waterproof and windproof, ideal for winter hiking.",product
+d16,Our running shoes are lightweight with breathable mesh uppers.,product
+d17,The wool sweater is machine washable on a gentle cold cycle.,product
+d18,These sunglasses block one hundred percent of UVA and UVB rays.,product
+d19,The backpack has a padded laptop sleeve and water-bottle pockets.,product
+d20,This t-shirt is made from organic cotton and comes in five colors.,product
+d21,All products include a one-year limited warranty against defects.,warranty
+d22,Contact customer support by chat or email seven days a week.,support
+d23,Damaged items can be exchanged free of charge within 14 days.,warranty
+d24,Our help center has step-by-step guides and video tutorials.,support
