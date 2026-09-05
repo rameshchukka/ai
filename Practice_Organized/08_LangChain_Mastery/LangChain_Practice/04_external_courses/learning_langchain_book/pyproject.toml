@@ -1,0 +1,38 @@
+[project]
+name = "learning-langchain"
+version = "0.0.1"
+description = "Code blocks for the book Learning LangChain."
+authors = []
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "langgraph>=0.2.6",
+    "langchain-openai>=0.1.22",
+    "langchain>=0.2.14",
+    "python-dotenv>=1.0.1",
+    "langchain-community>=0.3.15",
+    "langchain-postgres>=0.0.12",
+    "langchain-chroma>=0.2.0",
+    "beautifulsoup4>=4.12.2",
+    "pypdf>=5.1.0",
+    "psycopg[binary]>=3.2.4",  # Updated to include [binary] extra
+    "setuptools>=75.8.0",
+    "langsmith>=0.3.2",
+    "langgraph-checkpoint-sqlite>=2.0.3",
+    "duckduckgo-search>=7.3.0",
+    "langgraph-cli>=0.1.73"
+]
+
+[build-system]
+requires = ["setuptools>=73.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = []
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[project.scripts]
+langgraph-dev = "langgraph.cli:dev_command --config ch9/py/langgraph.json --verbose"

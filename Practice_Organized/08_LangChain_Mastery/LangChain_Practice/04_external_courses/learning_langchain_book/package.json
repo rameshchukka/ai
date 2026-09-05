@@ -1,0 +1,28 @@
+{
+	"name": "learning-langchain-repo",
+	"description": "Learning LangChain O'Reilly book code examples",
+	"type": "module",
+	"author": "Nuno Campos and Mayo Oshin",
+	"scripts": {
+		"langgraph:dev": "npx @langchain/langgraph-cli dev -c ch9/js/langgraph.json --verbose"
+	},
+	"dependencies": {
+		"@langchain/community": "^0.3.26",
+		"@langchain/core": "^0.3.33",
+		"@langchain/langgraph": "^0.2.41",
+		"@langchain/langgraph-cli": "^0.0.1",
+		"@langchain/langgraph-sdk": "^0.0.36",
+		"@langchain/openai": "^0.3.17",
+		"@supabase/supabase-js": "^2.44.0",
+		"duck-duck-scrape": "^2.2.7",
+		"expr-eval": "^2.0.2",
+		"langchain": "^0.3.15",
+		"pdf-parse": "^1.1.1",
+		"pg": "^8.13.1",
+		"sqlite3": "^5.1.7",
+		"typeorm": "^0.3.20"
+	},
+	"devDependencies": {
+		"@types/pdf-parse": "^1.1.4"
+	}
+}

@@ -1,0 +1,18 @@
+{
+    "type": "module",
+    "dependencies": {
+        "@langchain/community": "^0.3.26",
+        "@langchain/core": "^0.3.33",
+        "@langchain/langgraph": "^0.2.41",
+        "@langchain/openai": "^0.3.17",
+        "@supabase/supabase-js": "^2.44.0",
+        "langchain": "^0.3.12",
+        "pdf-parse": "^1.1.1",
+        "chromadb": "^1.10.4"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "typescript": "^5.0.0",
+        "@types/pdf-parse": "^1.1.4"
+    }
+}

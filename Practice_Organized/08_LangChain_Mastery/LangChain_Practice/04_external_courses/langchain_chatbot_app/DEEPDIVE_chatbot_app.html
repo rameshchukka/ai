@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>LangChain Chatbot App — Deep Dive</title>
+<style>
+  :root{--bg:#0d1218;--panel:#141c26;--panel2:#101822;--ink:#e8eef4;--muted:#8fa0b2;--line:#233140;--accent:#54c39a;--accent2:#e6a54b;--ok:#54c39a;--danger:#e5687a;--code:#0a0f16;--maxw:920px;--mono:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.66 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  code,pre,.mono{font-family:var(--mono)}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  header{padding:52px 24px 38px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 15% -10%,#16232f,#0d1218)}
+  header .wrap{max-width:var(--maxw);margin:0 auto}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--accent);font-weight:600;margin-bottom:12px}
+  h1{margin:0 0 12px;font-size:33px;line-height:1.12;letter-spacing:-0.02em}header p{color:var(--muted);max-width:66ch;margin:0}
+  .meta{margin-top:16px;font-size:13px;color:var(--muted)}.meta code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:#bcd7ef}
+  nav.toc{position:sticky;top:0;z-index:20;background:rgba(13,18,24,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 24px}
+  nav.toc .wrap{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:5px 15px;font-size:13px}
+  nav.toc a{color:var(--muted)}nav.toc a:hover{color:var(--ink);text-decoration:none}
+  main{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{padding:32px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:23px;margin:0 0 6px;display:flex;gap:12px;align-items:baseline}h2 .n{font-size:13px;font-weight:700;color:var(--muted);font-family:var(--mono)}
+  h3{font-size:16.5px;margin:22px 0 8px;color:var(--ink)}h4{font-size:14px;margin:16px 0 4px;color:var(--accent2)}
+  p,li{color:#d3dde7}.lead{color:var(--muted);font-size:16.5px}
+  .concept{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:15px 18px;margin:16px 0}.concept h4{margin:0 0 6px;color:var(--accent)}
+  .danger{background:#241318;border:1px solid #48232c;border-left:3px solid var(--danger);border-radius:8px;padding:15px 18px;margin:16px 0}.danger h4{margin:0 0 6px;color:var(--danger)}
+  .ans{background:#0f1f18;border:1px solid #1f4a3b;border-left:3px solid var(--ok);border-radius:8px;padding:14px 18px;margin:12px 0}.ans h4{margin:0 0 6px;color:var(--ok)}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:13px 16px;overflow-x:auto;font-size:12.7px;line-height:1.55;color:#cfe0f0}
+  p code,li code,td code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:12.7px;color:#bcd7ef}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:14px 0}
+  ol.steps>li{counter-increment:s;position:relative;padding:11px 0 11px 44px;border-bottom:1px solid var(--line)}ol.steps>li:last-child{border-bottom:none}
+  ol.steps>li::before{content:counter(s);position:absolute;left:0;top:10px;width:28px;height:28px;background:var(--accent);color:#04121f;border-radius:7px;display:grid;place-items:center;font-weight:700;font-size:14px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase}tr:last-child td{border-bottom:none}
+  .file{font-family:var(--mono);color:var(--accent2);font-size:13px}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:18px 0}
+  .ex .tag{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:6px}
+  .obs{background:#0f1a22;border:1px dashed #2a3f4f;border-radius:8px;padding:12px 16px;margin:12px 0}.obs b{color:var(--ok)}
+  .pill{display:inline-block;background:#182432;border:1px solid var(--line);border-radius:20px;padding:2px 10px;font-size:12px;color:var(--muted);margin:2px 3px 2px 0}
+  footer{max-width:var(--maxw);margin:0 auto;padding:28px 24px 60px;color:var(--muted);font-size:13.5px}
+  @media(max-width:640px){h1{font-size:26px}}
+</style></head><body>
+<header><div class="wrap"><div class="eyebrow">Deployable RAG Service</div><h1>LangChain Chatbot App — Deep Dive</h1><p class="lead">A real FastAPI + Streamlit RAG application, traced end to end through the actual code — ingestion, retrieval, multi-model chat, and source citations. The 'how RAG ships as a service' capstone.</p><div class="meta">app.py · endpoints/ · handlers/base.py · ui/main.py · Pinecone + OpenAI + Anthropic</div></div></header>
+<nav class="toc"><div class="wrap"><a href="#what">What it is</a><a href="#arch">Architecture</a><a href="#run">Startup</a><a href="#ingest">Ingest flow</a><a href="#chat">Chat flow</a><a href="#ui">UI layer</a><a href="#setup">Running it</a><a href="#learn">Takeaways</a></div></nav><main><section id="what"><h2><span class="n">01</span> What this is — a real deployable app</h2><p class='lead'>Unlike the notebook tutorials, this is a <strong>production-shaped RAG service</strong>: a FastAPI backend + a Streamlit UI, with document ingestion, multi-model chat, and source citations. The best way to learn it is to trace one request through the layers — which this guide does with the real code.</p><div class="concept"><h4>The stack</h4><p><strong>FastAPI</strong> (the API, port 9091) · <strong>Streamlit</strong> (the web UI) · <strong>Pinecone</strong> (the vector store) · <strong>OpenAI + Anthropic</strong> (chat + embeddings). Modern LangChain 0.1.x — current imports, no version gymnastics.</p></div></section><section id="arch"><h2><span class="n">02</span> The architecture at a glance</h2><pre style="background:var(--code);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-size:12.5px;line-height:1.5;color:#bfe0d6;white-space:pre">  +-----------------+        HTTP         +----------------------+
+  |  Streamlit UI   |  ----------------&gt;  |   FastAPI backend    |
+  |  ui/main.py     |   POST /chat        |   app.py             |
+  |  (browser form) |   POST /ingest      |                      |
+  +-----------------+                     +----------+-----------+
+                                                     |
+                             routes to an endpoint   v
+                       +-----------------+   +-----------------+
+                       | endpoints/      |   | endpoints/      |
+                       |   ingest.py     |   |   chat.py       |
+                       +--------+--------+   +--------+--------+
+                                |                     |
+                                v                     v
+                       +------------------------------------+
+                       |        handlers/base.py            |
+                       |  load -&gt; split -&gt; embed -&gt; Pinecone|  (ingest)
+                       |  retrieve -&gt; LLM -&gt; answer+sources |  (chat)
+                       +------------------------------------+
+</pre><div class="concept"><h4>The one idea to hold onto</h4><p>Two flows share one handler. <strong>Ingest</strong> puts documents into Pinecone; <strong>chat</strong> retrieves from Pinecone and generates an answer. Everything else is plumbing around those two flows.</p></div></section><section id="run"><h2><span class="n">03</span> How it starts up</h2><div class="ex"><span class="tag">code walkthrough</span><h3 style="margin-top:2px">app.py — the FastAPI app wires in the routers</h3><pre>app = FastAPI()
+from endpoints import ingest, chat
+for endpoint in [ingest, chat]:
+    app.include_router(endpoint.router)
+uvicorn.run(&quot;app:app&quot;, port=9091, reload=True)</pre><ul><li>FastAPI is created once; each endpoint file exposes a <code>router</code> that's plugged in.</li><li>The server listens on <strong>port 9091</strong> — the UI posts to <code>localhost:9091</code>.</li></ul></div><div class="ex"><span class="tag">code walkthrough</span><h3 style="margin-top:2px">startup.py — run API + UI together</h3><pre>def run_app():       subprocess.run([&quot;python3&quot;, &quot;app.py&quot;])
+def run_streamlit(): subprocess.run([&quot;streamlit&quot;, &quot;run&quot;, &quot;ui/main.py&quot;])
+# each in its own thread, started together</pre><ul><li>One command launches both processes in parallel threads — the backend and the web UI.</li><li>This is why you run <code>python startup.py</code>, not the files individually.</li></ul></div></section><section id="ingest"><h2><span class="n">04</span> Flow 1 — Ingestion (getting documents in)</h2><p class='lead'>Trace an upload: UI → <code>/ingest</code> → handler → Pinecone.</p><div class="ex"><span class="tag">code walkthrough</span><h3 style="margin-top:2px">endpoints/ingest.py — the entry point</h3><pre>@router.post(&quot;/ingest&quot;)
+async def ingest_documents(files: List[UploadFile], namespace: Optional[str] = Form(None)):
+    handler = BaseHandler()
+    documents = handler.load_documents(files, namespace)
+    handler.ingest_documents(documents)
+    return {&quot;message&quot;: &quot;Documents ingested&quot;}</pre><ul><li>Accepts uploaded files (and an optional <strong>namespace</strong> — a way to keep separate document sets in one Pinecone index).</li><li>Delegates the real work to two handler methods: <code>load_documents</code> then <code>ingest_documents</code>.</li></ul></div><div class="ex"><span class="tag">code walkthrough</span><h3 style="margin-top:2px">handlers/base.py :: load_documents — file type → loader</h3><pre>loader_map = {&quot;txt&quot;: TextLoader, &quot;pdf&quot;: PyMuPDFLoader, &quot;docx&quot;: Docx2txtLoader}
+for file in files:
+    ext = file.filename.split(&quot;.&quot;)[-1]
+    if ext not in loader_map: raise HTTPException(400, &quot;File type not permitted&quot;)
+    # write to a temp file, then load with the right loader
+    loader = loader_map[ext](temp.name)
+    documents.append(loader.load())</pre><ul><li>A <strong>loader map</strong> picks the right LangChain loader per extension — the clean way to support many formats.</li><li>It validates the extension (security: reject unknown types) and streams the upload to a temp file before loading.</li></ul></div><div class="ex"><span class="tag">code walkthrough</span><h3 style="margin-top:2px">handlers/base.py :: ingest_documents — split, embed, store</h3><pre>splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+for document in documents:
+    chunks = splitter.split_documents(document)
+    Pinecone.from_documents(chunks, self.embeddings,
+                            index_name=self.pinecone_index, namespace=...)</pre><ul><li>This is the RAG <strong>indexing</strong> half: chunk (1000 chars, 100 overlap) → embed → store in Pinecone.</li><li>Embeddings are OpenAI <code>text-embedding-3-small</code> (1536-dim) by default, or <code>-large</code> (3072-dim) — the code warns that Pinecone's index dimension MUST match.</li><li>Note the <strong>splitter map</strong>: the app supports ~18 splitter types; recursive is the default. This is exactly the chunking concept from your foundations, made configurable.</li></ul></div></section><section id="chat"><h2><span class="n">05</span> Flow 2 — Chat (answering from documents)</h2><p class='lead'>Trace a question: UI → <code>/chat</code> → handler → retrieve + generate → answer with sources.</p><div class="ex"><span class="tag">code walkthrough</span><h3 style="margin-top:2px">endpoints/chat.py — validate, then delegate</h3><pre>class ChatModel(BaseModel):
+    query: str
+    model: str = &quot;gpt-3.5-turbo&quot;
+    temperature: float
+    vector_fetch_k: Optional[int] = 5     # how many chunks to retrieve
+    chat_history: list[str] = []
+    namespace: Optional[str] = None
+
+# validate model name and temperature (0.0-2.0), then:
+handler = BaseHandler(chat_model=chat_model.model, openai_chat_temperature=chat_model.temperature)
+response = handler.chat(chat_model.query, chat_model.chat_history,
+                        namespace=..., search_kwargs={&quot;k&quot;: chat_model.vector_fetch_k})</pre><ul><li>A <strong>Pydantic model</strong> (<code>ChatModel</code>) defines and validates the request body — the FastAPI way to get typed, checked inputs for free.</li><li>It guards the inputs (valid model name, temperature in range) before doing any work — good API hygiene.</li><li><code>vector_fetch_k</code> = how many chunks to retrieve (the 'k' in top-k). <code>namespace</code> scopes retrieval to one document set.</li></ul></div><div class="ex"><span class="tag">code walkthrough</span><h3 style="margin-top:2px">handlers/base.py :: chat — the RAG generation core</h3><pre>vectorstore = Pinecone.from_existing_index(index_name=self.pinecone_index,
+                                           embedding=self.embeddings, namespace=...)
+retriever = vectorstore.as_retriever(search_kwargs={&quot;k&quot;: 5})
+bot = ConversationalRetrievalChain.from_llm(
+        self.llm_map[self.chat_model],   # the chosen LLM (OpenAI or Anthropic)
+        retriever,
+        return_source_documents=True)
+result = bot.invoke({&quot;question&quot;: query, &quot;chat_history&quot;: chat_history})</pre><ul><li><code>ConversationalRetrievalChain</code> is the key object: it (1) reformulates the question using chat history, (2) retrieves relevant chunks, (3) generates a grounded answer.</li><li><code>return_source_documents=True</code> is why the UI can show citations — the chunks that supported the answer come back too.</li><li><code>self.llm_map[self.chat_model]</code> — a dict mapping model names to constructors, so the SAME code serves GPT-4, GPT-3.5, or Claude. Clean multi-provider design.</li></ul></div><div class="concept"><h4>Why ConversationalRetrievalChain (not plain RetrievalQA)</h4><p>It handles <em>follow-up questions</em>. If you ask 'what about its cost?' it uses the chat history to rewrite that into a standalone question ('what about the cost of X?') before retrieving — so retrieval works even when the query is only meaningful in context.</p></div></section><section id="ui"><h2><span class="n">06</span> The UI layer</h2><div class="ex"><span class="tag">code walkthrough</span><h3 style="margin-top:2px">ui/main.py — a thin Streamlit form over the API</h3><pre>api_endpoint = &quot;http://localhost:9091/chat&quot;
+param1 = st.text_input(&quot;Query&quot;)
+model_selector = st.selectbox(&quot;Chat Model&quot;, [...])
+temperature = st.slider(&quot;Temperature&quot;, 0.0, 2.0, 0.7)
+source_documents = st.slider(&quot;Number of Source Documents&quot;, 1, 10, 5)
+if st.button(&quot;Send&quot;):
+    data = post_data(api_endpoint, {...})
+    st.markdown(data[&quot;response&quot;][&quot;answer&quot;])
+    for msg in data[&quot;response&quot;][&quot;source_documents&quot;]:
+        st.markdown(f&quot;Document: {msg[&#x27;metadata&#x27;][&#x27;source&#x27;]} ...&quot;)</pre><ul><li>The UI holds NO logic — it just collects inputs, POSTs to the API, and renders the answer + source documents. Clean separation: UI ↔ API ↔ handler.</li><li>The sliders map directly to the API's <code>temperature</code> and <code>vector_fetch_k</code> — you can watch how each affects answers.</li><li>Showing <strong>source documents</strong> under each answer is a trust feature — users see WHERE the answer came from.</li></ul></div></section><section id="setup"><h2><span class="n">07</span> Running it yourself</h2><div class="concept"><h4>Prerequisites</h4><p>An OpenAI key (billing), an Anthropic key (for the Claude models), and a <strong>Pinecone</strong> account + index. Copy <code>example.env</code> to <code>.env</code> and fill <code>OPENAI_API_KEY</code>, <code>ANTHROPIC_API_KEY</code>, <code>PINECONE_API_KEY</code>, <code>PINECONE_ENV</code>, <code>PINECONE_INDEX</code>.</p></div><pre style="background:var(--code);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font-size:12.5px;line-height:1.5;color:#bfe0d6;white-space:pre">  1. pip install poetry            (this app uses Poetry, not plain pip)
+  2. poetry install                (reads pyproject.toml / poetry.lock)
+  3. poetry shell                  (enter the environment)
+  4. cp example.env .env  + fill in your keys
+  5. python startup.py             (launches API + Streamlit together)
+  6. open the Streamlit URL, upload a doc, then ask questions
+</pre><div class="concept"><h4>Pinecone dimension gotcha</h4><p>Your Pinecone index's dimension MUST match the embedding model: <strong>1536</strong> for <code>text-embedding-3-small</code> (default), <strong>3072</strong> for <code>text-embedding-3-large</code>. Mismatch → ingest fails with an ApiException (the code even warns about this).</p></div><div class="concept"><h4>Org-network / offline note</h4><p>This app is hard-wired to cloud services (OpenAI, Anthropic, Pinecone) — all likely blocked on your org network. To run it, use a personal machine, OR adapt it: swap <code>Pinecone</code> for local <code>Chroma</code> and the OpenAI lines for your in-house wrapper. The structure (FastAPI + handler + UI) stays identical.</p></div></section><section id="learn"><h2><span class="n">08</span> What to take away (the real lesson)</h2><p class='lead'>You've seen RAG in notebooks; this shows how it becomes a <em>service</em>.</p><table><tr><th>Production pattern here</th><th>Why it matters</th></tr><tr><td>API / UI / handler separation</td><td>each layer swappable; UI has no business logic</td></tr><tr><td>Pydantic request models</td><td>typed, validated inputs for free</td></tr><tr><td>Loader map &amp; splitter map</td><td>support many formats/strategies without if-chains</td></tr><tr><td>llm_map (multi-provider)</td><td>one codebase serves OpenAI AND Anthropic</td></tr><tr><td>return_source_documents</td><td>citations = user trust + debuggability</td></tr><tr><td>namespaces</td><td>isolate document sets in one index (multi-tenant)</td></tr><tr><td>colored alerts/logging</td><td>observability — see what happened</td></tr></table><div class="ex" style="border-left:3px solid var(--ok)"><span class="tag" style="color:var(--ok)">practice</span> Trace ONE request end to end on paper: UI slider → chat.py Pydantic model → handler.chat → ConversationalRetrievalChain → Pinecone retrieve → LLM → answer+sources → back to the UI. If you can draw that flow, you understand how a RAG app is built — and you can build your own.</div><div class="concept"><h4>How it connects to your work</h4><p>The handler's chunk→embed→store→retrieve→generate is exactly your RAG_Course, now wrapped in a service. The multi-provider <code>llm_map</code> mirrors your in-house wrapper idea. Study this as the 'so THIS is how the pieces ship' capstone after the notebook courses.</p></div></section></main>
+<footer>Detailed guide · LangChain Practice. Concepts + step-by-step + worked answers. Solutions describe expected behavior/output; your exact values vary with model and provider. Never commit real API keys.</footer></body></html>

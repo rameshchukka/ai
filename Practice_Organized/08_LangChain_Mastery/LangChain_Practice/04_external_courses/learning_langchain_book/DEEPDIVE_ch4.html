@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Ch4 Deep Dive — Memory &amp; State</title>
+<style>
+  :root{--bg:#0d1218;--panel:#141c26;--panel2:#101822;--ink:#e8eef4;--muted:#8fa0b2;--line:#233140;--accent:#e6a54b;--accent2:#e6a54b;--ok:#54c39a;--danger:#e5687a;--code:#0a0f16;--maxw:920px;--mono:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.66 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  code,pre,.mono{font-family:var(--mono)}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  header{padding:52px 24px 38px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 15% -10%,#16232f,#0d1218)}
+  header .wrap{max-width:var(--maxw);margin:0 auto}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--accent);font-weight:600;margin-bottom:12px}
+  h1{margin:0 0 12px;font-size:33px;line-height:1.12;letter-spacing:-0.02em}header p{color:var(--muted);max-width:66ch;margin:0}
+  .meta{margin-top:16px;font-size:13px;color:var(--muted)}.meta code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:#bcd7ef}
+  nav.toc{position:sticky;top:0;z-index:20;background:rgba(13,18,24,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 24px}
+  nav.toc .wrap{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:5px 15px;font-size:13px}
+  nav.toc a{color:var(--muted)}nav.toc a:hover{color:var(--ink);text-decoration:none}
+  main{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{padding:32px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:23px;margin:0 0 6px;display:flex;gap:12px;align-items:baseline}h2 .n{font-size:13px;font-weight:700;color:var(--muted);font-family:var(--mono)}
+  h3{font-size:16.5px;margin:22px 0 8px;color:var(--ink)}h4{font-size:14px;margin:16px 0 4px;color:var(--accent2)}
+  p,li{color:#d3dde7}.lead{color:var(--muted);font-size:16.5px}
+  .concept{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:15px 18px;margin:16px 0}.concept h4{margin:0 0 6px;color:var(--accent)}
+  .danger{background:#241318;border:1px solid #48232c;border-left:3px solid var(--danger);border-radius:8px;padding:15px 18px;margin:16px 0}.danger h4{margin:0 0 6px;color:var(--danger)}
+  .ans{background:#0f1f18;border:1px solid #1f4a3b;border-left:3px solid var(--ok);border-radius:8px;padding:14px 18px;margin:12px 0}.ans h4{margin:0 0 6px;color:var(--ok)}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:13px 16px;overflow-x:auto;font-size:12.7px;line-height:1.55;color:#cfe0f0}
+  p code,li code,td code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:12.7px;color:#bcd7ef}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:14px 0}
+  ol.steps>li{counter-increment:s;position:relative;padding:11px 0 11px 44px;border-bottom:1px solid var(--line)}ol.steps>li:last-child{border-bottom:none}
+  ol.steps>li::before{content:counter(s);position:absolute;left:0;top:10px;width:28px;height:28px;background:var(--accent);color:#04121f;border-radius:7px;display:grid;place-items:center;font-weight:700;font-size:14px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase}tr:last-child td{border-bottom:none}
+  .file{font-family:var(--mono);color:var(--accent2);font-size:13px}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:18px 0}
+  .ex .tag{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:6px}
+  .obs{background:#0f1a22;border:1px dashed #2a3f4f;border-radius:8px;padding:12px 16px;margin:12px 0}.obs b{color:var(--ok)}
+  .pill{display:inline-block;background:#182432;border:1px solid var(--line);border-radius:20px;padding:2px 10px;font-size:12px;color:var(--muted);margin:2px 3px 2px 0}
+  footer{max-width:var(--maxw);margin:0 auto;padding:28px 24px 60px;color:var(--muted);font-size:13.5px}
+  @media(max-width:640px){h1{font-size:26px}}
+</style></head><body>
+<header><div class="wrap"><div class="eyebrow">Learning LangChain · Ch4</div><h1>Ch4 Deep Dive — Memory &amp; State</h1><p class="lead">Conversation memory and state with LangGraph — StateGraph, persistence via checkpointers, and message trimming/filtering, in Python and JavaScript.</p></div></header>
+<nav class="toc"><div class="wrap"><a href="#goal">Goal</a><a href="#files">Files</a><a href="#core">Key ideas</a><a href="#run">Running</a><a href="#take">Takeaways</a></div></nav><main><section id="goal"><h2><span class="n">01</span> Chapter 4 — Memory &amp; state with LangGraph</h2><p class='lead'>Conversation memory done the modern way — with <strong>LangGraph</strong> state, persistence, and message trimming/filtering.</p><div class="concept"><h4>LangGraph enters here</h4><p>The book moves from simple memory to <strong>LangGraph</strong> — a way to build stateful, multi-step apps as a graph of nodes. State (including message history) flows through the graph and can be persisted. This is the foundation for the agents in ch6–ch9.</p></div></section><section id="files"><h2><span class="n">02</span> The lettered files</h2><table><tr><th>File</th><th>What it demonstrates</th></tr><tr><td class='file'>a-simple-memory</td><td>keep conversation history by hand</td></tr><tr><td class='file'>b-state-graph</td><td>a LangGraph StateGraph holding messages</td></tr><tr><td class='file'>c-persistent-memory</td><td>save state so a conversation survives restarts</td></tr><tr><td class='file'>d-trim-messages</td><td>cap history length by trimming old messages</td></tr><tr><td class='file'>e-filter-messages</td><td>keep only certain messages</td></tr><tr><td class='file'>f-merge-messages</td><td>combine consecutive messages</td></tr></table></section><section id="core"><h2><span class="n">03</span> State graph + persistence, in both languages</h2><div class="ex"><span class="tag">b — a minimal StateGraph</span><h4 style="color:var(--accent)">Python</h4><pre>from langgraph.graph import StateGraph, START
+from langgraph.graph.message import add_messages
+from typing import Annotated, TypedDict
+class State(TypedDict):
+    messages: Annotated[list, add_messages]
+builder = StateGraph(State)
+builder.add_node(&quot;model&quot;, model_node)
+builder.add_edge(START, &quot;model&quot;)
+graph = builder.compile()</pre><h4 style="color:var(--accent2)">JavaScript / TypeScript</h4><pre>import { StateGraph, START } from &#x27;@langchain/langgraph&#x27;;
+const graph = new StateGraph(State)
+  .addNode(&#x27;model&#x27;, modelNode)
+  .addEdge(START, &#x27;model&#x27;).compile();</pre><ul><li><code>State</code> is a typed dict; <code>add_messages</code> is a reducer that appends new messages to history automatically.</li><li>You define <strong>nodes</strong> (steps) and <strong>edges</strong> (flow) and <code>compile()</code> into a runnable graph — the LangGraph mental model.</li><li>JS mirrors this with a fluent builder.</li></ul></div><div class="ex"><span class="tag">c — persistence via a checkpointer</span><h4 style="color:var(--accent)">Python</h4><pre>from langgraph.checkpoint.memory import MemorySaver
+graph = builder.compile(checkpointer=MemorySaver())
+graph.invoke(input, {&quot;configurable&quot;: {&quot;thread_id&quot;: &quot;1&quot;}})</pre><h4 style="color:var(--accent2)">JavaScript / TypeScript</h4><pre>import { MemorySaver } from &#x27;@langchain/langgraph&#x27;;
+const graph = builder.compile({ checkpointer: new MemorySaver() });</pre><ul><li>A <strong>checkpointer</strong> saves graph state keyed by a <code>thread_id</code>, so the same conversation can resume later — durable memory.</li><li>Swap <code>MemorySaver</code> for a DB-backed saver in production.</li></ul></div></section><section id="run"><h2><span class="n">04</span> Running</h2><div class="concept"><h4>Running either language</h4><p><strong>Python:</strong> <code>pip install langchain langchain-openai langchain-community langchain-postgres langgraph python-dotenv</code>, then <code>python ch1/py/a-llm.py</code>. <strong>JS:</strong> <code>npm install @langchain/openai @langchain/core @langchain/community @langchain/langgraph dotenv</code>, then <code>npx tsx ch1/js/a-llm.js</code> (or <code>node</code>). Both read your key from <code>.env</code> (<code>OPENAI_API_KEY</code>). The two languages mirror each other — same concepts, idiomatic syntax.</p></div></section><section id="take"><h2><span class="n">05</span> Takeaways</h2><ul><li>LangGraph models an app as nodes + edges over a typed State.</li><li><code>add_messages</code> gives you conversation memory for free.</li><li>A checkpointer + thread_id = persistent, resumable conversations.</li></ul><div class="obs"><b>Observe:</b> Chapters 6–9 build agents on exactly this graph model — ch4 is the foundation, don't skip it.</div></section></main>
+<footer>Detailed guide · LangChain Practice. Concepts + step-by-step + worked answers. Solutions describe expected behavior/output; your exact values vary with model and provider. Never commit real API keys.</footer></body></html>

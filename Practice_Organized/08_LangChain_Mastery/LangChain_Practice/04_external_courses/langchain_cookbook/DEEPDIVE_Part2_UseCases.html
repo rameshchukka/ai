@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Cookbook Part 2 — Use Cases Deep Dive</title>
+<style>
+  :root{--bg:#0d1218;--panel:#141c26;--panel2:#101822;--ink:#e8eef4;--muted:#8fa0b2;--line:#233140;--accent:#e6a54b;--accent2:#e6a54b;--ok:#54c39a;--danger:#e5687a;--code:#0a0f16;--maxw:920px;--mono:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.66 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  code,pre,.mono{font-family:var(--mono)}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  header{padding:52px 24px 38px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 15% -10%,#16232f,#0d1218)}
+  header .wrap{max-width:var(--maxw);margin:0 auto}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--accent);font-weight:600;margin-bottom:12px}
+  h1{margin:0 0 12px;font-size:33px;line-height:1.12;letter-spacing:-0.02em}header p{color:var(--muted);max-width:66ch;margin:0}
+  .meta{margin-top:16px;font-size:13px;color:var(--muted)}.meta code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:#bcd7ef}
+  nav.toc{position:sticky;top:0;z-index:20;background:rgba(13,18,24,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 24px}
+  nav.toc .wrap{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:5px 15px;font-size:13px}
+  nav.toc a{color:var(--muted)}nav.toc a:hover{color:var(--ink);text-decoration:none}
+  main{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{padding:32px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:23px;margin:0 0 6px;display:flex;gap:12px;align-items:baseline}h2 .n{font-size:13px;font-weight:700;color:var(--muted);font-family:var(--mono)}
+  h3{font-size:16.5px;margin:22px 0 8px;color:var(--ink)}h4{font-size:14px;margin:16px 0 4px;color:var(--accent2)}
+  p,li{color:#d3dde7}.lead{color:var(--muted);font-size:16.5px}
+  .concept{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:15px 18px;margin:16px 0}.concept h4{margin:0 0 6px;color:var(--accent)}
+  .danger{background:#241318;border:1px solid #48232c;border-left:3px solid var(--danger);border-radius:8px;padding:15px 18px;margin:16px 0}.danger h4{margin:0 0 6px;color:var(--danger)}
+  .ans{background:#0f1f18;border:1px solid #1f4a3b;border-left:3px solid var(--ok);border-radius:8px;padding:14px 18px;margin:12px 0}.ans h4{margin:0 0 6px;color:var(--ok)}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:13px 16px;overflow-x:auto;font-size:12.7px;line-height:1.55;color:#cfe0f0}
+  p code,li code,td code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:12.7px;color:#bcd7ef}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:14px 0}
+  ol.steps>li{counter-increment:s;position:relative;padding:11px 0 11px 44px;border-bottom:1px solid var(--line)}ol.steps>li:last-child{border-bottom:none}
+  ol.steps>li::before{content:counter(s);position:absolute;left:0;top:10px;width:28px;height:28px;background:var(--accent);color:#04121f;border-radius:7px;display:grid;place-items:center;font-weight:700;font-size:14px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase}tr:last-child td{border-bottom:none}
+  .file{font-family:var(--mono);color:var(--accent2);font-size:13px}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:18px 0}
+  .ex .tag{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:6px}
+  .obs{background:#0f1a22;border:1px dashed #2a3f4f;border-radius:8px;padding:12px 16px;margin:12px 0}.obs b{color:var(--ok)}
+  .pill{display:inline-block;background:#182432;border:1px solid var(--line);border-radius:20px;padding:2px 10px;font-size:12px;color:var(--muted);margin:2px 3px 2px 0}
+  footer{max-width:var(--maxw);margin:0 auto;padding:28px 24px 60px;color:var(--muted);font-size:13.5px}
+  @media(max-width:640px){h1{font-size:26px}}
+</style></head><body>
+<header><div class="wrap"><div class="eyebrow">LangChain Cookbook · Part 2</div><h1>Cookbook Part 2 — Use Cases Deep Dive</h1><p class="lead">Assembling the building blocks into shippable use cases — summarization, RAG Q&A, extraction, evaluation, tabular data, code, APIs, chatbots, agents.</p><div class="meta">the 'what you build with it' notebook</div></div></header>
+<nav class="toc"><div class="wrap"><a href="#about">Overview</a><a href="#summ">Summarization</a><a href="#qa">Q&A/RAG</a><a href="#extract">Extraction</a><a href="#more">The rest</a><a href="#run">Running</a></div></nav><main><section id="about"><h2><span class="n">01</span> What Part 2 covers</h2><p class='lead'>Where Part 1 showed the building blocks, Part 2 assembles them into the <strong>use cases</strong> you'll actually ship: summarization, Q&amp;A, extraction, evaluation, tabular data, code understanding, APIs, chatbots, agents.</p></section><section id="summ"><h2><span class="n">02</span> Summarization — short vs long text</h2><div class="ex"><span class="tag">walkthrough</span><h3 style="margin-top:2px">The length problem, and map-reduce</h3><pre># short text: just ask
+chain = load_summarize_chain(llm, chain_type=&quot;stuff&quot;)
+# long text: split, summarize pieces, combine
+chain = load_summarize_chain(llm, chain_type=&quot;map_reduce&quot;)
+chain.run(split_documents)</pre><ul><li>Short text fits in one prompt (<code>stuff</code>). Long text doesn't — so you <code>map_reduce</code>: summarize each chunk, then summarize the summaries.</li><li>This directly motivates the <em>5 Levels of Summarization</em> recipe (next guide).</li></ul></div></section><section id="qa"><h2><span class="n">03</span> Q&amp;A using documents as context (RAG)</h2><div class="ex"><span class="tag">walkthrough</span><h3 style="margin-top:2px">Simple Q&amp;A, then with embeddings</h3><pre># retrieve relevant chunks, stuff into the prompt, answer
+qa = RetrievalQA.from_chain_type(llm=llm, chain_type=&quot;stuff&quot;,
+        retriever=vectorstore.as_retriever())
+qa.run(&quot;What did the author do growing up?&quot;)</pre><ul><li>The canonical RAG use case: embed docs, retrieve by question, answer from the retrieved context.</li><li>Part 2 shows both a naive version and the embeddings-backed version — the same progression you saw from scratch in your RAG_Course.</li></ul></div></section><section id="extract"><h2><span class="n">04</span> Extraction — turning text into structured data</h2><div class="ex"><span class="tag">walkthrough</span><h3 style="margin-top:2px">Vanilla vs Response Schema</h3><pre>from langchain.output_parsers import StructuredOutputParser, ResponseSchema
+schemas = [ResponseSchema(name=&quot;name&quot;, description=&quot;the person&#x27;s name&quot;),
+           ResponseSchema(name=&quot;age&quot;,  description=&quot;their age as an integer&quot;)]
+parser = StructuredOutputParser.from_response_schemas(schemas)</pre><ul><li>Extraction pulls fields (names, dates, amounts) out of free text into JSON — one of the highest-value LLM tasks in business.</li><li>The Response Schema approach declares the fields you want; the parser reads them back reliably. The applied recipes go further with function-calling and Kor.</li></ul></div></section><section id="more"><h2><span class="n">05</span> The rest — a quick map</h2><table><tr><th>Use case</th><th>What you'll build</th></tr><tr><td>Evaluation</td><td>use an LLM to grade another LLM's answers (the RAGAS idea)</td></tr><tr><td>Querying Tabular Data</td><td>natural-language questions over a CSV/SQL table</td></tr><tr><td>Code Understanding</td><td>ask questions about a codebase</td></tr><tr><td>Interacting with APIs</td><td>let the LLM call REST APIs to answer</td></tr><tr><td>Chatbots</td><td>memory-backed conversation</td></tr><tr><td>Agents</td><td>tool-using reasoning loops</td></tr></table></section><section id="run"><h2><span class="n">06</span> Running Part 2</h2><div class="concept"><h4>Setup</h4><p>Same base install as Part 1 plus, per use case, a vector store (<code>faiss-cpu</code> or <code>chromadb</code>). Data ships in <code>data/</code>.</p></div><div class="ex" style="border-left:3px solid var(--ok)"><span class="tag" style="color:var(--ok)">practice</span> Each use case is a self-contained recipe — jump to the one matching your project. Q&A and Extraction are the two most transferable to real work; start there.</div></section></main>
+<footer>Detailed guide · LangChain Practice. Concepts + step-by-step + worked answers. Solutions describe expected behavior/output; your exact values vary with model and provider. Never commit real API keys.</footer></body></html>

@@ -1,0 +1,17 @@
+{
+    "name": null,
+    "input_variables": [
+        "length",
+        "project_title",
+        "writing_style"
+    ],
+    "optional_variables": [],
+    "output_parser": null,
+    "partial_variables": {},
+    "metadata": null,
+    "tags": null,
+    "template": "\nGenerate a detailed project proposal summary for the project titled \"{project_title}\".\nFollow these instructions:\n\nWriting Style: {writing_style}\nLength Requirement: {length}\n\n1. Technical Details:\n   - Describe the core architecture and technologies involved.\n   - Provide a simple Python code snippet that illustrates the main logic.\n\n2. Business Value:\n   - Explain the expected ROI in simple terms.\n\n3. Risks:\n   - Mention key technical or business risks only if they are explicitly stated.\n\nIf information is missing, respond with: \"Insufficient information available\".\n\nEnsure the proposal is clear, structured, and aligned with the writing style and length.\n",
+    "template_format": "f-string",
+    "validate_template": true,
+    "_type": "prompt"
+}

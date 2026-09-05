@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Cookbook Part 1 — Fundamentals Deep Dive</title>
+<style>
+  :root{--bg:#0d1218;--panel:#141c26;--panel2:#101822;--ink:#e8eef4;--muted:#8fa0b2;--line:#233140;--accent:#c07be0;--accent2:#e6a54b;--ok:#54c39a;--danger:#e5687a;--code:#0a0f16;--maxw:920px;--mono:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.66 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  code,pre,.mono{font-family:var(--mono)}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  header{padding:52px 24px 38px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 15% -10%,#16232f,#0d1218)}
+  header .wrap{max-width:var(--maxw);margin:0 auto}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--accent);font-weight:600;margin-bottom:12px}
+  h1{margin:0 0 12px;font-size:33px;line-height:1.12;letter-spacing:-0.02em}header p{color:var(--muted);max-width:66ch;margin:0}
+  .meta{margin-top:16px;font-size:13px;color:var(--muted)}.meta code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:#bcd7ef}
+  nav.toc{position:sticky;top:0;z-index:20;background:rgba(13,18,24,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 24px}
+  nav.toc .wrap{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:5px 15px;font-size:13px}
+  nav.toc a{color:var(--muted)}nav.toc a:hover{color:var(--ink);text-decoration:none}
+  main{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{padding:32px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:23px;margin:0 0 6px;display:flex;gap:12px;align-items:baseline}h2 .n{font-size:13px;font-weight:700;color:var(--muted);font-family:var(--mono)}
+  h3{font-size:16.5px;margin:22px 0 8px;color:var(--ink)}h4{font-size:14px;margin:16px 0 4px;color:var(--accent2)}
+  p,li{color:#d3dde7}.lead{color:var(--muted);font-size:16.5px}
+  .concept{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:15px 18px;margin:16px 0}.concept h4{margin:0 0 6px;color:var(--accent)}
+  .danger{background:#241318;border:1px solid #48232c;border-left:3px solid var(--danger);border-radius:8px;padding:15px 18px;margin:16px 0}.danger h4{margin:0 0 6px;color:var(--danger)}
+  .ans{background:#0f1f18;border:1px solid #1f4a3b;border-left:3px solid var(--ok);border-radius:8px;padding:14px 18px;margin:12px 0}.ans h4{margin:0 0 6px;color:var(--ok)}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:13px 16px;overflow-x:auto;font-size:12.7px;line-height:1.55;color:#cfe0f0}
+  p code,li code,td code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:12.7px;color:#bcd7ef}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:14px 0}
+  ol.steps>li{counter-increment:s;position:relative;padding:11px 0 11px 44px;border-bottom:1px solid var(--line)}ol.steps>li:last-child{border-bottom:none}
+  ol.steps>li::before{content:counter(s);position:absolute;left:0;top:10px;width:28px;height:28px;background:var(--accent);color:#04121f;border-radius:7px;display:grid;place-items:center;font-weight:700;font-size:14px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase}tr:last-child td{border-bottom:none}
+  .file{font-family:var(--mono);color:var(--accent2);font-size:13px}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:18px 0}
+  .ex .tag{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:6px}
+  .obs{background:#0f1a22;border:1px dashed #2a3f4f;border-radius:8px;padding:12px 16px;margin:12px 0}.obs b{color:var(--ok)}
+  .pill{display:inline-block;background:#182432;border:1px solid var(--line);border-radius:20px;padding:2px 10px;font-size:12px;color:var(--muted);margin:2px 3px 2px 0}
+  footer{max-width:var(--maxw);margin:0 auto;padding:28px 24px 60px;color:var(--muted);font-size:13.5px}
+  @media(max-width:640px){h1{font-size:26px}}
+</style></head><body>
+<header><div class="wrap"><div class="eyebrow">LangChain Cookbook · Part 1</div><h1>Cookbook Part 1 — Fundamentals Deep Dive</h1><p class="lead">A runnable glossary of every LangChain building block — schema, models, prompts, indexes (RAG), memory, chains, agents — with code walkthroughs and what each does.</p><div class="meta">the best starting notebook · run it first</div></div></header>
+<nav class="toc"><div class="wrap"><a href="#about">Overview</a><a href="#schema">Schema</a><a href="#models">Models</a><a href="#prompts">Prompts</a><a href="#indexes">Indexes/RAG</a><a href="#memchain">Memory/Chains/Agents</a><a href="#run">Running</a></div></nav><main><section id="about"><h2><span class="n">01</span> What Part 1 covers</h2><p class='lead'>The single best starting notebook in the whole cookbook: a hands-on tour of every LangChain building block. Think of it as a runnable glossary — when a term is fuzzy, run its cell here.</p><div class="concept"><h4>The 6 component families</h4><p>LangChain organizes into: <strong>Schema</strong> (the data types), <strong>Models</strong> (the AI), <strong>Prompts</strong> (instructions), <strong>Indexes</strong> (your documents), <strong>Memory</strong> (conversation state), <strong>Chains</strong> &amp; <strong>Agents</strong> (composition). Part 1 walks each in order.</p></div></section><section id="schema"><h2><span class="n">02</span> Schema — the data types</h2><div class="ex"><span class="tag">walkthrough</span><h3 style="margin-top:2px">Text, ChatMessages, Documents</h3><pre>from langchain.schema import HumanMessage, SystemMessage, AIMessage
+from langchain.schema import Document
+
+msgs = [SystemMessage(content=&quot;You are a helpful assistant.&quot;),
+        HumanMessage(content=&quot;What is the capital of France?&quot;)]
+doc = Document(page_content=&quot;LangChain is a framework.&quot;,
+               metadata={&quot;source&quot;: &quot;notes&quot;})</pre><ul><li><strong>Text</strong> is just a string prompt. <strong>ChatMessages</strong> carry a role (System/Human/AI) — chat models need these, not bare strings.</li><li><strong>Document</strong> = <code>page_content</code> + <code>metadata</code>. Everything you load/split/retrieve is a Document. This is the unit RAG moves around.</li></ul></div></section><section id="models"><h2><span class="n">03</span> Models — the AI interface</h2><div class="ex"><span class="tag">walkthrough</span><h3 style="margin-top:2px">LLM, Chat, Embedding, Function-calling</h3><pre>from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.embeddings import OpenAIEmbeddings
+
+llm  = OpenAI(model_name=&quot;text-davinci-003&quot;)     # text in -&gt; text out
+chat = ChatOpenAI()                               # messages in -&gt; message out
+emb  = OpenAIEmbeddings()                          # text in -&gt; vector out
+vector = emb.embed_query(&quot;hello&quot;)                 # a list of floats</pre><ul><li>Three model types you'll use everywhere: <strong>LLM</strong> (legacy text completion), <strong>Chat</strong> (the modern default), <strong>Embedding</strong> (powers search/RAG).</li><li><strong>Function-calling</strong> models return structured arguments, not prose — the foundation for reliable extraction (see the applied recipes guide).</li><li>(These are old <code>langchain.*</code> imports; current LangChain uses <code>langchain_openai</code>. Concept identical — see the version note in the README.)</li></ul></div></section><section id="prompts"><h2><span class="n">04</span> Prompts — instructions to the model</h2><div class="ex"><span class="tag">walkthrough</span><h3 style="margin-top:2px">PromptTemplate, ExampleSelectors, OutputParsers</h3><pre>from langchain import PromptTemplate
+template = PromptTemplate(
+    input_variables=[&quot;product&quot;],
+    template=&quot;What is a good name for a company that makes {product}?&quot;)
+template.format(product=&quot;shoes&quot;)</pre><ul><li><strong>PromptTemplate</strong> = reusable prompt with named slots (validated).</li><li><strong>ExampleSelectors</strong> pick which few-shot examples to include (e.g. the most similar ones) so the prompt stays small but relevant.</li><li><strong>OutputParsers</strong> turn the reply into structure — the notebook shows two ways: prompt-instructions+string-parsing, and OpenAI functions (the robust way).</li></ul></div></section><section id="indexes"><h2><span class="n">05</span> Indexes — making documents searchable (this is RAG)</h2><div class="ex"><span class="tag">walkthrough</span><h3 style="margin-top:2px">Loaders → Splitters → VectorStores → Retrievers</h3><pre>from langchain.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import FAISS
+
+docs   = TextLoader(&quot;data/PaulGrahamEssaySmall/disc.txt&quot;).load()
+chunks = RecursiveCharacterTextSplitter(chunk_size=500).split_documents(docs)
+db     = FAISS.from_documents(chunks, OpenAIEmbeddings())
+retriever = db.as_retriever()
+hits = retriever.get_relevant_documents(&quot;what is discipline?&quot;)</pre><ul><li>This is the entire RAG ingestion + retrieval loop in five lines: <strong>load → split → embed+store → retrieve</strong>.</li><li>It uses the included Paul Graham essays as the corpus — real documents to practice on.</li><li>Everything you learned in RAG_Course part 1 is exactly this, now via LangChain's objects.</li></ul></div></section><section id="memchain"><h2><span class="n">06</span> Memory, Chains &amp; Agents</h2><div class="ex"><span class="tag">walkthrough</span><h3 style="margin-top:2px">ChatMessageHistory, SimpleSequentialChain, an Agent</h3><pre>from langchain.chains import SimpleSequentialChain, LLMChain
+# chain: output of step 1 becomes input of step 2
+overall = SimpleSequentialChain(chains=[chain_one, chain_two], verbose=True)
+
+from langchain.agents import load_tools, initialize_agent
+tools = load_tools([&quot;llm-math&quot;], llm=llm)
+agent = initialize_agent(tools, llm, agent=&quot;zero-shot-react-description&quot;)</pre><ul><li><strong>Memory</strong> stores conversation turns so a bot remembers context.</li><li><strong>Chains</strong> connect steps (output→input). <strong>Agents</strong> let the model choose tools in a reasoning loop.</li><li>These are the same concepts covered in depth in your other course deep-dives — here they're one cell each, so it's the fastest way to see them all working.</li></ul></div></section><section id="run"><h2><span class="n">07</span> Running Part 1</h2><div class="concept"><h4>Setup</h4><p><code>pip install langchain openai faiss-cpu tiktoken</code>, put <code>OPENAI_API_KEY</code> in your environment, then run cells top to bottom. The data it needs (Paul Graham essays, CSVs) ships in <code>data/</code>. On the org network, swap the OpenAI model line for your in-house wrapper.</p></div><div class="ex" style="border-left:3px solid var(--ok)"><span class="tag" style="color:var(--ok)">practice</span> Run every cell once. When you hit a component you want to understand deeper, open the matching topic-folder notebook (agents/, chains/, chatapi/) — the next guide covers those.</div></section></main>
+<footer>Detailed guide · LangChain Practice. Concepts + step-by-step + worked answers. Solutions describe expected behavior/output; your exact values vary with model and provider. Never commit real API keys.</footer></body></html>

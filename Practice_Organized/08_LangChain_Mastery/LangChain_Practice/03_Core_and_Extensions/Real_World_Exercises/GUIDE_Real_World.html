@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Real-World Exercise — Detailed Guide</title>
+<style>
+  :root{--bg:#0d1218;--panel:#141c26;--panel2:#101822;--ink:#e8eef4;--muted:#8fa0b2;--line:#233140;--accent:#e6a54b;--accent2:#e6a54b;--ok:#54c39a;--danger:#e5687a;--code:#0a0f16;--maxw:920px;--mono:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.66 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  code,pre,.mono{font-family:var(--mono)}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  header{padding:52px 24px 38px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 15% -10%,#16232f,#0d1218)}
+  header .wrap{max-width:var(--maxw);margin:0 auto}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--accent);font-weight:600;margin-bottom:12px}
+  h1{margin:0 0 12px;font-size:33px;line-height:1.12;letter-spacing:-0.02em}header p{color:var(--muted);max-width:66ch;margin:0}
+  .meta{margin-top:16px;font-size:13px;color:var(--muted)}.meta code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:#bcd7ef}
+  nav.toc{position:sticky;top:0;z-index:20;background:rgba(13,18,24,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 24px}
+  nav.toc .wrap{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:5px 15px;font-size:13px}
+  nav.toc a{color:var(--muted)}nav.toc a:hover{color:var(--ink);text-decoration:none}
+  main{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{padding:32px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:23px;margin:0 0 6px;display:flex;gap:12px;align-items:baseline}h2 .n{font-size:13px;font-weight:700;color:var(--muted);font-family:var(--mono)}
+  h3{font-size:16.5px;margin:22px 0 8px;color:var(--ink)}h4{font-size:14px;margin:16px 0 4px;color:var(--accent2)}
+  p,li{color:#d3dde7}.lead{color:var(--muted);font-size:16.5px}
+  .concept{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:15px 18px;margin:16px 0}.concept h4{margin:0 0 6px;color:var(--accent)}
+  .danger{background:#241318;border:1px solid #48232c;border-left:3px solid var(--danger);border-radius:8px;padding:15px 18px;margin:16px 0}.danger h4{margin:0 0 6px;color:var(--danger)}
+  .ans{background:#0f1f18;border:1px solid #1f4a3b;border-left:3px solid var(--ok);border-radius:8px;padding:14px 18px;margin:12px 0}.ans h4{margin:0 0 6px;color:var(--ok)}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:13px 16px;overflow-x:auto;font-size:12.7px;line-height:1.55;color:#cfe0f0}
+  p code,li code,td code{background:#182432;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:12.7px;color:#bcd7ef}
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:14px 0}
+  ol.steps>li{counter-increment:s;position:relative;padding:11px 0 11px 44px;border-bottom:1px solid var(--line)}ol.steps>li:last-child{border-bottom:none}
+  ol.steps>li::before{content:counter(s);position:absolute;left:0;top:10px;width:28px;height:28px;background:var(--accent);color:#04121f;border-radius:7px;display:grid;place-items:center;font-weight:700;font-size:14px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase}tr:last-child td{border-bottom:none}
+  .file{font-family:var(--mono);color:var(--accent2);font-size:13px}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:18px 0}
+  .ex .tag{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:6px}
+  .obs{background:#0f1a22;border:1px dashed #2a3f4f;border-radius:8px;padding:12px 16px;margin:12px 0}.obs b{color:var(--ok)}
+  .pill{display:inline-block;background:#182432;border:1px solid var(--line);border-radius:20px;padding:2px 10px;font-size:12px;color:var(--muted);margin:2px 3px 2px 0}
+  footer{max-width:var(--maxw);margin:0 auto;padding:28px 24px 60px;color:var(--muted);font-size:13.5px}
+  @media(max-width:640px){h1{font-size:26px}}
+</style></head><body>
+<header><div class="wrap"><div class="eyebrow">LangChain Practice · 03 · Real World</div><h1>Real-World Exercise — Detailed Guide</h1><p class="lead">Orientation and expected outcome for the applied capstone exercise, which ships its own detailed developer and exercise guides.</p><div class="meta"><code>Real_World_Exercises/</code> · 1 notebook + its own guides</div></div></header>
+<nav class="toc"><div class="wrap"><a href="#what">What it is</a><a href="#do">How + expected outcome</a></div></nav><main><section id="what"><h2><span class="n">01</span> What this is</h2><p class='lead'>An applied, end-to-end exercise that combines everything — this folder already ships its own <code>Exercise_Guide_LangChain.html</code>, <code>Developer_Guide.md</code>, and <code>User_Guide_BrainFriendly.md</code>.</p><div class="concept"><h4>Use the guides it ships with</h4><p>Open <code>Exercise_Guide_LangChain.html</code> for the exercise itself and <code>Developer_Guide.md</code> for the build detail. This page just orients you and adds the expected-outcome note below.</p></div></section><section id="do"><h2><span class="n">02</span> How to approach it + expected outcome</h2><ol class='steps'><li>Read <code>User_Guide_BrainFriendly.md</code> for the plain-language overview.</li><li>Open <code>EX_LangChain_RealWorld.ipynb</code> and work it top to bottom.</li><li>Follow <code>Developer_Guide.md</code> when a step needs setup detail.</li></ol><div class="ans"><h4>✔ Worked answer / expected output</h4><p>By the end you have a working end-to-end LangChain application that ingests content, retrieves relevantly, and generates grounded answers — the capstone of the whole bundle. If a step depends on a blocked cloud provider, swap in your in-house wrapper; the flow is the same.</p></div></section></main>
+<footer>Detailed guide · LangChain Practice. Concepts + step-by-step + worked answers. Solutions describe expected behavior/output; your exact values vary with model and provider. Never commit real API keys.</footer></body></html>
