@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Developer Guide — API Governance Platform</title>
+<style>
+:root {
+  --navy:#1F2937; --blue:#2563EB; --lblue:#EFF6FF;
+  --green:#059669; --lgreen:#ECFDF5;
+  --amber:#D97706; --lamber:#FFFBEB;
+  --red:#DC2626;   --lred:#FEF2F2;
+  --gray:#6B7280;  --lgray:#F9FAFB;
+  --border:#E5E7EB;
+  --exp:#4C72B0; --proc:#DD8452; --sys:#55A868;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Segoe UI',system-ui,sans-serif; font-size:15px;
+       color:#111827; background:#F3F4F6; }
+/* sidebar */
+.sidebar { position:fixed; top:0; left:0; width:250px; height:100vh;
+           background:var(--navy); overflow-y:auto; z-index:100; }
+.sidebar .logo { padding:20px; border-bottom:1px solid #374151;
+                 color:#F9FAFB; font-weight:700; font-size:14px; line-height:1.5; }
+.sidebar .logo span { color:#93C5FD; }
+.sidebar nav a { display:block; color:#D1D5DB; padding:7px 20px;
+                 font-size:13px; text-decoration:none;
+                 border-left:3px solid transparent; }
+.sidebar nav a:hover { color:#fff; background:#374151; }
+.sidebar nav a.active { color:#fff; border-left-color:#3B82F6; background:#1E3A5F; }
+.sidebar .sec-label { color:#9CA3AF; font-size:11px; font-weight:700;
+                      letter-spacing:.08em; text-transform:uppercase;
+                      padding:16px 20px 4px; }
+/* topbar */
+.topbar { position:fixed; top:0; left:250px; right:0; height:50px;
+          background:#fff; border-bottom:1px solid var(--border);
+          display:flex; align-items:center; padding:0 40px;
+          font-size:13px; color:var(--gray); z-index:50;
+          justify-content:space-between; }
+/* main */
+.main { margin-left:250px; margin-top:50px; padding:36px 48px;
+        max-width:1080px; }
+/* typography */
+h1 { font-size:28px; color:var(--navy); margin-bottom:8px;
+     padding-bottom:12px; border-bottom:3px solid var(--blue); }
+h2 { font-size:20px; color:var(--blue); margin:32px 0 10px; }
+h3 { font-size:16px; color:var(--navy); margin:20px 0 8px; }
+h4 { font-size:14px; color:var(--gray); margin:14px 0 6px; font-weight:600; }
+p  { line-height:1.8; margin-bottom:14px; }
+a  { color:var(--blue); }
+ul,ol { padding-left:22px; line-height:1.8; margin-bottom:14px; }
+li { margin-bottom:4px; }
+/* code */
+code { font-family:'Cascadia Code','Consolas',monospace; font-size:13px;
+       background:#F1F5F9; padding:1px 6px; border-radius:4px; color:#C7254E; }
+pre  { background:#0F172A; border-radius:8px; padding:18px;
+       overflow-x:auto; margin:0 0 18px; }
+pre code { color:#A5F3FC; background:none; padding:0; font-size:13px;
+           line-height:1.65; color:#E2E8F0; }
+/* tables */
+table { border-collapse:collapse; width:100%; margin-bottom:18px; font-size:14px; }
+th { background:var(--lblue); color:var(--navy); padding:10px 14px;
+     text-align:left; font-size:12px; text-transform:uppercase;
+     letter-spacing:.04em; border-bottom:2px solid var(--border); }
+td { padding:10px 14px; border-bottom:1px solid #F0F2F4; vertical-align:top; }
+tr:last-child td { border-bottom:none; }
+/* cards */
+.card { background:#fff; border:1px solid var(--border); border-radius:10px;
+        padding:24px 28px; margin-bottom:20px; }
+blockquote { border-left:4px solid var(--blue); margin:0 0 16px;
+             padding:10px 16px; background:var(--lblue);
+             border-radius:0 8px 8px 0; }
+blockquote p { margin:0; }
+/* callouts */
+.tip   { background:var(--lgreen); border-left:4px solid var(--green);
+         padding:12px 16px; border-radius:0 8px 8px 0; margin-bottom:16px; }
+.warn  { background:var(--lamber); border-left:4px solid var(--amber);
+         padding:12px 16px; border-radius:0 8px 8px 0; margin-bottom:16px; }
+.alert { background:var(--lred); border-left:4px solid var(--red);
+         padding:12px 16px; border-radius:0 8px 8px 0; margin-bottom:16px; }
+.tip p,.warn p,.alert p { margin:0; }
+/* step list */
+.steps { counter-reset:step; }
+.step  { display:flex; gap:16px; margin-bottom:20px; }
+.step-n { min-width:34px; height:34px; border-radius:50%; background:var(--blue);
+           color:#fff; font-weight:800; font-size:14px; display:flex;
+           align-items:center; justify-content:center; flex-shrink:0; }
+.step-b h3 { margin-top:4px; }
+/* badges */
+.badge { display:inline-block; padding:2px 10px; border-radius:12px;
+         font-size:11px; font-weight:700; }
+.b-exp  { background:#EFF6FF; color:var(--exp); }
+.b-proc { background:#FFF7ED; color:#C2410C; }
+.b-sys  { background:#ECFDF5; color:var(--sys); }
+.b-high { background:#FEF2F2; color:var(--red); }
+.b-med  { background:#FFFBEB; color:var(--amber); }
+.b-low  { background:#F0FDF4; color:var(--green); }
+.b-pass { background:#DCFCE7; color:#166534; }
+.b-fail { background:#FEE2E2; color:#991B1B; }
+/* verify box */
+.verify { background:#F0FDF4; border:1px solid #BBF7D0;
+          border-radius:8px; padding:16px 20px; margin-top:16px; }
+.verify h4 { color:var(--green); margin-top:0; }
+/* page show/hide */
+.page { display:none; }
+.page.active { display:block; }
+</style></head><body>
+<div class="sidebar"><div class="logo">API Governance<br><span>& Discovery Platform</span></div><nav><div class="sec-label">Setup</div><a href="#" id="nav-dev-overview" onclick="show('dev-overview');return false;">🏠 Overview & Setup</a><div class="sec-label">Build Milestones</div><a href="#" id="nav-dev-m1" onclick="show('dev-m1');return false;">M1  Schema & Data Load</a><a href="#" id="nav-dev-m1b" onclick="show('dev-m1b');return false;">M1b Taxonomy & Versions</a><a href="#" id="nav-dev-m2" onclick="show('dev-m2');return false;">M2  Traversal & Detection</a><a href="#" id="nav-dev-m7" onclick="show('dev-m7');return false;">M7  Core Assembly</a><a href="#" id="nav-dev-m8" onclick="show('dev-m8');return false;">M8  Graph & Findings UI</a><a href="#" id="nav-dev-m10" onclick="show('dev-m10');return false;">M10 Merge & Impact UI</a><a href="#" id="nav-dev-m12" onclick="show('dev-m12');return false;">M12 Refresh & Audit</a><div class="sec-label">Reference</div><a href="#" id="nav-dev-trouble" onclick="show('dev-trouble');return false;">🔧 Troubleshooting</a></nav></div><div class="topbar"><span id="topbar-title">Guide</span></div><div class="page" id="dev-overview"><div class="main">
+<h1>Developer Guide</h1>
+<p>Step-by-step instructions for building the Mule API Structural Detection
+Platform. Each milestone has a goal, all the agent prompts you need, the
+exact verification checks to run, and common failure causes.</p>
+
+<h2>Platform architecture</h2>
+<table>
+<tr><th>Layer</th><th>Technology</th><th>Why</th></tr>
+<tr><td>UI</td><td>Streamlit</td><td>Internal tool for architects — no public web app needed</td></tr>
+<tr><td>Database</td><td>PostgreSQL 15+</td><td>Single instance — relational + pgvector in one place</td></tr>
+<tr><td>Graph traversal</td><td>Recursive CTE</td><td>~3,000 nodes handled easily, no Neo4j needed</td></tr>
+<tr><td>Graph render</td><td>streamlit-agraph</td><td>Interactive directed graph, layer colouring</td></tr>
+<tr><td>Vector store</td><td>pgvector extension</td><td>Reserved in Phase 1, activated in Phase 2</td></tr>
+<tr><td>LLM</td><td>Internal endpoint</td><td>Reserved in Phase 1, wired in Phase 2</td></tr>
+</table>
+
+<h2>Project structure</h2>
+<pre><code>project/
+├── core/
+│   ├── db.py           # get_conn() — PostgreSQL connection
+│   ├── graph.py        # build_graph(conn) — networkx DiGraph from DB
+│   ├── traversal.py    # materialize_flows(conn) — recursive CTE
+│   └── rules.py        # find_duplicate_flows, find_pass_through_hops,
+│                       # find_deep_chains, find_fan_in_clusters
+├── app/
+│   ├── 1_Graph_Explorer.py
+│   ├── 2_Findings_Dashboard.py
+│   └── 3_Merge_Impact.py
+├── scripts/
+│   ├── ingest.py       # load_from_file(json_path)
+│   └── refresh.py      # run_refresh(conn) — weekly job
+├── sql/
+│   └── schema.sql      # All 21 DDL statements
+└── .env</code></pre>
+
+<h2>Environment setup</h2>
+<pre><code># 1. PostgreSQL + pgvector
+sudo apt install postgresql-16-pgvector
+# macOS: brew install pgvector
+
+# 2. Python environment
+python -m venv venv && source venv/bin/activate
+pip install psycopg2-binary streamlit streamlit-agraph
+pip install networkx pandas numpy python-dotenv
+
+# 3. Create the database
+psql -U postgres -c "CREATE DATABASE api_governance;"</code></pre>
+
+<h2>The .env file</h2>
+<pre><code>DATABASE_URL=postgresql://postgres:password@localhost:5432/api_governance
+# Phase 2 additions (leave blank for Phase 1):
+INTERNAL_LLM_URL=
+INTERNAL_LLM_API_KEY=
+INTERNAL_LLM_MODEL=
+INTERNAL_LLM_EMBED_URL=
+INTERNAL_LLM_EMBED_MODEL=</code></pre>
+
+<h2>Milestone sequence</h2>
+<table>
+<tr><th>Milestone</th><th>Delivers</th><th>Depends on</th></tr>
+<tr><td><strong>M1</strong></td><td>All 19 tables created, nodes and edges loaded</td><td>—</td></tr>
+<tr><td><strong>M1b</strong></td><td>Domain taxonomy mapped, version pairs linked</td><td>M1</td></tr>
+<tr><td><strong>M2</strong></td><td>Flows built, all 4 structural patterns detected</td><td>M1b</td></tr>
+<tr><td><strong>M7</strong></td><td>Clean core/ package with type-hinted functions</td><td>M2</td></tr>
+<tr><td><strong>M8</strong></td><td>Graph Explorer + Findings Dashboard screens live</td><td>M7</td></tr>
+<tr><td><strong>M10</strong></td><td>Merge Candidates + Impact Analysis screen live</td><td>M7</td></tr>
+<tr><td><strong>M12</strong></td><td>Weekly refresh, edge history, snapshot versioning</td><td>M8, M10</td></tr>
+</table>
+<div class="alert"><p><strong>Rule:</strong> Never start a milestone until the previous one's verify check passes. A schema gap discovered at M8 is ten times harder to fix than at M1.</p></div>
+</div></div><div class="page" id="dev-m1"><div class="main">
+<h1>M1 — Schema & Data Load</h1>
+<p><strong>Goal:</strong> All 19 PostgreSQL tables exist. Sample API data is loaded
+into <code>api_nodes</code> and <code>api_edges</code>. Provenance recorded in
+<code>source_repos</code> and <code>ingestion_runs</code>.</p>
+
+<p>The reserved tables (<code>node_embeddings</code>, <code>api_fields</code>,
+<code>composition_candidates</code>, etc.) are created now but stay empty until
+Phase 2. Creating them now avoids any migration later.</p>
+
+<h2>Agent prompt</h2>
+<pre><code>Create all 19 PostgreSQL tables from the DDL in 01-srs.md Sections 2.1-2.21.
+Include CREATE EXTENSION IF NOT EXISTS vector for node_embeddings even though
+it will not be populated in Phase 1.
+
+Write scripts/ingest.py with load_from_file(json_path: str) that:
+1. Opens the JSON file (list of API documents per 06-data-ingestion-guide.md Section 2)
+2. Pass 1 - inserts all nodes into api_nodes:
+   - Reject if layer not in ('exp','proc','sys') - print REJECTED with reason
+   - ON CONFLICT (project_name) DO UPDATE
+   - Collect node_name_to_id map after inserting all nodes
+3. Pass 2 - inserts all edges from each doc's calls[] array:
+   - Resolve source and target project_name to node_id
+   - Skip and print SKIP if either project_name not in node_map
+4. Pass 3 - insert source_repos rows (one per API)
+5. Wrap in start_run()/finish_run() that writes to ingestion_runs
+6. Print per-table row count at the end including reserved tables showing 0
+
+Do not populate: api_fields, node_embeddings, field_mappings,
+composition_candidates, llm_call_log, api_specs. These stay empty.</code></pre>
+
+<h2>Source data format</h2>
+<p>Each API document in the JSON file must have this shape:</p>
+<pre><code>{
+  "project_name":      "proc-nach-debit-api",
+  "layer":             "proc",
+  "domain":            "payments",
+  "functionality":     "NACH Debit Processing",
+  "owning_team":       "payments-team",
+  "listener_endpoint": "/proc/v1/nach/debit/initiate",
+  "purpose_text":      "Orchestrates NACH debit - validates mandate and submits to clearance.",
+  "repo_name":         "mule-proc-nach-debit",
+  "repo_url":          "https://bitbucket.org/org/mule-proc-nach-debit",
+  "calls": [
+    {
+      "target_project":  "sys-nach-clearance-api",
+      "source_endpoint": "/proc/v1/nach/debit/initiate",
+      "target_endpoint": "/nach/v2/clearance/submit",
+      "call_type":       "sync"
+    }
+  ]
+}</code></pre>
+
+<div class="verify">
+<h4>✓ Verify before moving to M1b</h4>
+<pre><code>-- All 19 tables must exist
+SELECT COUNT(*) FROM information_schema.tables
+WHERE table_schema='public' AND table_type='BASE TABLE';
+-- Expected: 19
+
+-- Nodes and edges loaded
+SELECT COUNT(*) FROM api_nodes WHERE status='active';  -- must be > 0
+SELECT COUNT(*) FROM api_edges;                         -- must be > 0
+
+-- Ingestion run completed
+SELECT run_id, status, nodes_created, edges_created
+FROM ingestion_runs ORDER BY started_at DESC LIMIT 1;
+-- status must be 'completed'
+
+-- Edges resolve correctly (must be 0)
+SELECT COUNT(*) FROM api_edges e
+WHERE NOT EXISTS (SELECT 1 FROM api_nodes WHERE node_id=e.source_node_id)
+   OR NOT EXISTS (SELECT 1 FROM api_nodes WHERE node_id=e.target_node_id);</code></pre>
+</div>
+
+<h2>Common failures</h2>
+<table>
+<tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr>
+<tr><td>Edge count is 0</td><td><code>calls[]</code> array empty in all source docs</td><td>Check your Bitbucket extraction — it must populate calls from HTTP client config in each Mule project</td></tr>
+<tr><td>Edges skipped "target not found"</td><td>project_name in calls[] doesn't exactly match api_nodes.project_name</td><td>Confirm naming convention is consistent — even a trailing space causes a miss</td></tr>
+<tr><td>Table count less than 19</td><td>Vector extension missing</td><td>Run <code>CREATE EXTENSION vector;</code> then re-run schema script</td></tr>
+</table></div></div><div class="page" id="dev-m1b"><div class="main">
+<h1>M1b — Taxonomy Seeding & Version Detection</h1>
+<p><strong>Goal:</strong> <code>domain_taxonomy</code> populated with canonical names.
+Every <code>api_nodes.domain_id</code> set — zero nulls. Version pairs (v1/v2)
+linked in <code>api_versions</code> so M2's duplicate-flow rule can suppress
+false positives between versioned APIs.</p>
+
+<div class="warn"><p><strong>Why M1b must run before M2:</strong> The duplicate-flow rule checks <code>api_versions</code> before raising a finding. If proc-payment-api-v1 and proc-payment-api-v2 both reach the same Sys API, they should NOT be flagged as a duplicate — they are just versioned. Without M1b, every version pair becomes a false positive.</p></div>
+
+<h2>Agent prompt</h2>
+<pre><code>M1 is complete. Implement taxonomy seeding and version detection.
+
+Step 1 - Seed domain_taxonomy:
+  Read all distinct domain values from api_nodes.domain
+  Deduplicate: 'payments', 'Payments', 'payment' -> canonical 'payments'
+  For any pair where canonical form is ambiguous, PRINT and STOP.
+  Do not guess. Ask me to confirm.
+  Insert into domain_taxonomy (domain_name, description).
+
+Step 2 - Map domain_id on api_nodes:
+  UPDATE api_nodes SET domain_id = matching domain_taxonomy.domain_id
+  WHERE LOWER(TRIM(domain)) = domain_name
+  After updating, run:
+    SELECT COUNT(*) FROM api_nodes WHERE domain_id IS NULL AND status='active';
+  This MUST return 0. If not, stop and report which nodes are unmatched.
+
+Step 3 - Detect version pairs:
+  Scan all project_names for these suffix patterns:
+    -v1, -v2, -v3, -v4 (e.g. proc-payment-api-v1)
+    -YYYY-MM date suffixes (e.g. proc-payment-api-2024-03)
+  Group by base name (strip suffix).
+  For each group with 2+ members:
+    - Sort by version label ascending
+    - Insert into api_versions: all versions linked, highest is_current=TRUE
+  If a version suffix exists but no counterpart found (e.g. -v2 with no -v1),
+  PRINT and flag for manual review. Do not guess.
+
+Print summary: domains seeded, nodes updated, version pairs detected.</code></pre>
+
+<div class="verify">
+<h4>✓ Verify before moving to M2</h4>
+<pre><code>-- Taxonomy populated
+SELECT domain_id, domain_name FROM domain_taxonomy ORDER BY domain_name;
+
+-- CRITICAL: this must return 0 rows
+SELECT project_name FROM api_nodes
+WHERE domain_id IS NULL AND status='active';
+
+-- Version pairs detected
+SELECT n.project_name, av.version_label, av.is_current
+FROM api_versions av
+JOIN api_nodes n ON n.node_id = av.node_id
+ORDER BY n.project_name, av.version_label;
+
+-- Quick sanity: version pair project_names share the same base
+-- e.g. proc-payment-api-v1 and proc-payment-api-v2 should both appear</code></pre>
+</div></div></div><div class="page" id="dev-m2"><div class="main">
+<h1>M2 — Traversal & Structural Detection</h1>
+<p><strong>Goal:</strong> The <code>flows</code> table is populated with all
+materialised call paths. All four structural patterns are detected and written
+to <code>structural_findings</code>. Duplicate-flow pairs also create
+<code>merge_candidates</code> rows with a structural score.</p>
+
+<h2>How the traversal works</h2>
+<p>A recursive CTE starts at every active Exp node and follows
+<code>api_edges</code> forward, building up <code>node_path[]</code> arrays
+until it reaches a Sys terminal or hits the depth limit (6 hops). Each
+complete path is one row in <code>flows</code>.</p>
+
+<pre><code>WITH RECURSIVE traverse AS (
+  -- Base: every active Exp node
+  SELECT node_id AS root_exp_id, node_id AS current_node,
+         ARRAY[node_id] AS node_path, 1 AS hop_count, layer
+  FROM api_nodes WHERE layer='exp' AND status='active'
+
+  UNION ALL
+
+  -- Follow each outbound edge
+  SELECT t.root_exp_id, e.target_node_id,
+         t.node_path || e.target_node_id,
+         t.hop_count + 1,
+         n.layer
+  FROM traverse t
+  JOIN api_edges e ON e.source_node_id = t.current_node
+  JOIN api_nodes n ON n.node_id = e.target_node_id
+  WHERE t.hop_count &lt; 6
+    AND NOT (e.target_node_id = ANY(t.node_path))
+    AND n.status = 'active'
+)
+SELECT * FROM traverse WHERE hop_count &gt;= 2;</code></pre>
+
+<h2>The four detection rules</h2>
+<table>
+<tr><th>Rule</th><th>Logic</th><th>Severity</th></tr>
+<tr><td>DUPLICATE_FLOW</td><td>Two+ distinct Exp nodes each have a flow reaching the same Sys terminal. Check api_versions before flagging — version pairs are suppressed.</td><td><span class="badge b-high">HIGH</span></td></tr>
+<tr><td>PASS_THROUGH_HOP</td><td>A Proc node has out_degree == 1. It passes through to one downstream API with no orchestration.</td><td><span class="badge b-med">MEDIUM</span></td></tr>
+<tr><td>DEEP_CHAIN</td><td>Any flow with hop_count >= 4. May indicate unnecessary intermediate steps.</td><td><span class="badge b-low">LOW</span></td></tr>
+<tr><td>FAN_IN_CLUSTER</td><td>A Sys node called by 3+ different Proc nodes. May be healthy reuse or accidental convergence.</td><td><span class="badge b-low">LOW</span></td></tr>
+</table>
+
+<h2>Agent prompt</h2>
+<pre><code>M1b is complete. Implement traversal and all four structural detection rules.
+
+Step 1 - materialize_flows(conn):
+  Run the recursive CTE from 01-srs.md Section 4.
+  TRUNCATE flows before inserting (rebuild from scratch each call).
+  Print row count inserted.
+
+Step 2 - Build a networkx DiGraph from api_nodes and api_edges.
+  Node attributes: layer, domain_id, project_name
+  This is used by pass_through and fan_in rules.
+
+Step 3 - Implement these four functions EXACTLY as in 01-srs.md Section 5:
+  find_duplicate_flows(flows_df, conn)
+    - Group flows by terminal_sys_id
+    - For each terminal with 2+ distinct root_exp_ids, check api_versions:
+      call same_version_lineage(root_a, root_b, conn) — if True, SKIP this pair
+    - Write DUPLICATE_FLOW finding to structural_findings
+    - Also INSERT merge_candidates row with structural_score (formula in Section 5.5)
+      Leave semantic_score=NULL, llm_rationale=NULL
+
+  find_pass_through_hops(G, id_to_name)
+    - Proc nodes where G.out_degree(node) == 1
+
+  find_deep_chains(flows_df, id_to_name)
+    - Flows where hop_count >= DEEP_CHAIN_THRESHOLD (default 4)
+
+  find_fan_in_clusters(G, id_to_name)
+    - Sys nodes where count of Proc predecessors >= FAN_IN_THRESHOLD (default 3)
+
+Print finding counts per pattern type.</code></pre>
+
+<div class="verify">
+<h4>✓ Verify before moving to M7</h4>
+<pre><code>-- Flows built
+SELECT COUNT(*) FROM flows;   -- must be > 0
+
+-- All four patterns present
+SELECT pattern_type, severity, COUNT(*)
+FROM structural_findings
+GROUP BY pattern_type, severity
+ORDER BY pattern_type;
+
+-- Version pair NOT in duplicate findings
+-- (replace with your actual version-pair names)
+SELECT detail FROM structural_findings
+WHERE pattern_type='DUPLICATE_FLOW'
+  AND detail::text LIKE '%-v1%' AND detail::text LIKE '%-v2%';
+-- Must return 0 rows
+
+-- Merge candidates created
+SELECT mc.candidate_id, mc.structural_score,
+       na.project_name AS api_a, nb.project_name AS api_b
+FROM merge_candidates mc
+JOIN api_nodes na ON na.node_id=mc.node_a_id
+JOIN api_nodes nb ON nb.node_id=mc.node_b_id;
+
+-- LLM fields correctly null in Phase 1
+SELECT COUNT(*) FROM merge_candidates WHERE llm_rationale IS NOT NULL;
+-- Must be 0</code></pre>
+</div></div></div><div class="page" id="dev-m7"><div class="main">
+<h1>M7 — Core Module Assembly</h1>
+<p><strong>Goal:</strong> All logic built in M1–M2 reorganised into the
+<code>core/</code> Python package. No logic changes — pure code organisation
+with type hints added. The Streamlit pages will import from here.</p>
+
+<h2>Required package structure</h2>
+<pre><code>core/
+├── __init__.py
+├── db.py
+├── graph.py
+├── traversal.py
+└── rules.py</code></pre>
+
+<h2>Required function signatures</h2>
+<pre><code># core/db.py
+def get_conn() -> psycopg2.connection:
+    # Return a PostgreSQL connection using DATABASE_URL from .env
+    ...
+
+# core/graph.py
+def build_graph(conn) -> nx.DiGraph:
+    # Build networkx DiGraph from api_nodes and api_edges
+    # Node attributes: node_id, project_name, layer, domain_id, status
+    ...
+
+def get_node_names(conn) -> dict[int, str]:
+    # Return {node_id: project_name} for all active nodes
+    ...
+
+# core/traversal.py
+def materialize_flows(conn) -> int:
+    # Run recursive CTE, truncate and reload flows table
+    # Returns number of rows inserted
+    ...
+
+def get_flows_df(conn) -> pd.DataFrame:
+    # Read flows table into a DataFrame for detection rules
+    ...
+
+# core/rules.py
+def find_duplicate_flows(flows_df: pd.DataFrame, conn) -> list[dict]: ...
+def find_pass_through_hops(G: nx.DiGraph, id_to_name: dict) -> list[dict]: ...
+def find_deep_chains(flows_df: pd.DataFrame, id_to_name: dict) -> list[dict]: ...
+def find_fan_in_clusters(G: nx.DiGraph, id_to_name: dict) -> list[dict]: ...
+def run_all_rules(conn) -> list[dict]:
+    # Run all four rules and return combined list of finding dicts
+    ...
+def write_findings(findings: list[dict], conn) -> int:
+    # Insert findings to structural_findings. Returns count.
+    ...
+def structural_score(flow_a_len: int, flow_b_len: int, same_domain: bool) -> float: ...</code></pre>
+def structural_score(flow_a_len: int, flow_b_len: int,
+                     same_domain: bool) -> float</code></pre>
+
+<h2>Agent prompt</h2>
+<pre><code>M2 is verified and all detection logic is working.
+Reorganise the code into the core/ package with these exact file and
+function names. Do not change any logic — only move code and update imports.
+
+Rules:
+1. core/db.py reads DATABASE_URL from .env using python-dotenv
+2. Every public function must have a type-hinted signature and a one-line docstring
+3. core/rules.py must export run_all_rules(conn) that calls all four
+   detectors and returns a combined list
+4. After moving code, run this integration test and confirm output matches
+   the M2 verify output exactly:
+
+from core.db import get_conn
+from core.rules import run_all_rules
+findings = run_all_rules(get_conn())
+print(len(findings))   # must match M2 finding count</code></pre>
+
+<div class="verify">
+<h4>✓ Verify before moving to M8</h4>
+<pre><code>python3 -c "
+from core.db import get_conn
+from core.graph import build_graph, get_node_names
+from core.traversal import materialize_flows, get_flows_df
+from core.rules import run_all_rules, write_findings
+
+conn     = get_conn()
+G        = build_graph(conn)
+flows_df = get_flows_df(conn)
+findings = run_all_rules(conn)
+
+print(f'Nodes: {G.number_of_nodes()}')
+print(f'Flows: {len(flows_df)}')
+print(f'Findings: {len(findings)}')
+for f in findings:
+    print(f'  {f["pattern_type"]}')
+"
+# All counts must match M2 verify output exactly</code></pre>
+</div></div></div><div class="page" id="dev-m8"><div class="main">
+<h1>M8 — Streamlit: Graph Explorer & Findings Dashboard</h1>
+<p><strong>Goal:</strong> Two screens live. The graph renders with layer
+colouring and finding overlays. Architects can review and approve/dismiss
+findings with a mandatory comment and full audit trail.</p>
+
+<h2>Layer colour scheme (exact hex)</h2>
+<table>
+<tr><th>Layer</th><th>Colour</th><th>Code</th></tr>
+<tr><td><span class="badge b-exp">EXP</span></td><td>Blue</td><td><code>#4C72B0</code></td></tr>
+<tr><td><span class="badge b-proc">PROC</span></td><td>Orange</td><td><code>#DD8452</code></td></tr>
+<tr><td><span class="badge b-sys">SYS</span></td><td>Green</td><td><code>#55A868</code></td></tr>
+<tr><td>Finding overlay</td><td>Red</td><td><code>#E74C3C</code></td></tr>
+</table>
+
+<h2>Critical implementation requirements</h2>
+<div class="alert"><p><strong>Transaction requirement:</strong> The Approve and Dismiss buttons must write the status update AND the audit_log row in a <strong>single transaction</strong>. If the status updates but the audit_log insert fails, you have an unaudited governance action.</p></div>
+
+<pre><code># CORRECT — both writes in one transaction
+with conn:
+    with conn.cursor() as cur:
+        cur.execute("UPDATE structural_findings SET review_status=%s WHERE finding_id=%s",
+                    ('reviewed', finding_id))
+        cur.execute("INSERT INTO audit_log "
+                    "(entity_type, entity_id, action, comment, reviewer) "
+                    "VALUES ('finding', %s, 'reviewed', %s, 'architect')",
+                    (finding_id, comment))
+# conn.__exit__ commits both or rolls back both
+
+# WRONG — two separate commits, audit_log could be missed
+conn.cursor().execute("UPDATE ...")
+conn.commit()
+conn.cursor().execute("INSERT INTO audit_log ...")
+conn.commit()</code></pre>
+
+<h2>Agent prompt</h2>
+<pre><code>Build app/1_Graph_Explorer.py and app/2_Findings_Dashboard.py
+exactly as specified in 03-ui-design.md Sections 1 and 2.
+
+Critical rules:
+1. Layer colours are exact hex: exp=#4C72B0, proc=#DD8452, sys=#55A868
+2. Node size = 15 + min(G.in_degree(node_id) * 5, 35)
+3. Finding overlay: when checkbox ticked, nodes in open findings get #E74C3C
+4. Approve and Dismiss: BOTH the UPDATE and the INSERT audit_log must be
+   inside a single "with conn: with conn.cursor() as cur:" block.
+   Separate commits are WRONG.
+5. Comment is required — if empty, show st.warning() and do NOT write to DB.
+6. "View in graph" button: st.session_state['filter_node'] = node_id
+   then st.switch_page("pages/1_Graph_Explorer.py")
+7. Import from core/ only — no raw psycopg2 SQL in the page files
+   except for the transaction blocks that need the conn context directly.
+8. streamlit run app/1_Graph_Explorer.py must launch without errors.</code></pre>
+
+<div class="verify">
+<h4>✓ Verify before moving to M10</h4>
+<ul>
+<li>Node count shown in graph matches <code>SELECT COUNT(*) FROM api_nodes WHERE status='active'</code></li>
+<li>Finding count in dashboard matches <code>SELECT COUNT(*) FROM structural_findings WHERE review_status='open'</code></li>
+<li>Click "Mark reviewed" with an empty comment → warning shown, DB unchanged</li>
+<li>Click "Mark reviewed" with a comment → both <code>review_status</code> updated AND <code>audit_log</code> row present</li>
+<li>"View in graph" button → lands on Graph Explorer with correct node highlighted</li>
+<li>Toggle "Show findings" checkbox → finding nodes turn red, non-finding nodes keep layer colour</li>
+</ul>
+</div></div></div><div class="page" id="dev-m10"><div class="main">
+<h1>M10 — Streamlit: Merge Candidates & Impact Analysis</h1>
+<p><strong>Goal:</strong> Screen 3 live. Two panels side by side: merge
+candidate cards (left) and impact analysis tree (right). All three actions
+(Approve/Reject/Defer) write to both <code>merge_candidates</code> and
+<code>audit_log</code> in a single transaction.</p>
+
+<h2>Merge candidate card — what to show</h2>
+<table>
+<tr><th>Field</th><th>Source</th><th>Display</th></tr>
+<tr><td>API names</td><td><code>merge_candidates</code> joined to <code>api_nodes</code></td><td>Bold project names with ↔ between them</td></tr>
+<tr><td>Structural score</td><td><code>structural_score</code></td><td><code>st.metric()</code> — 0.00 to 1.00</td></tr>
+<tr><td>Domain alignment</td><td>Compare <code>domain_id</code> of both nodes</td><td>✓ Same or ✗ Different</td></tr>
+<tr><td>Traffic risk</td><td><code>traffic_metrics</code> (if populated)</td><td>LOW / MEDIUM / HIGH / UNKNOWN</td></tr>
+<tr><td>LLM rationale</td><td><code>llm_rationale</code></td><td>If NULL: show grey italic "pending — added in semantic detection phase"</td></tr>
+</table>
+
+<h2>Impact analysis — upstream and downstream</h2>
+<pre><code># Upstream: who calls this node
+SELECT n.project_name, n.layer,
+       e.source_endpoint_path, e.target_endpoint_path
+FROM api_edges e
+JOIN api_nodes n ON n.node_id = e.source_node_id
+WHERE e.target_node_id = %s AND n.status = 'active'
+ORDER BY n.layer, n.project_name;
+
+# Downstream: what this node calls
+SELECT n.project_name, n.layer,
+       e.source_endpoint_path, e.target_endpoint_path
+FROM api_edges e
+JOIN api_nodes n ON n.node_id = e.target_node_id
+WHERE e.source_node_id = %s AND n.status = 'active'
+ORDER BY n.layer, n.project_name;</code></pre>
+
+<h2>Agent prompt</h2>
+<pre><code>Build app/3_Merge_Impact.py as specified in 03-ui-design.md Section 3.
+Two columns: merge candidates left, impact analysis right.
+
+Merge candidates:
+1. Query WHERE status='pending', ORDER BY structural_score DESC
+2. Join api_nodes twice (node_a and node_b) for project names
+3. Join domain_taxonomy twice to compare domain alignment
+4. For traffic risk: LEFT JOIN traffic_metrics and aggregate hits if available
+   If no rows for this node: show traffic_risk = 'UNKNOWN'
+5. If llm_rationale IS NULL: show grey italic text
+   "pending — added in semantic detection phase"
+6. All three buttons (Approve/Reject/Defer): single transaction with audit_log
+7. Comment required for all three — st.warning() if empty
+8. After any action: st.rerun()
+
+Impact analysis:
+1. Text input for project_name (ILIKE %search%)
+2. Upstream: api_edges WHERE target_node_id = found node
+3. Downstream: api_edges WHERE source_node_id = found node
+4. Show endpoint paths for each hop, not just project names
+5. If upstream empty: "None — this is an entry point"
+6. If downstream empty: "None — this is a terminal node"</code></pre>
+
+<div class="verify">
+<h4>✓ Verify before moving to M12</h4>
+<ul>
+<li>Merge candidate count matches <code>SELECT COUNT(*) FROM merge_candidates WHERE status='pending'</code></li>
+<li>Approve one candidate → <code>status='approved'</code> AND <code>audit_log</code> row with <code>entity_type='merge_candidate'</code></li>
+<li>Impact analysis for a known Proc node → upstream shows its Exp caller(s), downstream shows its Sys callee(s)</li>
+<li>Impact analysis for a terminal Sys node → downstream shows "None"</li>
+<li>Impact analysis for a root Exp node → upstream shows "None"</li>
+</ul>
+</div></div></div><div class="page" id="dev-m12"><div class="main">
+<h1>M12 — Refresh, Snapshots & Audit Trail</h1>
+<p><strong>Goal:</strong> A scheduled weekly job that re-runs traversal and
+detection, creates a <code>graph_snapshots</code> row, logs edge changes to
+<code>edge_history</code>, and diffs findings into new/resolved/persisting
+so architects can see what changed since last week.</p>
+
+<h2>Refresh job steps (in order)</h2>
+<div class="steps">
+<div class="step"><div class="step-n">1</div><div class="step-b">
+<h3>Create ingestion_runs row</h3>
+<p>Insert with <code>status='running'</code>. All subsequent steps reference this <code>run_id</code>.</p>
+</div></div>
+<div class="step"><div class="step-n">2</div><div class="step-b">
+<h3>Reload nodes and edges</h3>
+<p>Re-ingest from source or detect changes. Update any changed <code>purpose_text</code>, <code>owning_team</code>, etc.</p>
+</div></div>
+<div class="step"><div class="step-n">3</div><div class="step-b">
+<h3>Edge diff → edge_history</h3>
+<p>Compare current <code>api_edges</code> to the previous run. New edges get <code>event_type='appeared'</code>, removed edges get <code>event_type='disappeared'</code>.</p>
+</div></div>
+<div class="step"><div class="step-n">4</div><div class="step-b">
+<h3>Rebuild flows</h3>
+<p>Call <code>materialize_flows(conn)</code> — truncates and rebuilds the flows table.</p>
+</div></div>
+<div class="step"><div class="step-n">5</div><div class="step-b">
+<h3>Create graph_snapshots row</h3>
+<p>Insert with <code>run_id</code>, <code>node_count</code>, <code>edge_count</code>. UPDATE flows to set <code>snapshot_id</code>.</p>
+</div></div>
+<div class="step"><div class="step-n">6</div><div class="step-b">
+<h3>Re-run all four rules</h3>
+<p>Call <code>run_all_rules(conn)</code>. Tag each new finding with the <code>snapshot_id</code>.</p>
+</div></div>
+<div class="step"><div class="step-n">7</div><div class="step-b">
+<h3>Finding diff</h3>
+<p>Compare new findings to previous snapshot. Tag each with <code>detail['diff_status']</code> = <code>'new'</code>, <code>'persisting'</code>, or <code>'resolved'</code>.</p>
+</div></div>
+<div class="step"><div class="step-n">8</div><div class="step-b">
+<h3>Close ingestion_runs row</h3>
+<p>UPDATE <code>status='completed'</code>, <code>completed_at=NOW()</code>.</p>
+</div></div>
+</div>
+
+<h2>Agent prompt</h2>
+<pre><code>Build scripts/refresh.py with run_refresh(conn) implementing the 8 steps above.
+
+Additional requirements:
+- Steps 4-7 must all use the SAME snapshot_id created in step 5.
+  If step 4 truncates flows and step 5 creates the snapshot, then step 4
+  rows have no snapshot_id. Fix: create snapshot BEFORE truncating flows,
+  or UPDATE flows after step 5.
+- Edge diff: get previous run's edge set from api_edges as it was
+  (use edge_history to reconstruct, or keep a snapshot of edge IDs)
+- APScheduler: schedule for every Monday 02:00
+  scheduler.add_job(lambda: run_refresh(get_conn()),
+                    'cron', day_of_week='mon', hour=2)
+- Also expose as "Run refresh now" button callable from Streamlit UI
+
+Wire the diff_status tag into the Findings Dashboard filter
+(add a "Diff status" dropdown: all / new / persisting / resolved).</code></pre>
+
+<div class="verify">
+<h4>✓ Verify after M12</h4>
+<pre><code>-- After running run_refresh():
+SELECT run_id, status, nodes_created, edges_created, completed_at
+FROM ingestion_runs ORDER BY started_at DESC LIMIT 1;
+-- status must be 'completed'
+
+-- Snapshot created and linked to flows
+SELECT s.snapshot_id, s.node_count, s.edge_count
+FROM graph_snapshots s ORDER BY taken_at DESC LIMIT 1;
+
+SELECT COUNT(*) FROM flows
+WHERE snapshot_id = (SELECT snapshot_id FROM graph_snapshots
+                     ORDER BY taken_at DESC LIMIT 1);
+-- Must be > 0
+
+-- Finding diff tags present
+SELECT detail->>'diff_status', COUNT(*)
+FROM structural_findings
+WHERE snapshot_id = (SELECT snapshot_id FROM graph_snapshots
+                     ORDER BY taken_at DESC LIMIT 1)
+GROUP BY detail->>'diff_status';</code></pre>
+</div></div></div><div class="page" id="dev-trouble"><div class="main">
+<h1>Troubleshooting</h1>
+<table>
+<tr><th>Symptom</th><th>Most likely cause</th><th>Fix</th></tr>
+<tr><td><code>operator does not exist: vector &lt;=&gt; vector</code></td><td>pgvector extension not active in this session</td><td>Run <code>CREATE EXTENSION IF NOT EXISTS vector;</code> in psql, then reconnect</td></tr>
+<tr><td>Graph Explorer shows 0 nodes</td><td>api_nodes empty or layer filter hiding all</td><td>Check <code>SELECT COUNT(*) FROM api_nodes WHERE status='active'</code> — if 0, run ingest.py</td></tr>
+<tr><td>Findings Dashboard shows 0 findings</td><td>M2 did not run or flows table empty</td><td>Check <code>SELECT COUNT(*) FROM flows</code> — if 0, re-run materialize_flows()</td></tr>
+<tr><td>All edges are PASS_THROUGH_HOP</td><td>Every Proc node calls only one downstream</td><td>Check your source data — if proc APIs genuinely only call one sys API, this is correct. Raise FAN_IN_THRESHOLD if too noisy.</td></tr>
+<tr><td>Version pair appears as DUPLICATE_FLOW</td><td>M1b did not run, api_versions empty</td><td>Run M1b verify: <code>SELECT COUNT(*) FROM api_versions</code> — must be > 0</td></tr>
+<tr><td>Merge candidate Approve does nothing</td><td>Comment field empty — UI shows warning but doesn't scroll to it</td><td>Scroll up after clicking — warning appears above the button</td></tr>
+<tr><td>Streamlit page shows blank content on one tab</td><td>st.switch_page path is wrong</td><td>Use exact path: <code>"pages/2_Findings_Dashboard.py"</code> — must match actual filename</td></tr>
+<tr><td>DEEP_CHAIN findings far too many</td><td>Threshold too low for your architecture</td><td>Raise DEEP_CHAIN_THRESHOLD from 4 to 5 in core/rules.py</td></tr>
+<tr><td>FAN_IN findings too noisy (shared Sys APIs)</td><td>Threshold too low</td><td>Raise FAN_IN_THRESHOLD from 3 to 5 or 6 at full scale</td></tr>
+</table>
+
+<h2>Running the application</h2>
+<pre><code>source venv/bin/activate
+streamlit run app/1_Graph_Explorer.py
+# Opens at http://localhost:8501
+# Sidebar shows all 3 screens automatically</code></pre>
+
+<h2>Running the refresh job manually</h2>
+<pre><code>python scripts/refresh.py
+# Or from Python:
+from scripts.refresh import run_refresh
+from core.db import get_conn
+run_refresh(get_conn())</code></pre>
+</div></div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.remove('active'));
+  var pg=document.getElementById(id);
+  var lnk=document.getElementById('nav-'+id);
+  if(pg) pg.classList.add('active');
+  if(lnk){ lnk.classList.add('active');
+    document.getElementById('topbar-title').textContent=lnk.textContent.trim(); }
+  window.scrollTo(0,0);
+}
+</script><script>show('dev-overview');</script>
+</body></html>

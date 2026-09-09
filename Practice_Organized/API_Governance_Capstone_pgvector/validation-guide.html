@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Validation Guide — API Governance Platform</title>
+
+<style>
+  :root {
+    --navy:  #1F2937;
+    --blue:  #2E5C8A;
+    --lblue: #EAF1F8;
+    --green: #1E7B4D;
+    --lgreen:#E8F5EC;
+    --amber: #B8860B;
+    --lamber:#FBF3E0;
+    --red:   #B3261E;
+    --lred:  #FBEAEA;
+    --gray:  #6B7280;
+    --lgray: #F0F2F6;
+    --border:#D5D7DE;
+    --code:  #F4F4F4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    color: #1A1A1A;
+    background: #F9FAFB;
+  }
+  /* sidebar */
+  .sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 240px; height: 100vh;
+    background: var(--navy);
+    overflow-y: auto;
+    padding: 20px 0;
+    z-index: 100;
+  }
+  .sidebar .logo {
+    color: #F9FAFB; font-size: 14px; font-weight: 700;
+    padding: 0 20px 20px; border-bottom: 1px solid #374151;
+    line-height: 1.4;
+  }
+  .sidebar .logo span { color: #93C5FD; }
+  .sidebar nav { padding: 12px 0; }
+  .sidebar nav a {
+    display: block; color: #D1D5DB;
+    padding: 7px 20px; font-size: 13px;
+    text-decoration: none; border-left: 3px solid transparent;
+  }
+  .sidebar nav a:hover { color: #fff; background: #374151; }
+  .sidebar nav a.active { color: #fff; border-left-color: #3B82F6; background: #1E3A5F; }
+  .sidebar nav .section-label {
+    color: #6B7280; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 16px 20px 4px;
+  }
+  /* main content */
+  .main { margin-left: 240px; padding: 40px 52px; max-width: 1100px; }
+  h1 { font-size: 30px; color: var(--navy); margin: 0 0 8px;
+       padding-bottom: 10px; border-bottom: 3px solid var(--blue); }
+  h2 { font-size: 22px; color: var(--blue); margin: 36px 0 10px; }
+  h3 { font-size: 17px; color: var(--navy); margin: 24px 0 8px; }
+  h4 { font-size: 15px; color: var(--gray); margin: 16px 0 6px; }
+  p  { line-height: 1.75; margin: 0 0 14px; }
+  a  { color: var(--blue); }
+  ul, ol { line-height: 1.75; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  /* code */
+  code {
+    font-family: 'Cascadia Code','Consolas',monospace;
+    font-size: 13px; background: var(--code);
+    padding: 1px 5px; border-radius: 4px; color: #C7254E;
+  }
+  pre {
+    background: #0F1117; border-radius: 8px;
+    padding: 16px; overflow-x: auto; margin: 0 0 18px;
+  }
+  pre code {
+    color: #A5F3FC; background: none;
+    padding: 0; font-size: 13px; line-height: 1.65;
+  }
+  /* tables */
+  table { border-collapse: collapse; width: 100%; margin: 0 0 18px; font-size: 14px; }
+  th {
+    background: var(--lblue); color: var(--navy);
+    padding: 9px 13px; text-align: left; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    border-bottom: 2px solid var(--border);
+  }
+  td { padding: 10px 13px; border-bottom: 1px solid #EEF0F4; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  /* callouts */
+  blockquote {
+    border-left: 4px solid var(--blue); margin: 0 0 16px;
+    padding: 10px 16px; background: var(--lblue);
+    border-radius: 0 8px 8px 0; color: #374151;
+  }
+  blockquote p { margin: 0; }
+  /* badge pills */
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.03em;
+  }
+  .badge-blue   { background: var(--lblue);  color: var(--blue); }
+  .badge-green  { background: var(--lgreen); color: var(--green); }
+  .badge-amber  { background: var(--lamber); color: var(--amber); }
+  .badge-red    { background: var(--lred);   color: var(--red); }
+  /* section card */
+  .card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 10px; padding: 24px 28px; margin-bottom: 20px;
+  }
+  .card h2 { margin-top: 0; }
+  /* step numbers */
+  .steps { counter-reset: step; }
+  .step  { display: flex; gap: 16px; margin-bottom: 20px; }
+  .step-num {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--blue); color: #fff;
+    font-weight: 800; font-size: 14px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-body h3 { margin-top: 4px; }
+  /* pass/warn/fail indicators */
+  .pass  { color: var(--green); font-weight: 700; }
+  .warn  { color: var(--amber); font-weight: 700; }
+  .fail  { color: var(--red);   font-weight: 700; }
+  /* top bar */
+  .topbar {
+    position: fixed; top: 0; left: 240px; right: 0; height: 48px;
+    background: #fff; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 52px;
+    font-size: 13px; color: var(--gray); z-index: 50;
+  }
+  .main { margin-top: 48px; }
+  /* page sections */
+  .page { display: none; }
+  .page.active { display: block; }
+</style>
+
+</head>
+<body>
+<div class="sidebar"><div class="logo">API Governance<br><span>& Discovery Platform</span></div><nav><div class="section-label">Validation Layers</div><a href="#" id="nav-val-intro" onclick="show('val-intro');return false;">📋 Overview</a><a href="#" id="nav-val-layer1" onclick="show('val-layer1');return false;">Layer 1 — Ingestion</a><a href="#" id="nav-val-layer2" onclick="show('val-layer2');return false;">Layer 2 — Retrieval</a><a href="#" id="nav-val-layer3" onclick="show('val-layer3');return false;">Layer 3 — Composition</a><a href="#" id="nav-val-layer4" onclick="show('val-layer4');return false;">Layer 4 — Embeddings</a><a href="#" id="nav-val-layer5" onclick="show('val-layer5');return false;">Layer 5 — Graph Correctness</a><a href="#" id="nav-val-layer6" onclick="show('val-layer6');return false;">Layer 6 — Phase 1 Rules</a><a href="#" id="nav-val-layer7" onclick="show('val-layer7');return false;">Layer 7 — Workflow & Audit</a><a href="#" id="nav-val-layer8" onclick="show('val-layer8');return false;">Layer 8 — LLM Consistency</a><a href="#" id="nav-val-gate" onclick="show('val-gate');return false;">✅ Go-Live Gate</a><a href="#" id="nav-val-finetune" onclick="show('val-finetune');return false;">🎛️ Tuning vs Fine-tuning</a><a href="#" id="nav-val-monitor" onclick="show('val-monitor');return false;">📊 Production Monitoring</a></nav></div>
+<div class="topbar" id="topbar-title">Developer Guide</div>
+<div class="page" id="val-intro"><div class="main"><h1 id="validation-guide">Validation Guide</h1>
+<h2 id="api-governance-discovery-platform">API Governance &amp; Discovery Platform</h2>
+<p>This guide explains how to validate every layer of the platform —
+ingestion quality, retrieval quality, composition correctness, and
+embedding quality — and how to determine whether fine-tuning is needed.</p>
+<hr />
+<h2 id="the-four-validation-layers">The four validation layers</h2>
+<p>Each layer must be validated in order. A problem at Layer 1 (ingestion)
+cascades into every higher layer — fixing retrieval quality before fixing
+ingestion is wasted effort.</p>
+<pre><code>Layer 1 — Ingestion quality          (fix first)
+    ↓ only if Layer 1 passes
+Layer 2 — Retrieval quality          (measure with labelled test set)
+    ↓ only if Layer 2 passes
+Layer 3 — Composition correctness    (architect review)
+    ↓ only if Layer 3 passes
+Layer 4 — Embedding quality          (UMAP + numeric gap)
+</code></pre>
+<hr /></div></div><div class="page" id="val-layer1"><div class="main"><h2 id="layer-1-ingestion-quality">Layer 1 — Ingestion Quality</h2>
+<h3 id="what-youre-validating">What you're validating</h3>
+<p>The LLM-extracted purpose text and structured fields accurately describe
+what the real API does — not a generic placeholder.</p>
+<h3 id="method-manual-spot-check-not-automatable">Method: manual spot-check (not automatable)</h3>
+<p>Open the raw Bitbucket spec (or RAML/Swagger) for 15 randomly-selected APIs.
+For each, compare:</p>
+<table>
+<thead>
+<tr>
+<th>What to check</th>
+<th>Source of truth</th>
+<th>Red flag</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>purpose_text</code> describes what the API actually does</td>
+<td>The RAML/Swagger description or README</td>
+<td>Generic text like "This is a microservice"</td>
+</tr>
+<tr>
+<td><code>functionality</code> correctly categorises the API</td>
+<td>The API's actual business function</td>
+<td>Mismatched (e.g. a payment API tagged as "customer")</td>
+</tr>
+<tr>
+<td><code>domain</code> is the canonical form</td>
+<td>The <code>domain_taxonomy</code> table</td>
+<td>Free-text variants ("Payments" vs "payments")</td>
+</tr>
+<tr>
+<td><code>request_fields_structured</code> lists the real request fields</td>
+<td>The RAML requestBody / Swagger parameters</td>
+<td>Missing fields, wrong types, wrong required flags</td>
+</tr>
+<tr>
+<td><code>response_fields_structured</code> lists the real response fields</td>
+<td>The RAML/Swagger responses</td>
+<td>Missing the actual fields the API returns</td>
+</tr>
+</tbody>
+</table>
+<h3 id="acceptance-threshold">Acceptance threshold</h3>
+<p>13 out of 15 spot-checked APIs must pass all checks (87%).
+If below 87%: revise the LLM extraction prompt before proceeding.</p>
+<h3 id="the-single-most-important-check">The single most important check</h3>
+<p>Read the <code>purpose_text</code> out loud and ask: "If I searched for this API
+using these words, would I find it?" If the answer is no — if the text
+is too generic, too technical, or uses jargon that users would not type
+in a search box — the retrieval quality (Layer 2) will be poor regardless
+of the embedding model.</p>
+<h3 id="running-the-automated-checks-from-the-practice-notebook">Running the automated checks from the practice notebook</h3>
+<pre><code class="language-sql">-- Check 1: no nodes missing purpose embedding
+SELECT project_name FROM api_nodes n
+LEFT JOIN node_embeddings e ON e.node_id = n.node_id AND e.chunk_type = 'purpose'
+WHERE n.status = 'active' AND e.embedding_id IS NULL;
+
+-- Check 2: no nodes missing structured fields (composition validator is blind for these)
+SELECT project_name FROM api_nodes n
+LEFT JOIN api_fields f ON f.node_id = n.node_id
+WHERE n.status = 'active' AND f.field_id IS NULL;
+
+-- Check 3: no nodes with unresolved domain (free-text, not taxonomy-linked)
+SELECT project_name FROM api_nodes WHERE domain_id IS NULL AND status = 'active';
+</code></pre>
+<p>All three queries must return zero rows before proceeding.</p>
+<hr /></div></div><div class="page" id="val-layer2"><div class="main"><h2 id="layer-2-retrieval-quality">Layer 2 — Retrieval Quality</h2>
+<h3 id="what-youre-validating">What you're validating</h3>
+<p>When a developer searches for a requirement, the correct API appears
+in the top results.</p>
+<h3 id="method-labelled-test-set-create-this-yourself-it-cannot-be-automated">Method: labelled test set (create this yourself — it cannot be automated)</h3>
+<p><strong>Step 1 — Create the test set before running any searches.</strong>
+Write 25-30 requirements in plain English. For each, write the correct
+answer (which API or APIs should be found). Do this based on your
+knowledge of the real APIs, not based on searching.</p>
+<pre><code>Requirement: &quot;Process a NACH debit for a recurring subscription payment&quot;
+Correct answer: proc-nach-debit-api  (DIRECT_MATCH)
+
+Requirement: &quot;Validate a bank mandate and then initiate a debit&quot;
+Correct answer: proc-mandate-validate-api → proc-nach-debit-api  (COMPOSE)
+
+Requirement: &quot;Check available inventory for a product SKU before order&quot;
+Correct answer: proc-inventory-check-api  (DIRECT_MATCH)
+
+Requirement: &quot;Real-time machine learning fraud detection for transactions&quot;
+Correct answer: NEW_BUILD (no existing API)
+</code></pre>
+<p>Include at least:
+- 8-10 DIRECT_MATCH cases (clear single-API match)
+- 5-6 COMPOSE cases (need 2 APIs chained)
+- 3-4 NEW_BUILD cases (no existing coverage)
+- 2-3 edge cases (domain overlap, near-duplicates that should NOT match)</p>
+<p><strong>Step 2 — Run each requirement through the platform and record the result.</strong></p>
+<p><strong>Step 3 — Measure recall@3</strong> (is the correct answer in the top 3 results?)</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+<th>Minimum threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recall@1</td>
+<td>Correct answer is result #1</td>
+<td>60%</td>
+</tr>
+<tr>
+<td>Recall@3</td>
+<td>Correct answer is in top 3</td>
+<td>72%</td>
+</tr>
+<tr>
+<td>NEW_BUILD precision</td>
+<td>System correctly returns no match</td>
+<td>75%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="if-recall3-is-below-72">If recall@3 is below 72%</h3>
+<p>Work through this diagnosis in order:</p>
+<ol>
+<li>
+<p><strong>Is Layer 1 passing?</strong> Low-quality purpose_text is the most common cause
+   of poor retrieval. Fix extraction before adjusting thresholds.</p>
+</li>
+<li>
+<p><strong>Is the similarity threshold too high?</strong> Lower the <code>threshold</code> parameter
+   in <code>run_semantic_search()</code> from 0.50 to 0.40 and re-measure.</p>
+</li>
+<li>
+<p><strong>Is the embedding gap too low?</strong> Run Layer 4 verification. If gap &lt; 0.10,
+   the embeddings are not separating well enough — review purpose_text quality.</p>
+</li>
+<li>
+<p><strong>Are the failing cases NEW_BUILD edge cases?</strong> If the correct answer is
+   "no match" but the system returns a low-confidence DIRECT_MATCH, raise the
+   DIRECT_MATCH threshold from 0.85 to 0.88.</p>
+</li>
+</ol>
+<p><strong>Fine-tuning the embedding model is NOT the right answer at this stage.</strong>
+All failures at this scale are caused by data quality or threshold settings,
+not by the embedding model's capability.</p>
+<hr /></div></div><div class="page" id="val-layer3"><div class="main"><h2 id="layer-3-composition-correctness">Layer 3 — Composition Correctness</h2>
+<h3 id="what-youre-validating">What you're validating</h3>
+<p>When the system recommends COMPOSE (two APIs chained), the proposed chain
+is actually valid and usable.</p>
+<h3 id="method-architect-review-of-first-20-compose-recommendations">Method: architect review of first 20 COMPOSE recommendations</h3>
+<p>For each COMPOSE result in <code>composition_candidates</code>:
+1. Read the LLM rationale
+2. Review the field mapping table (which required fields are satisfied/unsatisfied)
+3. Mark approved or rejected in the platform with a specific reason</p>
+<p>Track the approval rate: <code>approved / (approved + rejected)</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Approval rate</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≥ 70%</td>
+<td>Composition scoring is working well</td>
+<td>Proceed</td>
+</tr>
+<tr>
+<td>50-70%</td>
+<td>Borderline — investigate rejected cases</td>
+<td>Adjust weights or schema_compat threshold</td>
+</tr>
+<tr>
+<td>&lt; 50%</td>
+<td>Scoring unreliable</td>
+<td>Review field_mappings quality first</td>
+</tr>
+</tbody>
+</table>
+<h3 id="common-reasons-for-rejection-and-fixes">Common reasons for rejection and fixes</h3>
+<table>
+<thead>
+<tr>
+<th>Rejection reason</th>
+<th>Root cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"These APIs are in different domains and don't actually compose"</td>
+<td>domain_alignment weight too low</td>
+<td>Raise 0.25 → 0.35 in composition_confidence formula</td>
+</tr>
+<tr>
+<td>"The field mapping is superficial — same name but different meaning"</td>
+<td>LLM field equivalence check not catching semantic differences</td>
+<td>Review llm_call_log for field_equivalence calls on these pairs</td>
+</tr>
+<tr>
+<td>"API B is deprecated — should not be recommended"</td>
+<td>status filter missing in retrieval</td>
+<td>Confirm <code>n.status = 'active'</code> filter in all retrieval queries</td>
+</tr>
+<tr>
+<td>"The schema compatibility score is high but the fields don't actually match"</td>
+<td>Leaf-name matching too aggressive for this domain</td>
+<td>Consider domain-specific exclusion list for common leaf names that appear across unrelated contexts (e.g. 'id', 'name', 'status')</td>
+</tr>
+</tbody>
+</table>
+<hr /></div></div><div class="page" id="val-layer4"><div class="main"><h2 id="layer-4-embedding-quality">Layer 4 — Embedding Quality</h2>
+<h3 id="what-youre-validating">What you're validating</h3>
+<p>Semantically similar APIs actually cluster together in vector space,
+and dissimilar APIs are separated.</p>
+<h3 id="method-umap-plot-numeric-gap-check">Method: UMAP plot + numeric gap check</h3>
+<p>Run the verification from the practice notebook Section 9 (Check 10)
+or the Embedding Health screen in the application.</p>
+<pre><code class="language-python"># Expected output format
+Within-domain similarity : 0.XXX
+Cross-domain similarity  : 0.XXX
+Gap (want &gt; 0.10)        : 0.XXX
+</code></pre>
+<h3 id="interpreting-results">Interpreting results</h3>
+<table>
+<thead>
+<tr>
+<th>Gap</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; 0.20</td>
+<td>Strong separation</td>
+<td>No action needed</td>
+</tr>
+<tr>
+<td>0.10-0.20</td>
+<td>Adequate</td>
+<td>Monitor on next bulk ingestion</td>
+</tr>
+<tr>
+<td>0.05-0.10</td>
+<td>Weak</td>
+<td>Review purpose_text quality (Layer 1 first)</td>
+</tr>
+<tr>
+<td>&lt; 0.05</td>
+<td>Very weak</td>
+<td>Embeddings not useful for similarity — do not use Phase 2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="when-to-run-this-check">When to run this check</h3>
+<ul>
+<li>After the initial bulk ingestion of real data</li>
+<li>After any batch of 50+ new APIs are ingested</li>
+<li>If users report that search results seem unrelated to their queries</li>
+</ul>
+<hr /></div></div><div class="page" id="val-layer5"><div class="main"><h2 id="layer-5-graph-correctness">Layer 5 — Graph Correctness</h2>
+<h3 id="what-you-are-validating">What you are validating</h3>
+<p>The edges in <code>api_edges</code> accurately reflect the real Mule call relationships —
+correct source/target nodes, correct endpoint paths, no missing edges.
+The four AI/data layers all assume the graph is correct. If edges are wrong
+or missing, every downstream feature — Phase 1 findings, impact analysis,
+duplicate flow detection — produces wrong answers silently. No error, just
+wrong results.</p>
+<h3 id="method-manual-flow-trace-5-known-flows">Method: manual flow trace (5 known flows)</h3>
+<p>Pick 5 complete flows you can verify independently — from Anypoint Studio,
+Mule runtime logs, or your own knowledge of the system.
+For each flow, walk it by hand and then query the database to confirm.</p>
+<pre><code class="language-sql">-- Confirm a known flow exists end-to-end
+-- Example: exp-nach-debit-api -&gt; proc-nach-debit-api -&gt; sys-nach-clearance-api
+SELECT
+    src.project_name AS caller,
+    e.source_endpoint_path,
+    e.target_endpoint_path,
+    tgt.project_name AS callee
+FROM api_edges e
+JOIN api_nodes src ON src.node_id = e.source_node_id
+JOIN api_nodes tgt ON tgt.node_id = e.target_node_id
+WHERE src.project_name = 'exp-nach-debit-api'
+ORDER BY src.project_name;
+
+-- Then confirm the next hop
+SELECT
+    src.project_name AS caller,
+    e.source_endpoint_path,
+    e.target_endpoint_path,
+    tgt.project_name AS callee
+FROM api_edges e
+JOIN api_nodes src ON src.node_id = e.source_node_id
+JOIN api_nodes tgt ON tgt.node_id = e.target_node_id
+WHERE src.project_name = 'proc-nach-debit-api';
+</code></pre>
+<p>For each of your 5 known flows, confirm:
+- Every hop is present as an <code>api_edges</code> row
+- <code>source_endpoint_path</code> matches the actual calling endpoint
+- <code>target_endpoint_path</code> matches the actual downstream endpoint being called
+- No extra/wrong edges exist (the caller does NOT call APIs it shouldn't)</p>
+<h3 id="acceptance-threshold">Acceptance threshold</h3>
+<p>5/5 known flows must be exactly correct — no partial credit.
+A missing edge is as bad as a wrong edge.</p>
+<h3 id="what-to-do-if-edges-are-wrong">What to do if edges are wrong</h3>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Root cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Edge completely missing</td>
+<td>Extraction step did not parse this call</td>
+<td>Review the Bitbucket extraction logic for HTTP client calls / DataWeave flows</td>
+</tr>
+<tr>
+<td>Wrong source_endpoint_path</td>
+<td>Extraction picked up a different endpoint on the same API</td>
+<td>Review how the extraction identifies which endpoint initiates the call</td>
+</tr>
+<tr>
+<td>Wrong target_endpoint_path</td>
+<td>Extraction used the wrong downstream path</td>
+<td>Check if the API has multiple versions or base paths</td>
+</tr>
+<tr>
+<td>Extra edges that should not exist</td>
+<td>Extraction is too aggressive in finding HTTP calls</td>
+<td>Add a filter to exclude test/mock endpoints during extraction</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>The specific risk for Phase 1:</strong> pass-through hop detection depends on
+out-degree = 1. A missing edge makes a Proc look like a pass-through when
+it actually orchestrates multiple calls. Duplicate flow detection depends on
+both paths reaching the same terminal — a missing edge breaks the terminal
+entirely.</p>
+</blockquote>
+<hr /></div></div><div class="page" id="val-layer6"><div class="main"><h2 id="layer-6-phase-1-rule-correctness">Layer 6 — Phase 1 Rule Correctness</h2>
+<h3 id="what-you-are-validating">What you are validating</h3>
+<p>The four structural rules (duplicate flow, pass-through hop, deep chain,
+fan-in cluster) produce genuine findings on real data — not false positives
+from versioning, and not missed findings you already know about.</p>
+<h3 id="method-two-checks">Method: two checks</h3>
+<p><strong>Check A — False positive rate</strong></p>
+<p>After the first run on real data, have 3 architects independently review
+the first 30 structural findings. For each finding they mark:
+- <code>reviewed</code> — this is a genuine redundancy/governance issue
+- <code>dismissed</code> — this is a false positive (version pair, healthy reuse, etc.)</p>
+<p>Track the genuine rate: <code>reviewed / (reviewed + dismissed)</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Genuine rate</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≥ 70%</td>
+<td>Rules are well-calibrated</td>
+<td>Proceed</td>
+</tr>
+<tr>
+<td>50-70%</td>
+<td>Too many false positives</td>
+<td>Investigate dismissed findings — are they a specific pattern?</td>
+</tr>
+<tr>
+<td>&lt; 50%</td>
+<td>Rules need tuning</td>
+<td>Adjust thresholds (fan-in min_callers, deep_chain threshold)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Common false positive patterns and fixes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Version pairs flagged as duplicate flow</td>
+<td><code>api_versions</code> check not working</td>
+<td>Verify M1b ran correctly — check <code>api_versions</code> table row count</td>
+</tr>
+<tr>
+<td>Known shared-reuse Sys APIs flagged as fan-in</td>
+<td>Threshold too low</td>
+<td>Raise <code>FAN_IN_THRESHOLD</code> from 3 to 5 for production scale</td>
+</tr>
+<tr>
+<td>One-step utility Procs flagged as pass-through</td>
+<td>Proc has real transformation logic, just one downstream call</td>
+<td>Add a <code>has_transformation</code> flag to <code>api_nodes</code> and exclude from pass-through detection</td>
+</tr>
+<tr>
+<td>4-hop chains flagged as deep when they are legitimate</td>
+<td>Threshold too aggressive</td>
+<td>Raise <code>DEEP_CHAIN_THRESHOLD</code> from 4 to 5 for your architecture</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Check B — False negative rate (known redundancy not detected)</strong></p>
+<p>From your own knowledge of the codebase, identify 3 APIs you already
+know are redundant or unnecessary. Confirm they appear in either
+<code>structural_findings</code> or <code>merge_candidates</code>.</p>
+<p>If a known redundant pair is not detected:
+- Check if they are in the same domain (Phase 1 duplicate flow only fires
+  if both paths reach the same terminal Sys API)
+- Check if the functional overlap is semantic rather than structural
+  (Phase 1 is graph-shape only — semantic overlap appears in Phase 2)
+- If neither applies, the edges connecting them may be missing (go back to Layer 5)</p>
+<h3 id="metric-to-track-ongoing">Metric to track ongoing</h3>
+<pre><code class="language-sql">-- False positive rate over time
+SELECT
+    review_status,
+    COUNT(*) AS count,
+    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 1) AS pct
+FROM structural_findings
+WHERE review_status IN ('open','reviewed','dismissed')
+GROUP BY review_status;
+</code></pre>
+<p>Target: dismissed% stays below 30% after initial calibration.</p>
+<hr /></div></div><div class="page" id="val-layer7"><div class="main"><h2 id="layer-7-end-to-end-workflow-audit-trail-integrity">Layer 7 — End-to-End Workflow (Audit Trail Integrity)</h2>
+<h3 id="what-you-are-validating">What you are validating</h3>
+<p>Every approve/reject/defer action correctly updates the target record AND
+writes an <code>audit_log</code> row. Without this, the platform is a read-only report
+tool — it cannot be used for actual governance decisions or audit evidence.</p>
+<h3 id="method-walk-each-workflow-action-end-to-end">Method: walk each workflow action end-to-end</h3>
+<p>Run each of these manually and verify both the record update AND the audit
+log entry:</p>
+<p><strong>Test 1 — Structural finding review</strong></p>
+<pre><code class="language-sql">-- Before: confirm finding is open
+SELECT finding_id, review_status FROM structural_findings LIMIT 1;
+
+-- Action: mark reviewed in the UI (or directly)
+UPDATE structural_findings SET review_status = 'reviewed' WHERE finding_id = 1;
+INSERT INTO audit_log (entity_type, entity_id, action, comment, reviewer)
+VALUES ('finding', 1, 'reviewed', 'Confirmed duplicate — merge candidate raised', 'test-user');
+
+-- Verify: both rows exist
+SELECT review_status FROM structural_findings WHERE finding_id = 1;
+SELECT * FROM audit_log WHERE entity_type = 'finding' AND entity_id = 1;
+</code></pre>
+<p><strong>Test 2 — Merge candidate approval</strong></p>
+<pre><code class="language-sql">SELECT candidate_id, status FROM merge_candidates LIMIT 1;
+
+-- Approve via UI, then verify:
+SELECT status FROM merge_candidates WHERE candidate_id = 1;
+-- Must be 'approved'
+
+SELECT entity_type, action, reviewer, acted_at
+FROM audit_log
+WHERE entity_type = 'merge_candidate' AND entity_id = 1;
+-- Must exist with correct entity_type
+</code></pre>
+<p><strong>Test 3 — Composition candidate approval</strong></p>
+<pre><code class="language-sql">SELECT composition_id, status FROM composition_candidates LIMIT 1;
+
+-- Approve via UI, verify:
+SELECT status FROM composition_candidates WHERE composition_id = 1;
+SELECT * FROM audit_log WHERE entity_type = 'composition_candidate';
+</code></pre>
+<p><strong>Test 4 — Weekly refresh creates correct snapshot</strong></p>
+<pre><code class="language-sql">-- After running the refresh job:
+SELECT run_id, status, nodes_created, edges_created
+FROM ingestion_runs ORDER BY started_at DESC LIMIT 1;
+
+SELECT snapshot_id, node_count, edge_count
+FROM graph_snapshots ORDER BY taken_at DESC LIMIT 1;
+
+-- Flows from this run must be linked to the snapshot
+SELECT COUNT(*) FROM flows WHERE snapshot_id = (
+    SELECT snapshot_id FROM graph_snapshots ORDER BY taken_at DESC LIMIT 1
+);
+-- Must be &gt; 0
+
+-- Edge history written if any edges changed
+SELECT event_type, COUNT(*) FROM edge_history
+WHERE detected_in_run = (
+    SELECT run_id FROM ingestion_runs ORDER BY started_at DESC LIMIT 1
+)
+GROUP BY event_type;
+</code></pre>
+<p><strong>Test 5 — Retired API disappears from all queries</strong></p>
+<pre><code class="language-sql">-- Mark one API as retired
+UPDATE api_nodes SET status = 'retired' WHERE project_name = 'test-api-to-retire';
+
+-- Confirm it disappears from discovery search results
+SELECT * FROM node_embeddings e
+JOIN api_nodes n ON n.node_id = e.node_id
+WHERE n.project_name = 'test-api-to-retire' AND n.status = 'active';
+-- Must return 0 rows (the retrieval queries all filter WHERE status = 'active')
+
+-- Confirm it is excluded from traversal
+SELECT * FROM flows f
+JOIN api_nodes n ON n.node_id = f.root_exp_id
+WHERE n.project_name = 'test-api-to-retire';
+-- Should be 0 rows in the NEXT refresh run
+</code></pre>
+<h3 id="acceptance-threshold">Acceptance threshold</h3>
+<p>All 5 tests must pass completely — no partial credit.
+A missing <code>audit_log</code> row means governance decisions are not recorded
+and the platform cannot produce an audit trail for compliance purposes.</p>
+<h3 id="the-most-commonly-missed-failure">The most commonly missed failure</h3>
+<p>The status update and the audit_log insert are often written as two
+separate database calls. If the first succeeds and the second fails
+(network blip, constraint violation), you get a status update with
+no audit record. Both must be in the same transaction:</p>
+<pre><code class="language-python"># Correct — both in one transaction
+with conn:
+    with conn.cursor() as cur:
+        cur.execute(&quot;UPDATE merge_candidates SET status = %s WHERE candidate_id = %s&quot;,
+                    ('approved', candidate_id))
+        cur.execute(&quot;INSERT INTO audit_log &quot;
+                       &quot;(entity_type, entity_id, action, comment, reviewer) &quot;
+                       &quot;VALUES ('merge_candidate', %s, 'approved', %s, %s)&quot;,
+                    (candidate_id, comment, reviewer))
+# conn.__exit__ commits both or rolls back both
+</code></pre>
+<hr /></div></div><div class="page" id="val-layer8"><div class="main"><h2 id="layer-8-llm-consistency">Layer 8 — LLM Consistency</h2>
+<h3 id="what-you-are-validating">What you are validating</h3>
+<p>The LLM produces consistent recommendations across repeated runs —
+because non-determinism in governance decisions destroys trust.
+An architect who gets DIRECT_MATCH on Monday and NEW_BUILD on Wednesday
+for the same requirement will stop trusting the platform.</p>
+<h3 id="method-three-consistency-checks">Method: three consistency checks</h3>
+<p><strong>Check A — Composition band stability</strong></p>
+<p>Run the same requirement 5 times and record the recommendation band each time:</p>
+<pre><code class="language-python">requirement = &quot;Process a NACH mandate debit for recurring payment collection&quot;
+bands = []
+for i in range(5):
+    results = analyze_requirement(requirement)
+    bands.append(results[0]['recommendation'] if results else 'NO_RESULT')
+print(bands)
+# Expected: ['DIRECT_MATCH', 'DIRECT_MATCH', 'DIRECT_MATCH', 'DIRECT_MATCH', 'DIRECT_MATCH']
+# Acceptable: max 1 variation across 5 runs
+</code></pre>
+<p>If the band changes more than once in 5 runs: lower <code>temperature</code> to <code>0.0</code>
+in the composition decision LLM call (currently <code>0.1</code> in <code>07-llm-integration-guide.md</code>
+Section 6).</p>
+<p><strong>Check B — Field equivalence stability</strong></p>
+<p>Run the same borderline field pair 3 times:</p>
+<pre><code class="language-python">for i in range(3):
+    result = check_field_equivalence(
+        &quot;mandate_id&quot;, &quot;string&quot;,
+        &quot;mandate_reference_id&quot;, &quot;string&quot;,
+        &quot;payments&quot;
+    )
+    print(f&quot;Run {i+1}: equivalent={result['equivalent']}, confidence={result['confidence']:.2f}&quot;)
+# Expected: same equivalent value all 3 times
+</code></pre>
+<p>If <code>equivalent</code> flips between true and false: lower temperature to <code>0.0</code>
+for field equivalence calls.</p>
+<p><strong>Check C — Query expansion paraphrase consistency</strong></p>
+<p>Two differently phrased versions of the same requirement should produce
+the same top result:</p>
+<pre><code class="language-python">req_a = &quot;initiate NACH debit for mandate&quot;
+req_b = &quot;start NACH direct debit collection for a payment mandate&quot;
+
+result_a = semantic_search(req_a, top_k=1)
+result_b = semantic_search(req_b, top_k=1)
+
+top_a = result_a[0]['project_name'] if result_a else None
+top_b = result_b[0]['project_name'] if result_b else None
+
+print(f&quot;Phrasing A top result: {top_a}&quot;)
+print(f&quot;Phrasing B top result: {top_b}&quot;)
+print(f&quot;Consistent: {top_a == top_b}&quot;)
+# Expected: both return the same top API
+</code></pre>
+<p>If they differ: query expansion (LLM Point 1) is not bridging the gap.
+Check the expansion variants logged in <code>llm_call_log</code> for each query —
+confirm the variants are semantically covering the alternative phrasing.</p>
+<h3 id="checking-consistency-via-llm_call_log">Checking consistency via llm_call_log</h3>
+<pre><code class="language-sql">-- Find all composition decisions for the same requirement
+SELECT
+    llm_response,
+    called_at,
+    latency_ms
+FROM llm_call_log
+WHERE call_type = 'composition_decision'
+  AND user_prompt LIKE '%NACH mandate debit%'
+ORDER BY called_at;
+
+-- Check if recommendation band is consistent across runs
+-- (parse llm_response JSON to extract the recommendation field)
+</code></pre>
+<h3 id="acceptance-threshold">Acceptance threshold</h3>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Acceptable variance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Band stability</td>
+<td>Max 1 change in 5 runs</td>
+</tr>
+<tr>
+<td>Field equivalence</td>
+<td>0 changes in 3 runs</td>
+</tr>
+<tr>
+<td>Paraphrase consistency</td>
+<td>Top result matches in both phrasings</td>
+</tr>
+</tbody>
+</table>
+<h3 id="temperature-reference">Temperature reference</h3>
+<table>
+<thead>
+<tr>
+<th>LLM point</th>
+<th>Current temperature</th>
+<th>Lower to if inconsistent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Query expansion</td>
+<td>0.3</td>
+<td>0.2</td>
+</tr>
+<tr>
+<td>Field equivalence</td>
+<td>0.0</td>
+<td>Already 0.0 — check prompt instead</td>
+</tr>
+<tr>
+<td>Composition decision</td>
+<td>0.1</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>Discovery quick-take</td>
+<td>0.0</td>
+<td>Already 0.0</td>
+</tr>
+</tbody>
+</table>
+<hr /></div></div><div class="page" id="val-gate"><div class="main"><h2 id="go-live-validation-gate">Go-live validation gate</h2>
+<p>Seven checks, all measured on real data, all must pass before the platform
+is opened to all developers:</p>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Layer</th>
+<th>Measurement</th>
+<th>Minimum threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ingestion accuracy</td>
+<td>1</td>
+<td>Manual spot-check, 15 APIs</td>
+<td>13/15 pass (87%)</td>
+</tr>
+<tr>
+<td>Retrieval recall@3</td>
+<td>2</td>
+<td>Labelled test set, 25 requirements</td>
+<td>18/25 correct (72%)</td>
+</tr>
+<tr>
+<td>Composition approval rate</td>
+<td>3</td>
+<td>Architect review, first 20 COMPOSE results</td>
+<td>14/20 approved (70%)</td>
+</tr>
+<tr>
+<td>Embedding separation gap</td>
+<td>4</td>
+<td>UMAP numeric gap on real data</td>
+<td>Gap &gt; 0.10</td>
+</tr>
+<tr>
+<td>Graph correctness</td>
+<td>5</td>
+<td>Manual trace of 5 known flows</td>
+<td>5/5 exactly correct</td>
+</tr>
+<tr>
+<td>Phase 1 genuine rate</td>
+<td>6</td>
+<td>First 30 findings reviewed by architects</td>
+<td>≥ 70% marked genuine</td>
+</tr>
+<tr>
+<td>Audit trail integrity</td>
+<td>7</td>
+<td>5 end-to-end workflow tests</td>
+<td>5/5 pass, all audit_log rows present</td>
+</tr>
+<tr>
+<td>LLM band stability</td>
+<td>8</td>
+<td>Same requirement run 5 times</td>
+<td>Max 1 band variation</td>
+</tr>
+</tbody>
+</table>
+<p>If any gate fails, fix at the layer where it broke — not at a lower layer.</p>
+<hr /></div></div><div class="page" id="val-finetune"><div class="main"><h2 id="when-to-fine-tune-vs-when-to-tune-parameters">When to fine-tune vs when to tune parameters</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Fine-tune embedding model?</th>
+<th>Tune parameters instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low similarity gap (&lt; 0.10)</td>
+<td>Only if purpose_text quality is already good</td>
+<td>Fix purpose_text extraction first</td>
+</tr>
+<tr>
+<td>Wrong APIs in top results</td>
+<td>No</td>
+<td>Check similarity threshold, then purpose_text</td>
+</tr>
+<tr>
+<td>COMPOSE recommendations rejected</td>
+<td>No</td>
+<td>Adjust composition weights and schema compat threshold</td>
+</tr>
+<tr>
+<td>NEW_BUILD false positives</td>
+<td>No</td>
+<td>Raise DIRECT_MATCH threshold</td>
+</tr>
+<tr>
+<td>System-wide poor performance after all tuning</td>
+<td>Only as last resort</td>
+<td>Requires a fine-tuning dataset you likely don't have</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fine-tuning the embedding model requires a training dataset of
+(query, relevant_API, irrelevant_API) triplets — minimum 500-1000 examples.
+You do not have this yet. All observed quality issues at this stage are
+parameter or data quality issues, not model capability issues.</strong></p>
+<hr /></div></div><div class="page" id="val-monitor"><div class="main"><h2 id="monitoring-in-production">Monitoring in production</h2>
+<p>Once live, track these metrics weekly:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Source</th>
+<th>Alert threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Retrieval recall@3</td>
+<td>Re-run labelled test set monthly</td>
+<td>Drop below 65%</td>
+</tr>
+<tr>
+<td>Composition approval rate</td>
+<td>Track composition_candidates approvals</td>
+<td>Drop below 60%</td>
+</tr>
+<tr>
+<td>Embedding gap</td>
+<td>Embedding Health screen</td>
+<td>Drop below 0.10</td>
+</tr>
+<tr>
+<td>Ingestion failure rate</td>
+<td>ingestion_runs table</td>
+<td>repos_failed &gt; 5%</td>
+</tr>
+<tr>
+<td>LLM call latency</td>
+<td>llm_call_log.latency_ms</td>
+<td>p95 &gt; 5000ms</td>
+</tr>
+<tr>
+<td>APIs missing structured fields</td>
+<td>api_fields coverage query</td>
+<td>&gt; 10% of active nodes</td>
+</tr>
+</tbody>
+</table></div></div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+  document.getElementById('topbar-title').textContent =
+    document.getElementById('nav-' + id).textContent.trim();
+  window.scrollTo(0, 0);
+}
+</script>
+
+<script>show('val-intro');</script>
+</body>
+</html>

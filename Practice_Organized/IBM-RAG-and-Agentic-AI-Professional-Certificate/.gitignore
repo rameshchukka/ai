@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Large files
+*.zip
+*.gz
+*.tar
+*.rar
+
+# Virtual environments
+.venv/
+.venv311/
+venv/
+env/
+ENV/
+*/.venv/
+*/.venv*/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Gradio
+.gradio/
+
+# Model cache
+*.bin
+*.pt
+*.safetensors
+
+# Synthetic generated images (large datasets)
+synthetic_recipe_images/
+synthetic-recipe-images/

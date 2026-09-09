@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>User Guide — API Governance Platform</title>
+<style>
+:root {
+  --navy:#1F2937; --blue:#2563EB; --lblue:#EFF6FF;
+  --green:#059669; --lgreen:#ECFDF5;
+  --amber:#D97706; --lamber:#FFFBEB;
+  --red:#DC2626;   --lred:#FEF2F2;
+  --gray:#6B7280;  --lgray:#F9FAFB;
+  --border:#E5E7EB;
+  --exp:#4C72B0; --proc:#DD8452; --sys:#55A868;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Segoe UI',system-ui,sans-serif; font-size:15px;
+       color:#111827; background:#F3F4F6; }
+/* sidebar */
+.sidebar { position:fixed; top:0; left:0; width:250px; height:100vh;
+           background:var(--navy); overflow-y:auto; z-index:100; }
+.sidebar .logo { padding:20px; border-bottom:1px solid #374151;
+                 color:#F9FAFB; font-weight:700; font-size:14px; line-height:1.5; }
+.sidebar .logo span { color:#93C5FD; }
+.sidebar nav a { display:block; color:#D1D5DB; padding:7px 20px;
+                 font-size:13px; text-decoration:none;
+                 border-left:3px solid transparent; }
+.sidebar nav a:hover { color:#fff; background:#374151; }
+.sidebar nav a.active { color:#fff; border-left-color:#3B82F6; background:#1E3A5F; }
+.sidebar .sec-label { color:#9CA3AF; font-size:11px; font-weight:700;
+                      letter-spacing:.08em; text-transform:uppercase;
+                      padding:16px 20px 4px; }
+/* topbar */
+.topbar { position:fixed; top:0; left:250px; right:0; height:50px;
+          background:#fff; border-bottom:1px solid var(--border);
+          display:flex; align-items:center; padding:0 40px;
+          font-size:13px; color:var(--gray); z-index:50;
+          justify-content:space-between; }
+/* main */
+.main { margin-left:250px; margin-top:50px; padding:36px 48px;
+        max-width:1080px; }
+/* typography */
+h1 { font-size:28px; color:var(--navy); margin-bottom:8px;
+     padding-bottom:12px; border-bottom:3px solid var(--blue); }
+h2 { font-size:20px; color:var(--blue); margin:32px 0 10px; }
+h3 { font-size:16px; color:var(--navy); margin:20px 0 8px; }
+h4 { font-size:14px; color:var(--gray); margin:14px 0 6px; font-weight:600; }
+p  { line-height:1.8; margin-bottom:14px; }
+a  { color:var(--blue); }
+ul,ol { padding-left:22px; line-height:1.8; margin-bottom:14px; }
+li { margin-bottom:4px; }
+/* code */
+code { font-family:'Cascadia Code','Consolas',monospace; font-size:13px;
+       background:#F1F5F9; padding:1px 6px; border-radius:4px; color:#C7254E; }
+pre  { background:#0F172A; border-radius:8px; padding:18px;
+       overflow-x:auto; margin:0 0 18px; }
+pre code { color:#A5F3FC; background:none; padding:0; font-size:13px;
+           line-height:1.65; color:#E2E8F0; }
+/* tables */
+table { border-collapse:collapse; width:100%; margin-bottom:18px; font-size:14px; }
+th { background:var(--lblue); color:var(--navy); padding:10px 14px;
+     text-align:left; font-size:12px; text-transform:uppercase;
+     letter-spacing:.04em; border-bottom:2px solid var(--border); }
+td { padding:10px 14px; border-bottom:1px solid #F0F2F4; vertical-align:top; }
+tr:last-child td { border-bottom:none; }
+/* cards */
+.card { background:#fff; border:1px solid var(--border); border-radius:10px;
+        padding:24px 28px; margin-bottom:20px; }
+blockquote { border-left:4px solid var(--blue); margin:0 0 16px;
+             padding:10px 16px; background:var(--lblue);
+             border-radius:0 8px 8px 0; }
+blockquote p { margin:0; }
+/* callouts */
+.tip   { background:var(--lgreen); border-left:4px solid var(--green);
+         padding:12px 16px; border-radius:0 8px 8px 0; margin-bottom:16px; }
+.warn  { background:var(--lamber); border-left:4px solid var(--amber);
+         padding:12px 16px; border-radius:0 8px 8px 0; margin-bottom:16px; }
+.alert { background:var(--lred); border-left:4px solid var(--red);
+         padding:12px 16px; border-radius:0 8px 8px 0; margin-bottom:16px; }
+.tip p,.warn p,.alert p { margin:0; }
+/* step list */
+.steps { counter-reset:step; }
+.step  { display:flex; gap:16px; margin-bottom:20px; }
+.step-n { min-width:34px; height:34px; border-radius:50%; background:var(--blue);
+           color:#fff; font-weight:800; font-size:14px; display:flex;
+           align-items:center; justify-content:center; flex-shrink:0; }
+.step-b h3 { margin-top:4px; }
+/* badges */
+.badge { display:inline-block; padding:2px 10px; border-radius:12px;
+         font-size:11px; font-weight:700; }
+.b-exp  { background:#EFF6FF; color:var(--exp); }
+.b-proc { background:#FFF7ED; color:#C2410C; }
+.b-sys  { background:#ECFDF5; color:var(--sys); }
+.b-high { background:#FEF2F2; color:var(--red); }
+.b-med  { background:#FFFBEB; color:var(--amber); }
+.b-low  { background:#F0FDF4; color:var(--green); }
+.b-pass { background:#DCFCE7; color:#166534; }
+.b-fail { background:#FEE2E2; color:#991B1B; }
+/* verify box */
+.verify { background:#F0FDF4; border:1px solid #BBF7D0;
+          border-radius:8px; padding:16px 20px; margin-top:16px; }
+.verify h4 { color:var(--green); margin-top:0; }
+/* page show/hide */
+.page { display:none; }
+.page.active { display:block; }
+</style></head><body>
+<div class="sidebar"><div class="logo">API Governance<br><span>& Discovery Platform</span></div><nav><div class="sec-label">Getting started</div><a href="#" id="nav-usr-intro" onclick="show('usr-intro');return false;">👋 Introduction</a><div class="sec-label">Screens</div><a href="#" id="nav-usr-graph" onclick="show('usr-graph');return false;">1. Graph Explorer</a><a href="#" id="nav-usr-findings" onclick="show('usr-findings');return false;">2. Findings Dashboard</a><a href="#" id="nav-usr-merge" onclick="show('usr-merge');return false;">3. Merge Candidates & Impact</a></nav></div><div class="topbar"><span id="topbar-title">Guide</span></div><div class="page" id="usr-intro"><div class="main">
+<h1>User Guide</h1>
+<p>This guide explains how to use the Mule API Structural Detection Platform
+as an architect, tech lead, or developer. Three screens, each with a specific job.</p>
+
+<h2>Who uses which screen</h2>
+<table>
+<tr><th>Role</th><th>Go to</th><th>Primary task</th></tr>
+<tr><td>Developer</td><td>Findings Dashboard</td><td>Check what redundancy exists before starting new work</td></tr>
+<tr><td>Architect</td><td>All three screens</td><td>Review findings, approve merges, assess impact</td></tr>
+<tr><td>Tech Lead</td><td>Graph Explorer + Impact</td><td>Understand the call graph, assess change risk</td></tr>
+</table>
+
+<h2>Quick start</h2>
+<div class="steps">
+<div class="step"><div class="step-n">1</div><div class="step-b">
+<h3>Open the platform</h3>
+<p>Navigate to the Streamlit URL your team has configured (e.g. <code>http://api-governance.internal:8501</code>). The Graph Explorer loads as the default screen.</p>
+</div></div>
+<div class="step"><div class="step-n">2</div><div class="step-b">
+<h3>Start with the Findings Dashboard</h3>
+<p>The Findings Dashboard shows all structural anomalies detected in the last refresh. HIGH severity findings (red) are duplicate flows — the most actionable starting point.</p>
+</div></div>
+<div class="step"><div class="step-n">3</div><div class="step-b">
+<h3>Navigate between screens</h3>
+<p>Use the left sidebar. "View in graph" buttons on finding cards open the Graph Explorer with that node pre-selected. "View findings" on a graph node opens the Findings Dashboard filtered to that node.</p>
+</div></div>
+</div>
+
+<h2>The governance workflow</h2>
+<pre>Finding detected (weekly refresh)
+    |
+    v
+Findings Dashboard: architect reviews
+    |-- Dismiss: false positive, comment explains why
+    |-- Mark reviewed: genuine finding
+         |
+         v (for DUPLICATE_FLOW findings)
+    Merge Candidates: architect reviews proposal
+         |-- Approve: owning team notified to carry out merge
+         |-- Reject: comment explains why these should stay separate
+         |-- Defer: re-appears next week
+</pre>
+<div class="tip"><p><strong>Nothing in this platform changes any API.</strong> Approve means "this merge is governance-approved." The actual code change is done by the owning team outside the platform.</p></div>
+</div></div><div class="page" id="usr-graph"><div class="main">
+<h1>Screen 1 — Graph Explorer</h1>
+<p>The full Mule API call graph visualised as a directed graph.
+Use this to understand the overall architecture and see where structural
+anomalies are located.</p>
+
+<h2>Reading the graph</h2>
+<table>
+<tr><th>What you see</th><th>What it means</th></tr>
+<tr><td><span class="badge b-exp">Blue node</span></td><td>Experience layer (Exp) — entry points that external consumers call</td></tr>
+<tr><td><span class="badge b-proc">Orange node</span></td><td>Process layer (Proc) — orchestration and business logic</td></tr>
+<tr><td><span class="badge b-sys">Green node</span></td><td>System layer (Sys) — backend connectors to core systems</td></tr>
+<tr><td>Large node</td><td>High in-degree — many APIs call this one. A very large Sys node is a shared asset with fan-in risk.</td></tr>
+<tr><td>Red node</td><td>This node is involved in an open structural finding</td></tr>
+<tr><td>Red dashed edge</td><td>Part of a DUPLICATE_FLOW finding</td></tr>
+</table>
+
+<h2>Step by step — exploring a domain</h2>
+<div class="steps">
+<div class="step"><div class="step-n">1</div><div class="step-b">
+<h3>Filter to one domain</h3>
+<p>Use the Domain dropdown in the left sidebar. Select "payments" to see only the payments domain APIs. The graph redraws showing only those nodes and their connections.</p>
+</div></div>
+<div class="step"><div class="step-n">2</div><div class="step-b">
+<h3>Enable finding overlay</h3>
+<p>Check "Show findings overlay". Nodes and edges involved in open findings turn red. This is the fastest way to see where the structural issues are in a domain.</p>
+</div></div>
+<div class="step"><div class="step-n">3</div><div class="step-b">
+<h3>Click a node to inspect it</h3>
+<p>Click any node. The right panel shows: project name, layer, domain, owning team, listener endpoint, and a count of open findings. If the node has findings, a "View findings" button appears.</p>
+</div></div>
+<div class="step"><div class="step-n">4</div><div class="step-b">
+<h3>Follow the path</h3>
+<p>Click an Exp node to see where it leads. Follow the edges through Proc to Sys. If two different Exp nodes both reach the same Sys node, that is a DUPLICATE_FLOW.</p>
+</div></div>
+</div>
+
+<h2>What the node detail panel shows</h2>
+<table>
+<tr><th>Field</th><th>What it tells you</th></tr>
+<tr><td>Project name</td><td>The Mule project name in Bitbucket</td></tr>
+<tr><td>Layer</td><td>EXP / PROC / SYS</td></tr>
+<tr><td>Domain</td><td>Business domain from canonical taxonomy (e.g. payments, claims)</td></tr>
+<tr><td>Functionality</td><td>Specific function within the domain (e.g. NACH Debit Processing)</td></tr>
+<tr><td>Owning team</td><td>Team responsible for this API</td></tr>
+<tr><td>Endpoint</td><td>Primary listener endpoint path</td></tr>
+<tr><td>Open findings</td><td>Count of open structural findings involving this node</td></tr>
+</table></div></div><div class="page" id="usr-findings"><div class="main">
+<h1>Screen 2 — Findings Dashboard</h1>
+<p>All structural findings from the last graph refresh, sorted by severity.
+This is where architects review and action findings.</p>
+
+<h2>The four finding types</h2>
+<table>
+<tr><th>Type</th><th>Severity</th><th>What it means</th><th>Typical action</th></tr>
+<tr><td>DUPLICATE_FLOW</td><td><span class="badge b-high">HIGH</span></td><td>Two Exp APIs both reach the same Sys API through different Proc chains. One chain is likely redundant.</td><td>Review the two chains. If one is genuinely redundant, approve the merge candidate in Screen 3.</td></tr>
+<tr><td>PASS_THROUGH_HOP</td><td><span class="badge b-med">MEDIUM</span></td><td>A Proc API calls exactly one downstream API with no orchestration logic. The Exp caller could call the Sys API directly.</td><td>Verify with the owning team — does this Proc add any transformation? If not, it may be retirable.</td></tr>
+<tr><td>DEEP_CHAIN</td><td><span class="badge b-low">LOW</span></td><td>A call flow has 4 or more hops. May indicate unnecessary intermediate steps.</td><td>Review the full chain. Dismiss if the hops are genuinely necessary (e.g. each Proc adds real orchestration).</td></tr>
+<tr><td>FAN_IN_CLUSTER</td><td><span class="badge b-low">LOW</span></td><td>A Sys API is called by 3+ different Proc APIs. May be healthy shared reuse or accidental convergence.</td><td>Review in Impact Analysis. If it is a shared Sys asset, consider formal SLA documentation. If it is accidental duplication, flag for merge review.</td></tr>
+</table>
+
+<h2>Step by step — reviewing a finding</h2>
+<div class="steps">
+<div class="step"><div class="step-n">1</div><div class="step-b">
+<h3>Read the finding card</h3>
+<p>Each card shows the pattern type, severity badge, date detected, and the specific API names and paths involved. For DUPLICATE_FLOW, you see both paths — which Exp goes through which Proc to reach the shared Sys.</p>
+</div></div>
+<div class="step"><div class="step-n">2</div><div class="step-b">
+<h3>Open in graph (optional)</h3>
+<p>Click "View in graph" to open the Graph Explorer with the involved nodes highlighted. Useful for understanding the broader context of a finding.</p>
+</div></div>
+<div class="step"><div class="step-n">3</div><div class="step-b">
+<h3>Make a decision</h3>
+<p>There are two actions available on open findings:</p>
+<ul>
+<li><strong>Mark reviewed</strong> — genuine finding, acknowledged and recorded</li>
+<li><strong>Dismiss</strong> — false positive or intentional design, not a real issue</li>
+</ul>
+<p>A comment is <strong>mandatory</strong> for both. The comment is stored in the audit log and is the governance evidence that this finding was considered.</p>
+</div></div>
+<div class="step"><div class="step-n">4</div><div class="step-b">
+<h3>Use the diff filter</h3>
+<p>After a weekly refresh, the "Diff status" filter lets you see only "new" findings (appeared this week) versus "persisting" (still unresolved from a previous week). Focus your review on new findings first.</p>
+</div></div>
+</div>
+
+<h2>What to write in the comment</h2>
+<table>
+<tr><th>Decision</th><th>Good comment examples</th></tr>
+<tr><td>Mark reviewed (DUPLICATE_FLOW)</td><td>"Both chains confirmed redundant — exp-account-summary chain scheduled for retirement Q2"<br>"Raised merge candidate — owning team notified"</td></tr>
+<tr><td>Dismiss (DUPLICATE_FLOW)</td><td>"These serve different consumer audiences — exp-customer-360 for CRM, exp-account-summary for mobile app. Intentional separation."</td></tr>
+<tr><td>Dismiss (PASS_THROUGH_HOP)</td><td>"proc-order-status adds request transformation and auth token injection — not a true pass-through."</td></tr>
+<tr><td>Dismiss (FAN_IN_CLUSTER)</td><td>"sys-crm is a shared platform service — multiple callers are expected and healthy. Documenting as intentional."</td></tr>
+</table>
+
+<div class="tip"><p><strong>Filtering tip:</strong> Set Pattern to DUPLICATE_FLOW and Status to open. These are the highest-value findings and the most actionable. Process all HIGH severity before moving to MEDIUM and LOW.</p></div></div></div><div class="page" id="usr-merge"><div class="main">
+<h1>Screen 3 — Merge Candidates & Impact Analysis</h1>
+<p>Two panels in one screen. Left panel: merge proposals generated from
+DUPLICATE_FLOW findings. Right panel: impact analysis for any API you search.</p>
+
+<h2>Left panel — Merge Candidates</h2>
+<p>A merge candidate is created automatically when a DUPLICATE_FLOW finding
+is confirmed. It shows which two Proc API chains are candidates for consolidation.</p>
+
+<h3>Reading the merge candidate card</h3>
+<table>
+<tr><th>Field</th><th>What it means</th><th>What to look for</th></tr>
+<tr><td>API A ↔ API B</td><td>The two Proc APIs that are candidates to merge</td><td>Are these genuinely doing the same job?</td></tr>
+<tr><td>Structural score</td><td>Graph-shape confidence (0-1). Higher = stronger structural case.</td><td>&gt; 0.80 = strong structural evidence</td></tr>
+<tr><td>Domain alignment</td><td>Whether both APIs are in the same domain</td><td>Same domain = merge is lower risk</td></tr>
+<tr><td>Traffic risk</td><td>LOW / MEDIUM / HIGH based on daily hit counts</td><td>HIGH risk = staged rollout needed before retiring one API</td></tr>
+<tr><td>LLM rationale</td><td>AI-generated explanation (Phase 2). "Pending" in Phase 1.</td><td>In Phase 1: use your own knowledge of the APIs</td></tr>
+</table>
+
+<h3>Making a decision</h3>
+<table>
+<tr><th>Action</th><th>When to use</th><th>What happens</th></tr>
+<tr><td><strong>Approve</strong></td><td>The merge is valid and should proceed</td><td>Status → 'approved'. Owning team should be notified separately to carry out the actual code change.</td></tr>
+<tr><td><strong>Reject</strong></td><td>Despite the structural finding, these APIs should remain separate</td><td>Status → 'rejected'. Finding stays open but candidate is closed.</td></tr>
+<tr><td><strong>Defer</strong></td><td>Need more information or it is the wrong time</td><td>Status → 'deferred'. Re-appears next week in the candidate list.</td></tr>
+</table>
+
+<div class="alert"><p><strong>Approving a merge candidate is a governance decision, not a technical change.</strong> The platform does not modify, retire, or redirect any API. The owning team carries out the actual merge based on the approved governance record.</p></div>
+
+<h2>Right panel — Impact Analysis</h2>
+<p>Type any project name into the search box to see the full upstream and downstream dependency tree.</p>
+
+<h3>Step by step</h3>
+<div class="steps">
+<div class="step"><div class="step-n">1</div><div class="step-b">
+<h3>Search for an API</h3>
+<p>Type a full or partial project name (e.g. "nach-debit" or "proc-nach"). The first matching active API is shown.</p>
+</div></div>
+<div class="step"><div class="step-n">2</div><div class="step-b">
+<h3>Read the upstream tree</h3>
+<p>Upstream = APIs that call this one. Shown with their layer badge, project name, and the exact endpoint path they use to call this API. If empty: "None — this is an entry point" (it is an Exp node with no callers).</p>
+</div></div>
+<div class="step"><div class="step-n">3</div><div class="step-b">
+<h3>Read the downstream tree</h3>
+<p>Downstream = APIs this one calls. Same format. If empty: "None — this is a terminal node" (it is a Sys node that calls no further Mule APIs).</p>
+</div></div>
+<div class="step"><div class="step-n">4</div><div class="step-b">
+<h3>Use before any change</h3>
+<p>Before retiring, modifying, or renaming an API: search for it in Impact Analysis. The upstream list tells you exactly which teams and APIs will be affected by your change.</p>
+</div></div>
+</div>
+
+<h2>Common questions</h2>
+<table>
+<tr><th>Question</th><th>Answer</th></tr>
+<tr><td>I retired an API — when does it disappear from the graph?</td><td>On the next weekly refresh, the ingestion job will detect it as missing and mark its edges as 'disappeared' in edge_history. The node status is set to 'retired' and it disappears from all active queries.</td></tr>
+<tr><td>Why does my search return no results?</td><td>The search uses ILIKE %name% — try a shorter fragment. Also check the API is in the DB: <code>SELECT project_name FROM api_nodes WHERE project_name ILIKE '%search%'</code>.</td></tr>
+<tr><td>The impact tree looks incomplete — I know there are more callers</td><td>The upstream tree shows only edges in api_edges. If a caller is missing, it was not included in the Bitbucket extraction or its calls[] array was empty. Check the source data.</td></tr>
+</table></div></div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.remove('active'));
+  var pg=document.getElementById(id);
+  var lnk=document.getElementById('nav-'+id);
+  if(pg) pg.classList.add('active');
+  if(lnk){ lnk.classList.add('active');
+    document.getElementById('topbar-title').textContent=lnk.textContent.trim(); }
+  window.scrollTo(0,0);
+}
+</script><script>show('usr-intro');</script>
+</body></html>

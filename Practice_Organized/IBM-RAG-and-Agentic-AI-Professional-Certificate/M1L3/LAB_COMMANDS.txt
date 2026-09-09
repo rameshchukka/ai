@@ -1,0 +1,29 @@
+PASTE THESE COMMANDS INTO THE LAB SERVER TERMINAL ONE AT A TIME:
+
+COMMAND 1 (backup the file):
+cp restaurant_data_management.py restaurant_data_management.py.bak
+
+COMMAND 2 (comment out unittest):
+sed -i 's/    unittest.main()/    # unittest.main()/' restaurant_data_management.py
+
+COMMAND 3 (enable the menu):
+sed -i 's/    # manage_restaurants(FILEPATH, BACKUP_PATH)/    manage_restaurants(FILEPATH, BACKUP_PATH)/' restaurant_data_management.py
+
+COMMAND 4 (verify the change):
+tail -3 restaurant_data_management.py
+
+COMMAND 5 (run the app):
+python restaurant_data_management.py
+
+
+IF COMMANDS 2-3 DON'T WORK:
+Open restaurant_data_management.py in the editor.
+Scroll to the very last lines.
+Change:
+    unittest.main()
+    # manage_restaurants(FILEPATH, BACKUP_PATH)
+To:
+    # unittest.main()
+    manage_restaurants(FILEPATH, BACKUP_PATH)
+Save with Ctrl+S.
+Then run COMMAND 5.
