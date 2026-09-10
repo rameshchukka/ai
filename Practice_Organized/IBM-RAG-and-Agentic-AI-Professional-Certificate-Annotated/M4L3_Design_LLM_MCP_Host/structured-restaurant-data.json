@@ -1,0 +1,222 @@
+[
+  {
+    "name": "The Gilded Artichoke",
+    "neighborhood": "Silver Lake",
+    "cuisine": "Farm-to-Table Californian",
+    "type": "upscale bistro",
+    "rating": 4.5,
+    "price_range": "$$$$",
+    "signature_dish": "lavender-rubbed roasted chicken and heirloom tomato tarts",
+    "vibes": ["bohemian chic"],
+    "description": "The space feels like a high-end greenhouse with reclaimed wood and floor-to-ceiling windows."
+  },
+  {
+    "name": "Mar de Cortez",
+    "neighborhood": "Santa Monica",
+    "cuisine": "Baja-style seafood",
+    "type": "casual taqueria",
+    "rating": 4.2,
+    "price_range": "$",
+    "signature_dish": "beer-battered snapper tacos and zesty octopus ceviche",
+    "vibes": ["sun-drenched", "casual"],
+    "description": "Captures the salt-air energy of the coast, a premier spot for open-air dining near the pier."
+  },
+  {
+    "name": "Iron & Embers",
+    "neighborhood": "Arts District, DTLA",
+    "cuisine": "American steakhouse",
+    "type": "fine dining",
+    "rating": 4.8,
+    "price_range": "$$$$",
+    "signature_dish": "45-day dry-aged ribeye with bone marrow chimichurri",
+    "vibes": ["moody", "industrial"],
+    "description": "A space that smells deeply of white oak smoke and masculine sophistication."
+  },
+  {
+    "name": "Sakura Garden",
+    "neighborhood": "Little Tokyo",
+    "cuisine": "Japanese Kaiseki-lite",
+    "type": "intimate restaurant",
+    "rating": 4.9,
+    "price_range": "$$$",
+    "signature_dish": "buttery bluefin tuna belly",
+    "vibes": ["zen", "minimalist", "intimate"],
+    "description": "A quiet escape focused on seasonal perfection, a top-tier destination for serious sushi aficionados."
+  },
+  {
+    "name": "Pasta & Prose",
+    "neighborhood": "West Hollywood",
+    "cuisine": "Modern Italian",
+    "type": "trattoria",
+    "rating": 4.3,
+    "price_range": "$$$",
+    "signature_dish": "theatrical table-side Cacio e Pepe tossed in a massive parmesan wheel",
+    "vibes": ["glamorous", "lively"],
+    "description": "A see-and-be-seen hub where the energy is fueled by chilled prosecco."
+  },
+  {
+    "name": "The Golden Hummus",
+    "neighborhood": "Glendale",
+    "cuisine": "Modern Lebanese",
+    "type": "family eatery",
+    "rating": 4.6,
+    "price_range": "$$",
+    "signature_dish": "signature hummus topped with spiced wagyu beef",
+    "vibes": ["warm", "family-style"],
+    "description": "A bustling environment that makes every guest feel like part of a large, hungry family."
+  },
+  {
+    "name": "Velvet & Vine",
+    "neighborhood": "Pasadena",
+    "cuisine": "French-Mediterranean",
+    "type": "wine bar",
+    "rating": 4.1,
+    "price_range": "$$",
+    "signature_dish": "duck confit sliders with curated small-batch European labels",
+    "vibes": ["romantic", "sophisticated"],
+    "description": "A small-plates venue within a historic, exposed-brick setting providing a backdrop for evening dates."
+  },
+  {
+    "name": "The Neon Noodle Bar",
+    "neighborhood": "San Gabriel Valley",
+    "cuisine": "Sichuan street food",
+    "type": "fast-casual",
+    "rating": 4.4,
+    "price_range": "$",
+    "signature_dish": "numbing Dan Dan noodles and cumin lamb skewers",
+    "vibes": ["cyberpunk", "funky"],
+    "description": "Attracts a younger crowd, all served under the glow of vibrant pink neon lights."
+  },
+  {
+    "name": "Sapphire Soul",
+    "neighborhood": "Inglewood",
+    "cuisine": "Southern soul food fusion",
+    "type": "restaurant",
+    "rating": 4.7,
+    "price_range": "$$",
+    "signature_dish": "spicy hot-honey fried chicken and waffles",
+    "vibes": ["vibrant", "soulful", "welcoming"],
+    "description": "Balances tradition with modern LA flair, as soulful and welcoming as the room itself."
+  },
+  {
+    "name": "The Obsidian Room",
+    "neighborhood": "Downtown LA",
+    "cuisine": "Experimental Japanese",
+    "type": "omakase bar",
+    "rating": 4.9,
+    "price_range": "$$$$",
+    "signature_dish": "dry-aged sashimi treated like a work of art",
+    "vibes": ["minimalist", "dark-chic"],
+    "description": "A hushed, focused environment that feels worlds away from the city streets."
+  },
+  {
+    "name": "The Stone Hearth",
+    "neighborhood": "Topanga",
+    "cuisine": "New American",
+    "type": "eatery",
+    "rating": 4.6,
+    "price_range": "$$$",
+    "signature_dish": "foraged mushroom tart",
+    "vibes": ["mystical", "woodland", "serene"],
+    "description": "A serene dining experience where the sound of the wind in the trees is the only soundtrack."
+  },
+  {
+    "name": "The Copper Pot",
+    "neighborhood": "Pasadena",
+    "cuisine": "Modern Indian",
+    "type": "dining room",
+    "rating": 4.7,
+    "price_range": "$$",
+    "signature_dish": "butter chicken pot pie and deconstructed samosas",
+    "vibes": ["warm", "sophisticated"],
+    "description": "An elegant space defined by rich copper accents and soft amber lighting."
+  },
+  {
+    "name": "Noche de Luz",
+    "neighborhood": "Silver Lake",
+    "cuisine": "Spanish Tapas",
+    "type": "wine bar",
+    "rating": 4.5,
+    "price_range": "$$$",
+    "signature_dish": "crispy-bottomed paella with curated sherry list",
+    "vibes": ["sultry", "dim-lit"],
+    "description": "Small plates with big impact, encouraging long, lingering evenings on a hidden back patio."
+  },
+  {
+    "name": "The Silk Road",
+    "neighborhood": "Glendale",
+    "cuisine": "Persian",
+    "type": "fine dining",
+    "rating": 4.8,
+    "price_range": "$$",
+    "signature_dish": "saffron-infused Koobideh kabobs and herb-heavy stews",
+    "vibes": ["opulent", "regal"],
+    "description": "A room adorned with intricate Persian carpets and crystal chandeliers."
+  },
+  {
+    "name": "Blue Bayou",
+    "neighborhood": "Long Beach",
+    "cuisine": "Cajun & Creole",
+    "type": "kitchen",
+    "rating": 4.6,
+    "price_range": "$$",
+    "signature_dish": "dark rich gumbo and spicy crawfish etouffee",
+    "vibes": ["moody", "soulful"],
+    "description": "Brings the flavors of New Orleans to the West Coast in a dim-lit room with live jazz."
+  },
+  {
+    "name": "Seoul Soul",
+    "neighborhood": "Koreatown",
+    "cuisine": "Korean BBQ",
+    "type": "hotspot",
+    "rating": 4.5,
+    "price_range": "$$$$",
+    "signature_dish": "premium wagyu cuts",
+    "vibes": ["high-energy", "industrial"],
+    "description": "Combines premium wagyu with a loud, rhythmic atmosphere perfect for starting a night out."
+  },
+  {
+    "name": "Common Thread",
+    "neighborhood": "Arts District, DTLA",
+    "cuisine": "New American",
+    "type": "tasting room",
+    "rating": 4.8,
+    "price_range": "$",
+    "signature_dish": "smoked koji-aged carrots",
+    "vibes": ["industrial", "high-concept"],
+    "description": "A chef-driven weekly-changing menu in a converted sewing factory with raw concrete and steel."
+  },
+  {
+    "name": "Midnight in Milan",
+    "neighborhood": "Downtown LA",
+    "cuisine": "Northern Italian",
+    "type": "ristorante",
+    "rating": 4.6,
+    "price_range": "$$",
+    "signature_dish": "elevated risotto and veal osso buco",
+    "vibes": ["sultry", "fashionable", "moody"],
+    "description": "A moody, high-ceilinged room in the Fashion District attracting a stylish, late-night crowd."
+  },
+  {
+    "name": "The French Laundry",
+    "neighborhood": "Yountville",
+    "cuisine": "French",
+    "type": "fine dining institution",
+    "rating": 5.0,
+    "price_range": "$$$$",
+    "signature_dish": "nine-course prix-fixe menu where no ingredient is repeated",
+    "vibes": ["iconic", "legendary", "intimate"],
+    "description": "The crown jewel of Napa Valley, three-Michelin-starred with a surprisingly intimate farmhouse setting."
+  },
+  {
+    "name": "Chez Panisse",
+    "neighborhood": "Berkeley",
+    "cuisine": "Californian",
+    "type": "kitchen",
+    "rating": 4.8,
+    "price_range": "$",
+    "signature_dish": "simple, perfect seasonal ingredients",
+    "vibes": ["revolutionary", "timeless"],
+    "description": "Alice Waters' landmark that birthed the farm-to-table movement, a warm copper-lit sanctuary."
+  }
+]

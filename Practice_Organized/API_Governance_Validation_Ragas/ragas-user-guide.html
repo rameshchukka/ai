@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RAGAS User Guide — API Governance</title><style>
+:root{--navy:#1F2937;--blue:#2563EB;--lblue:#EFF6FF;--green:#059669;
+      --lgreen:#ECFDF5;--amber:#D97706;--lamber:#FFFBEB;--red:#DC2626;
+      --lred:#FEF2F2;--gray:#6B7280;--lgray:#F9FAFB;--border:#E5E7EB;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;color:#111827;background:#F3F4F6;}
+.sidebar{position:fixed;top:0;left:0;width:250px;height:100vh;background:var(--navy);overflow-y:auto;z-index:100;}
+.sidebar .logo{padding:20px;border-bottom:1px solid #374151;color:#F9FAFB;font-weight:700;font-size:14px;line-height:1.5;}
+.sidebar .logo span{color:#93C5FD;}
+.sidebar nav a{display:block;color:#D1D5DB;padding:7px 20px;font-size:13px;text-decoration:none;border-left:3px solid transparent;}
+.sidebar nav a:hover{color:#fff;background:#374151;}
+.sidebar nav a.active{color:#fff;border-left-color:#3B82F6;background:#1E3A5F;}
+.sidebar .sec-label{color:#9CA3AF;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:16px 20px 4px;}
+.topbar{position:fixed;top:0;left:250px;right:0;height:50px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 40px;font-size:13px;color:var(--gray);z-index:50;justify-content:space-between;}
+.main{margin-left:250px;margin-top:50px;padding:36px 48px;max-width:1080px;}
+h1{font-size:28px;color:var(--navy);margin-bottom:8px;padding-bottom:12px;border-bottom:3px solid var(--blue);}
+h2{font-size:20px;color:var(--blue);margin:32px 0 10px;}
+h3{font-size:16px;color:var(--navy);margin:20px 0 8px;}
+h4{font-size:14px;color:var(--gray);margin:14px 0 6px;font-weight:600;}
+p{line-height:1.8;margin-bottom:14px;}
+ul,ol{padding-left:22px;line-height:1.8;margin-bottom:14px;}
+li{margin-bottom:4px;}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:13px;background:#F1F5F9;padding:1px 6px;border-radius:4px;color:#C7254E;}
+pre{background:#0F172A;border-radius:8px;padding:18px;overflow-x:auto;margin:0 0 18px;}
+pre code{color:#E2E8F0;background:none;padding:0;font-size:13px;line-height:1.65;}
+table{border-collapse:collapse;width:100%;margin-bottom:18px;font-size:14px;}
+th{background:var(--lblue);color:var(--navy);padding:10px 14px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--border);}
+td{padding:10px 14px;border-bottom:1px solid #F0F2F4;vertical-align:top;}
+.tip{background:var(--lgreen);border-left:4px solid var(--green);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+.warn{background:var(--lamber);border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+.alert{background:var(--lred);border-left:4px solid var(--red);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+.tip p,.warn p,.alert p{margin:0;}
+.steps{counter-reset:step;}
+.step{display:flex;gap:16px;margin-bottom:20px;}
+.step-n{min-width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-b h3{margin-top:4px;}
+.metric-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px;border-left:4px solid var(--blue);}
+.metric-card h3{color:var(--blue);margin-top:0;}
+.metric-card .formula{background:#F8FAFC;border-radius:6px;padding:10px 14px;font-family:monospace;font-size:13px;margin:8px 0;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;}
+.b-pass{background:#DCFCE7;color:#166534;}
+.b-fail{background:#FEE2E2;color:#991B1B;}
+.b-warn{background:#FEF9C3;color:#854D0E;}
+.page{display:none;}
+.page.active{display:block;}
+</style></head><body>
+<div class="sidebar"><div class="logo">RAGAS User Guide<br><span>API Governance Platform</span></div><nav><div class="sec-label">Understanding</div><a href="#" id="nav-u-intro" onclick="show('u-intro');return false;">📋 What RAGAS Tells You</a><a href="#" id="nav-u-reading" onclick="show('u-reading');return false;">📊 Reading the Results</a><div class="sec-label">Action</div><a href="#" id="nav-u-actions" onclick="show('u-actions');return false;">🔧 Fixing Failures</a><a href="#" id="nav-u-schedule" onclick="show('u-schedule');return false;">📅 When to Run</a></nav></div><div class="topbar"><span id="topbar-title"></span></div><div class="page" id="u-intro"><div class="main">
+<h1>RAGAS User Guide</h1>
+<p>This guide is for architects and tech leads who need to interpret RAGAS
+results and make decisions based on them — without necessarily understanding
+the implementation details.</p>
+
+<h2>What RAGAS tells you</h2>
+<p>RAGAS answers six specific questions about the API Discovery and Composition
+features. Each question has a threshold — a minimum score the platform must
+reach before it is trustworthy for governance decisions.</p>
+
+<table>
+<tr><th>Metric</th><th>Plain English question</th><th>Pass threshold</th></tr>
+<tr><td>Context Precision</td><td>When a developer searches, does the right API appear near the top?</td><td><span class="badge b-pass">≥ 0.70</span></td></tr>
+<tr><td>Context Recall</td><td>For requirements needing 2 APIs, does the search find both of them?</td><td><span class="badge b-pass">≥ 0.70</span></td></tr>
+<tr><td>Answer Relevancy</td><td>Is the first search result actually relevant to what was asked?</td><td><span class="badge b-pass">≥ 0.60</span></td></tr>
+<tr><td>Faithfulness</td><td>Does the AI rationale only say things that are true about the found APIs?</td><td><span class="badge b-pass">≥ 0.80</span></td></tr>
+<tr><td>Answer Correctness</td><td>Does the DIRECT_MATCH / COMPOSE / NEW_BUILD decision match expert judgement?</td><td><span class="badge b-pass">≥ 0.75</span></td></tr>
+<tr><td>Context Entity Recall</td><td>Are the API names that should appear actually mentioned in results?</td><td><span class="badge b-pass">≥ 0.80</span></td></tr>
+</table>
+
+<h2>The bottom line</h2>
+<div class="tip"><p>If all six metrics are green, the AI features are performing well enough
+for architects to trust the search results and composition recommendations as
+a starting point for governance decisions. Architects must still review and
+approve — RAGAS tells you the platform is reliable enough to be worth reviewing.</p></div>
+<div class="alert"><p>If Faithfulness is below 0.80, the AI rationale is making claims
+that are not supported by the actual API data. Do NOT use the Composition Advisor
+recommendations for governance decisions until this is resolved. The structural
+findings and merge candidates (which are not LLM-generated) are unaffected.</p></div>
+</div></div><div class="page" id="u-reading"><div class="main">
+<h1>Reading the RAGAS Summary</h1>
+<p>The final cell of the RAGAS notebook prints a summary table. Here is how to read it.</p>
+
+<h2>Example output — healthy platform</h2>
+<pre><code>======================================================================
+  RAGAS EVALUATION SUMMARY
+======================================================================
+  [v] PASS  Context Precision             0.742  (min 0.70)
+  [v] PASS  Context Recall                0.786  (min 0.70)
+  [v] PASS  Answer Relevancy (LLM)        0.671  (min 0.60)
+  [v] PASS  Faithfulness                  0.823  (min 0.80)
+  [v] PASS  Answer Correctness (Band)     0.776  (min 0.75)
+  [v] PASS  Context Entity Recall         0.841  (min 0.80)
+
+  PASS=6  FAIL=0  SKIP=0
+
+  STATUS: ALL RAGAS METRICS PASS
+======================================================================</code></pre>
+<p>All six green. Platform is ready for production use of AI features.</p>
+
+<h2>Example output — retrieval problem</h2>
+<pre><code>  [X] FAIL  Context Precision             0.542  (min 0.70)
+  [X] FAIL  Context Recall                0.619  (min 0.70)
+  [v] PASS  Answer Relevancy (LLM)        0.688  (min 0.60)
+  [v] PASS  Faithfulness                  0.844  (min 0.80)
+  [X] FAIL  Answer Correctness (Band)     0.647  (min 0.75)
+  [X] FAIL  Context Entity Recall         0.712  (min 0.80)</code></pre>
+<p><strong>What this means:</strong> The AI rationale is faithful (0.844) and relevance is fine
+when something IS retrieved (0.688), but the retrieval itself is poor — correct APIs
+are not being ranked first (Precision 0.542) and sometimes not retrieved at all (Recall 0.619).
+This drags down Answer Correctness because the wrong APIs feed the composition formula.</p>
+<p><strong>Action:</strong> Fix the embeddings or purpose_text quality. Do not adjust the
+composition formula thresholds — the formula is working correctly with bad inputs.</p>
+
+<h2>Example output — hallucination problem</h2>
+<pre><code>  [v] PASS  Context Precision             0.751
+  [v] PASS  Context Recall                0.794
+  [v] PASS  Answer Relevancy (LLM)        0.712
+  [X] FAIL  Faithfulness                  0.641  (min 0.80)
+  [v] PASS  Answer Correctness (Band)     0.788
+  [v] PASS  Context Entity Recall         0.853</code></pre>
+<p><strong>What this means:</strong> Retrieval is excellent and the band decision is correct,
+but the LLM rationale is inventing claims not supported by the actual API data.
+Faithfulness at 0.641 means 36% of claims in rationales are hallucinated.</p>
+<p><strong>Action:</strong> Tighten the composition decision prompt in <code>core/llm.py</code>.
+Add: "Only make claims explicitly supported by the API context provided. Do not infer
+capabilities not stated in purpose_text or functionality." Do not re-embed or tune
+retrieval — that is not the problem.</p>
+
+<h2>What SKIP means</h2>
+<pre><code>  [-] SKIP  Faithfulness                  0.000  SKIPPED - no LLM configured</code></pre>
+<p>The metric was not run because the LLM endpoint was not configured. SKIP metrics
+do not count as pass or fail. Configure <code>INTERNAL_LLM_URL</code> in the config
+cell and re-run to get a full evaluation.</p>
+</div></div><div class="page" id="u-actions"><div class="main">
+<h1>What to Do When Metrics Fail</h1>
+<p>Each failing metric points to a specific stage of the pipeline and a specific fix.
+This page gives the decision tree for each failure pattern.</p>
+
+<h2>Context Precision fails (< 0.70)</h2>
+<p>The correct API IS being retrieved but is not ranked first.</p>
+<ol>
+<li>Check the purpose_text for the top-ranked (wrong) API vs the correct API. Is the wrong API's purpose_text more generic — covering the domain broadly while the correct API is domain-specific? Generic purpose_text pulls in wrong APIs.</li>
+<li>Ask the data team to make purpose_text more specific: "orchestrates NACH debit — validates mandate, checks limits, submits to clearance" beats "payment processing API".</li>
+<li>Re-embed and re-run sections 2 and 3 only.</li>
+</ol>
+
+<h2>Context Recall fails (< 0.70)</h2>
+<p>The correct API is not appearing in the retrieved top-5 at all.</p>
+<ol>
+<li>For the failing samples, manually run: retrieve the query and check positions 6-10. If the correct API appears at position 7, the fix is lowering the similarity threshold from 0.40 to 0.30.</li>
+<li>If the correct API does not appear anywhere in the results: check its purpose_text. Is it too short or too generic? A purpose_text of "API" with 3 words will not embed well.</li>
+<li>For COMPOSE failures specifically: are both APIs in the same domain? If they span domains, domain alignment score may be dragging the correct pair below the COMPOSE threshold.</li>
+</ol>
+
+<h2>Answer Relevancy fails (< 0.60)</h2>
+<p>The LLM is judging the top retrieved API as not relevant.</p>
+<ol>
+<li>Review the actual (question, top_api) pairs that scored below 0.60. Print them from the notebook.</li>
+<li>If the API IS relevant but LLM scored it low: the LLM scoring prompt may be too strict. Review the ANSWER_RELEVANCY_PROMPT.</li>
+<li>If the API genuinely IS NOT relevant: retrieval problem — see Context Precision and Recall fixes above.</li>
+</ol>
+
+<h2>Faithfulness fails (< 0.80)</h2>
+<p>The LLM is adding claims to rationales that are not in the API data.</p>
+<ol>
+<li>Look at the printed claims for failing rationales. Which type of claim is being hallucinated most? (e.g. field names, business rules, performance claims?)</li>
+<li>Update the composition decision prompt in <code>core/llm.py</code> LLM Point 3. Add an explicit constraint like: "Your rationale must ONLY reference the API names, purpose descriptions, and functionality listed above. Do not add business rules, field names, or performance characteristics that are not in the context."</li>
+<li>Re-run M6b to regenerate rationales. Re-run Section 5 only.</li>
+</ol>
+
+<h2>Answer Correctness fails (< 0.75)</h2>
+<p>The DIRECT_MATCH / COMPOSE / NEW_BUILD band is wrong.</p>
+<ol>
+<li>Look at the confusion matrix. Is the failure mostly DIRECT_MATCH being classified as COMPOSE? Or COMPOSE being classified as NEW_BUILD?</li>
+<li>DIRECT_MATCH → COMPOSE confusion: the DIRECT_MATCH threshold (default 0.85) may be too high. Lower to 0.80 in <code>core/composition.py</code>.</li>
+<li>COMPOSE → NEW_BUILD confusion: the COMPOSE threshold (default 0.60) may be too high. Lower to 0.55.</li>
+<li>DIRECT_MATCH → NEW_BUILD confusion (maximum error): retrieval is failing to find the correct API at all. Return to Context Recall fix.</li>
+</ol>
+
+<h2>Context Entity Recall fails (< 0.80)</h2>
+<p>Ground truth API names are not surfacing in the retrieved context text.</p>
+<ol>
+<li>The most common cause: the API's <code>project_name</code> is not mentioned anywhere in its <code>purpose_text</code>. The embedding is built from purpose_text — if the name is not there, it cannot surface in a text-based entity check.</li>
+<li>Fix: update the extraction prompt to include the project_name in purpose_text: "proc-nach-debit-api orchestrates NACH debit..." rather than just "Orchestrates NACH debit..."</li>
+<li>Re-embed after updating purpose_text, then re-run Section 7 only.</li>
+</ol>
+</div></div><div class="page" id="u-schedule"><div class="main">
+<h1>When to Run RAGAS</h1>
+<p>RAGAS is not a one-time check — it is a continuous quality measurement.
+This page defines the schedule and triggers.</p>
+
+<h2>Scheduled runs</h2>
+<table>
+<tr><th>When</th><th>What to run</th><th>Why</th></tr>
+<tr><td>Before go-live</td><td>Full RAGAS suite (all 6 metrics)</td><td>Gate: all metrics must pass before AI features are opened to developers</td></tr>
+<tr><td>Monthly (ongoing)</td><td>Sections 2, 3, 6, 7 (no LLM metrics)</td><td>Check if retrieval quality has drifted as new APIs are ingested</td></tr>
+<tr><td>Quarterly (ongoing)</td><td>Full RAGAS suite</td><td>Full quality audit including LLM-based metrics</td></tr>
+<tr><td>After re-embedding</td><td>Full RAGAS suite</td><td>Embedding change affects all retrieval metrics</td></tr>
+<tr><td>After purpose_text updates</td><td>Sections 2, 3, 7 (retrieval metrics)</td><td>Purpose_text change affects ranking and entity recall</td></tr>
+<tr><td>After LLM prompt updates</td><td>Sections 5, 6 (faithfulness, correctness)</td><td>Prompt change affects LLM output quality</td></tr>
+</table>
+
+<h2>Drift detection</h2>
+<p>Track metric scores over time. A metric that was 0.74 in January and is
+0.62 in April indicates drift — not a configuration change but a gradual
+degradation as the API inventory grows or changes.</p>
+
+<p>Common causes of metric drift:</p>
+<ul>
+<li><strong>Context Precision drifting down:</strong> New APIs have been ingested with generic purpose_text, competing with specific APIs for top positions</li>
+<li><strong>Faithfulness drifting down:</strong> The LLM model version was updated and the new version is more prone to adding context not in the retrieved APIs</li>
+<li><strong>Answer Correctness drifting down:</strong> New requirement types that the current thresholds handle poorly — may need threshold recalibration</li>
+</ul>
+
+<h2>Adding new requirements to EVAL_DATASET</h2>
+<p>Every quarter, add 5-10 new requirements from real developer queries. Developers
+often search for capabilities that were not in the original dataset — these become
+the hardest cases for the platform. A platform that gets 0.85 on the original
+dataset but 0.60 on new queries has overfitted to the original test set.</p>
+</div></div>
+<script>
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.remove('active'));
+  var pg=document.getElementById(id);
+  var lnk=document.getElementById('nav-'+id);
+  if(pg)pg.classList.add('active');
+  if(lnk){lnk.classList.add('active');
+    document.getElementById('topbar-title').textContent=lnk.textContent.trim();}
+  window.scrollTo(0,0);
+}
+</script><script>show('u-intro');</script></body></html>

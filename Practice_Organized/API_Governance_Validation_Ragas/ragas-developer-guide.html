@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RAGAS Developer Guide — API Governance</title><style>
+:root{--navy:#1F2937;--blue:#2563EB;--lblue:#EFF6FF;--green:#059669;
+      --lgreen:#ECFDF5;--amber:#D97706;--lamber:#FFFBEB;--red:#DC2626;
+      --lred:#FEF2F2;--gray:#6B7280;--lgray:#F9FAFB;--border:#E5E7EB;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;color:#111827;background:#F3F4F6;}
+.sidebar{position:fixed;top:0;left:0;width:250px;height:100vh;background:var(--navy);overflow-y:auto;z-index:100;}
+.sidebar .logo{padding:20px;border-bottom:1px solid #374151;color:#F9FAFB;font-weight:700;font-size:14px;line-height:1.5;}
+.sidebar .logo span{color:#93C5FD;}
+.sidebar nav a{display:block;color:#D1D5DB;padding:7px 20px;font-size:13px;text-decoration:none;border-left:3px solid transparent;}
+.sidebar nav a:hover{color:#fff;background:#374151;}
+.sidebar nav a.active{color:#fff;border-left-color:#3B82F6;background:#1E3A5F;}
+.sidebar .sec-label{color:#9CA3AF;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:16px 20px 4px;}
+.topbar{position:fixed;top:0;left:250px;right:0;height:50px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 40px;font-size:13px;color:var(--gray);z-index:50;justify-content:space-between;}
+.main{margin-left:250px;margin-top:50px;padding:36px 48px;max-width:1080px;}
+h1{font-size:28px;color:var(--navy);margin-bottom:8px;padding-bottom:12px;border-bottom:3px solid var(--blue);}
+h2{font-size:20px;color:var(--blue);margin:32px 0 10px;}
+h3{font-size:16px;color:var(--navy);margin:20px 0 8px;}
+h4{font-size:14px;color:var(--gray);margin:14px 0 6px;font-weight:600;}
+p{line-height:1.8;margin-bottom:14px;}
+ul,ol{padding-left:22px;line-height:1.8;margin-bottom:14px;}
+li{margin-bottom:4px;}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:13px;background:#F1F5F9;padding:1px 6px;border-radius:4px;color:#C7254E;}
+pre{background:#0F172A;border-radius:8px;padding:18px;overflow-x:auto;margin:0 0 18px;}
+pre code{color:#E2E8F0;background:none;padding:0;font-size:13px;line-height:1.65;}
+table{border-collapse:collapse;width:100%;margin-bottom:18px;font-size:14px;}
+th{background:var(--lblue);color:var(--navy);padding:10px 14px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--border);}
+td{padding:10px 14px;border-bottom:1px solid #F0F2F4;vertical-align:top;}
+.tip{background:var(--lgreen);border-left:4px solid var(--green);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+.warn{background:var(--lamber);border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+.alert{background:var(--lred);border-left:4px solid var(--red);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+.tip p,.warn p,.alert p{margin:0;}
+.steps{counter-reset:step;}
+.step{display:flex;gap:16px;margin-bottom:20px;}
+.step-n{min-width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-b h3{margin-top:4px;}
+.metric-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px;border-left:4px solid var(--blue);}
+.metric-card h3{color:var(--blue);margin-top:0;}
+.metric-card .formula{background:#F8FAFC;border-radius:6px;padding:10px 14px;font-family:monospace;font-size:13px;margin:8px 0;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;}
+.b-pass{background:#DCFCE7;color:#166534;}
+.b-fail{background:#FEE2E2;color:#991B1B;}
+.b-warn{background:#FEF9C3;color:#854D0E;}
+.page{display:none;}
+.page.active{display:block;}
+</style></head><body>
+<div class="sidebar"><div class="logo">RAGAS Dev Guide<br><span>API Governance Platform</span></div><nav><div class="sec-label">Setup</div><a href="#" id="nav-d-setup" onclick="show('d-setup');return false;">🔧 Installation & Config</a><a href="#" id="nav-d-dataset" onclick="show('d-dataset');return false;">📝 Building Eval Dataset</a><div class="sec-label">Metrics</div><a href="#" id="nav-d-metrics-impl" onclick="show('d-metrics-impl');return false;">🔬 Implementation Details</a><a href="#" id="nav-d-chromadb-diff" onclick="show('d-chromadb-diff');return false;">⚡ ChromaDB vs pgvector</a></nav></div><div class="topbar"><span id="topbar-title"></span></div><div class="page" id="d-setup"><div class="main">
+<h1>RAGAS Developer Guide</h1>
+<p>Step-by-step instructions for installing, configuring, and running the
+RAGAS evaluation suite against the API Governance platform.</p>
+
+<h2>Installation</h2>
+<pre><code># Core dependencies
+pip install ragas>=0.1.0          # RAGAS framework (optional - we use custom implementations)
+pip install datasets               # HuggingFace datasets (for RAGAS dataset format)
+pip install scikit-learn umap-learn matplotlib
+pip install pandas numpy psycopg2-binary
+pip install thefuzz python-Levenshtein
+
+# For ChromaDB variant only
+pip install chromadb
+
+# Verify
+python -c "import ragas; print(ragas.__version__)"</code></pre>
+
+<div class="tip"><p><strong>Note on ragas library:</strong> The evaluation notebook implements
+all metrics from scratch using your internal LLM endpoint. The <code>ragas</code> pip package
+is optional — it provides additional utility functions but is not required to run the notebooks.</p></div>
+
+<h2>Configuration</h2>
+<p>All configuration is at the top of the config cell in each notebook.
+Copy from <code>.env</code> — do not hardcode credentials.</p>
+<pre><code>import os
+
+DB_URL             = "postgresql://user:password@localhost:5432/api_governance"
+INTERNAL_LLM_URL   = os.getenv("INTERNAL_LLM_URL")
+INTERNAL_LLM_KEY   = os.getenv("INTERNAL_LLM_API_KEY")
+INTERNAL_LLM_MODEL = os.getenv("INTERNAL_LLM_MODEL", "gpt-4o")
+EMBED_URL          = os.getenv("INTERNAL_LLM_EMBED_URL")
+EMBED_MODEL        = os.getenv("INTERNAL_LLM_EMBED_MODEL", "text-embedding-3-small")</code></pre>
+
+<h2>Which notebook to use</h2>
+<table>
+<tr><th>Your setup</th><th>Notebook</th><th>Path</th></tr>
+<tr><td>pgvector (node_embeddings table populated)</td><td>pgvector RAGAS</td><td><code>validation/pgvector/04-ragas-evaluation.ipynb</code></td></tr>
+<tr><td>ChromaDB (chroma_data/ directory populated)</td><td>ChromaDB RAGAS</td><td><code>validation/chromadb/04-ragas-evaluation.ipynb</code></td></tr>
+</table>
+<p>The only difference between the two notebooks is the retrieval function in Section 0.
+All metric logic (Sections 2-8) is identical.</p>
+</div></div><div class="page" id="d-dataset"><div class="main">
+<h1>Building the Evaluation Dataset</h1>
+<p>The EVAL_DATASET in Section 1 is the most important thing you fill in.
+Bad evaluation data produces misleading metrics. Good evaluation data
+produces actionable diagnostics.</p>
+
+<h2>Rules for writing evaluation samples</h2>
+<div class="alert"><p><strong>Never look up search results before writing the ground truth.</strong>
+Write what the correct answer SHOULD be from your knowledge of the APIs.
+Then run the evaluation. If you write ground truth after seeing results,
+you are measuring your ability to read results, not the platform's quality.</p></div>
+
+<div class="steps">
+<div class="step"><div class="step-n">1</div><div class="step-b">
+<h3>Write DIRECT_MATCH samples (target: 10+)</h3>
+<p>Requirements that you know, from your architectural knowledge, map to exactly
+one existing API. The question should be phrased as a developer would actually
+type it — not as an API description. Good: "process recurring mandate debit for
+customer account". Bad: "call proc-nach-debit-api".</p>
+</div></div>
+<div class="step"><div class="step-n">2</div><div class="step-b">
+<h3>Write COMPOSE samples (target: 4+)</h3>
+<p>Requirements where two APIs must be chained. Both correct API names must
+be in <code>ground_truth_apis</code>. The <code>ground_truth_answer</code>
+should explain how they chain: "validate mandate first, then initiate the debit".</p>
+</div></div>
+<div class="step"><div class="step-n">3</div><div class="step-b">
+<h3>Write NEW_BUILD samples (target: 3+)</h3>
+<p>Requirements with no existing API coverage. These test false positive rate —
+the platform should not return a confident DIRECT_MATCH for a capability that
+does not exist. Use capabilities you know are missing: ML fraud scoring,
+real-time risk assessment, image processing, etc.</p>
+</div></div>
+<div class="step"><div class="step-n">4</div><div class="step-b">
+<h3>Add edge cases (target: 2+)</h3>
+<p>Requirements that sound similar to an existing API but should NOT match.
+Set <code>expected_band: "NEW_BUILD"</code> and add the false-positive candidate
+to <code>should_not_match</code>. Tests whether the platform over-retrieves
+semantically adjacent but functionally different APIs.</p>
+</div></div>
+</div>
+
+<h2>Sample quality checklist</h2>
+<table>
+<tr><th>Check</th><th>Good example</th><th>Bad example</th></tr>
+<tr><td>Natural language phrasing</td><td>"register a customer bank mandate for auto-debit"</td><td>"call mandate registration API with bank account fields"</td></tr>
+<tr><td>Specific enough to be answerable</td><td>"check order status for a customer"</td><td>"do something with orders"</td></tr>
+<tr><td>Ground truth from knowledge</td><td>Written before running search</td><td>Written after seeing what the search returns</td></tr>
+<tr><td>ground_truth_answer is prose</td><td>"Validates a bank mandate registration against the NACH registry including account verification"</td><td>"proc-mandate-validate-api"</td></tr>
+</table>
+
+<h2>Minimum dataset size</h2>
+<pre><code>EVAL_DATASET size recommendations:
+  Minimum viable  : 17 samples (10 DM + 4 COMPOSE + 3 NB)
+  Good coverage   : 30 samples (15 DM + 8 COMPOSE + 5 NB + 2 edge)
+  Full confidence : 50+ samples across all domains
+
+Below 17 samples, metric variance is too high to be actionable.
+At 17 samples, a 5% metric change = 1 sample — borderline reliable.
+At 30+ samples, metrics are stable enough to track over time.</code></pre>
+</div></div><div class="page" id="d-metrics-impl"><div class="main">
+<h1>How Each Metric is Implemented</h1>
+<p>This page documents exactly what the notebook computes for each metric,
+so you can audit the code and adjust if needed.</p>
+
+<h2>Context Precision — implementation detail</h2>
+<pre><code>def context_precision(retrieved_names, ground_truth_names):
+    relevant   = set(ground_truth_names)
+    precisions = []
+    hits        = 0
+    for k, name in enumerate(retrieved_names, 1):   # k=1,2,3,4,5
+        if name in relevant:
+            hits += 1
+            precisions.append(hits / k)   # precision at this position
+    return mean(precisions) if precisions else 0.0</code></pre>
+<p>Example: ground truth = ["proc-nach-debit-api"], retrieved = ["some-other-api", "proc-nach-debit-api", ...]</p>
+<ul>
+<li>k=1: "some-other-api" — not relevant, no entry</li>
+<li>k=2: "proc-nach-debit-api" — relevant! hits=1, precision@2 = 1/2 = 0.50</li>
+<li>Result: CP = 0.50 (correct API retrieved but not ranked first)</li>
+</ul>
+<p>If "proc-nach-debit-api" were at k=1: CP = 1.0</p>
+
+<h2>Faithfulness — implementation detail</h2>
+<p>Two LLM calls per rationale:</p>
+<ol>
+<li><strong>Claims extraction:</strong> LLM reads the rationale and returns a JSON array of specific, verifiable claims</li>
+<li><strong>Claims verification:</strong> For each claim, LLM checks whether the claim is supported by the retrieved API context (purpose_text + functionality)</li>
+</ol>
+<p>Faithfulness = supported_claims / total_claims</p>
+<div class="warn"><p><strong>Cost note:</strong> A rationale with 5 claims uses 1 + 5 = 6 LLM calls.
+With 10 rationales: ~60 LLM calls. Run Faithfulness on a subset if cost is a concern —
+the first 10 rationales in merge_candidates are sufficient for calibration.</p></div>
+
+<h2>Answer Correctness — partial credit</h2>
+<pre><code>ADJACENCY_CREDIT = {
+    ("DIRECT_MATCH", "COMPOSE"): 0.5,   # adjacent bands
+    ("COMPOSE", "DIRECT_MATCH"): 0.5,
+    ("COMPOSE", "NEW_BUILD"):    0.5,
+    ("NEW_BUILD", "COMPOSE"):    0.5,
+    ("DIRECT_MATCH", "NEW_BUILD"): 0.0, # maximum error
+    ("NEW_BUILD", "DIRECT_MATCH"): 0.0,
+}</code></pre>
+<p>Exact match = 1.0. Adjacent mismatch = 0.5. Maximum mismatch = 0.0.</p>
+<p>This partial credit scheme means a mean Answer Correctness of 0.75 could be:
+all exact matches on 75% of samples, or a mix where some samples have 0.5 partial credit.</p>
+<p>Look at the confusion matrix output to distinguish — an all-0.5-partial platform
+behaves very differently from a 75%-exact platform even if the mean score is the same.</p>
+
+<h2>Adding custom metrics</h2>
+<p>To add a new metric, follow this pattern:</p>
+<pre><code># New metric: Response Completeness
+# Measures whether the rationale covers all aspects of the requirement
+
+def response_completeness(question, rationale):
+    if not INTERNAL_LLM_URL or not rationale:
+        return 0.0
+    prompt = (
+        "Does this rationale completely address all aspects of the requirement?\n"
+        f"Requirement: {question}\nRationale: {rationale}\n"
+        'Score 1-5 where 5=completely addresses all aspects.\n'
+        'Return only JSON: {"score": N}'
+    )
+    resp  = call_llm("Evaluate completeness.", prompt)
+    data  = json.loads(resp)
+    return (data["score"] - 1) / 4.0
+
+# Add to ragas_results in the summary
+record("Response Completeness", mean_score, f"mean over N samples")</code></pre>
+</div></div><div class="page" id="d-chromadb-diff"><div class="main">
+<h1>ChromaDB vs pgvector — Evaluation Differences</h1>
+<p>The only structural difference between the two RAGAS notebooks is the
+retrieval function. All metric computation is identical.</p>
+
+<h2>Retrieval function comparison</h2>
+<table>
+<tr><th></th><th>pgvector</th><th>ChromaDB</th></tr>
+<tr><td>Entry point</td><td><code>retrieve_pgvector()</code></td><td><code>retrieve_pgvector()</code> (aliased to ChromaDB function)</td></tr>
+<tr><td>Step 1</td><td>SQL with <code>&lt;=&gt;</code> vector operator</td><td><code>collection.query(query_embeddings=[vec])</code></td></tr>
+<tr><td>Step 2</td><td>JOIN gives all fields in one query</td><td>Second SQL query to fetch relational fields by node_id</td></tr>
+<tr><td>Returns</td><td><code>list[dict]</code> with all fields</td><td><code>list[dict]</code> with same fields (from two sources)</td></tr>
+<tr><td>node_embeddings table</td><td>Populated, used for retrieval</td><td>Empty — ChromaDB is the store</td></tr>
+</table>
+
+<h2>What this means for metrics</h2>
+<p>Because all metrics use the same <code>retrieve_pgvector()</code> function name
+and return format, all metric cells (Sections 2-8) are byte-for-byte identical
+between the two notebooks.</p>
+
+<p>You may see slightly different metric scores between pgvector and ChromaDB
+variants even with the same embedding model and data. This is because:</p>
+<ul>
+<li>pgvector uses HNSW approximate nearest-neighbour search — fast but approximate</li>
+<li>ChromaDB also uses HNSW internally with different default parameters (m=16 by default)</li>
+<li>For the same query the ranking order may differ by 1-2 positions at the margin</li>
+</ul>
+
+<div class="tip"><p>If the Context Precision score differs significantly between variants
+(more than 0.05), inspect the specific cases that differ. The difference reveals
+which HNSW configuration is more accurately ranking the true top-1 result.</p></div>
+
+<h2>Comparing both variants</h2>
+<p>To compare pgvector vs ChromaDB objectively, run both RAGAS notebooks with
+the SAME EVAL_DATASET and compare the Context Precision and Context Recall scores.
+The better performing variant on your specific data distribution is the right
+long-term choice.</p>
+
+<pre><code># Run in both notebooks, then compare:
+pgvector_results = {
+    "Context Precision": 0.74,
+    "Context Recall":    0.82,
+    "Answer Correctness": 0.76,
+}
+chromadb_results = {
+    "Context Precision": 0.71,
+    "Context Recall":    0.79,
+    "Answer Correctness": 0.76,
+}
+# Answer Correctness same = scoring formula is identical (not retrieval-dependent)
+# Precision/Recall difference = HNSW ranking difference between the two stores</code></pre>
+</div></div>
+<script>
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.remove('active'));
+  var pg=document.getElementById(id);
+  var lnk=document.getElementById('nav-'+id);
+  if(pg)pg.classList.add('active');
+  if(lnk){lnk.classList.add('active');
+    document.getElementById('topbar-title').textContent=lnk.textContent.trim();}
+  window.scrollTo(0,0);
+}
+</script><script>show('d-setup');</script></body></html>

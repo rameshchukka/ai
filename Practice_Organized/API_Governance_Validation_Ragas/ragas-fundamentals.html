@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RAGAS Fundamentals — API Governance</title><style>
+:root{--navy:#1F2937;--blue:#2563EB;--lblue:#EFF6FF;--green:#059669;
+      --lgreen:#ECFDF5;--amber:#D97706;--lamber:#FFFBEB;--red:#DC2626;
+      --lred:#FEF2F2;--gray:#6B7280;--lgray:#F9FAFB;--border:#E5E7EB;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;font-size:15px;color:#111827;background:#F3F4F6;}
+.sidebar{position:fixed;top:0;left:0;width:250px;height:100vh;background:var(--navy);overflow-y:auto;z-index:100;}
+.sidebar .logo{padding:20px;border-bottom:1px solid #374151;color:#F9FAFB;font-weight:700;font-size:14px;line-height:1.5;}
+.sidebar .logo span{color:#93C5FD;}
+.sidebar nav a{display:block;color:#D1D5DB;padding:7px 20px;font-size:13px;text-decoration:none;border-left:3px solid transparent;}
+.sidebar nav a:hover{color:#fff;background:#374151;}
+.sidebar nav a.active{color:#fff;border-left-color:#3B82F6;background:#1E3A5F;}
+.sidebar .sec-label{color:#9CA3AF;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:16px 20px 4px;}
+.topbar{position:fixed;top:0;left:250px;right:0;height:50px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 40px;font-size:13px;color:var(--gray);z-index:50;justify-content:space-between;}
+.main{margin-left:250px;margin-top:50px;padding:36px 48px;max-width:1080px;}
+h1{font-size:28px;color:var(--navy);margin-bottom:8px;padding-bottom:12px;border-bottom:3px solid var(--blue);}
+h2{font-size:20px;color:var(--blue);margin:32px 0 10px;}
+h3{font-size:16px;color:var(--navy);margin:20px 0 8px;}
+h4{font-size:14px;color:var(--gray);margin:14px 0 6px;font-weight:600;}
+p{line-height:1.8;margin-bottom:14px;}
+ul,ol{padding-left:22px;line-height:1.8;margin-bottom:14px;}
+li{margin-bottom:4px;}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:13px;background:#F1F5F9;padding:1px 6px;border-radius:4px;color:#C7254E;}
+pre{background:#0F172A;border-radius:8px;padding:18px;overflow-x:auto;margin:0 0 18px;}
+pre code{color:#E2E8F0;background:none;padding:0;font-size:13px;line-height:1.65;}
+table{border-collapse:collapse;width:100%;margin-bottom:18px;font-size:14px;}
+th{background:var(--lblue);color:var(--navy);padding:10px 14px;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--border);}
+td{padding:10px 14px;border-bottom:1px solid #F0F2F4;vertical-align:top;}
+.tip{background:var(--lgreen);border-left:4px solid var(--green);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+.warn{background:var(--lamber);border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+.alert{background:var(--lred);border-left:4px solid var(--red);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+.tip p,.warn p,.alert p{margin:0;}
+.steps{counter-reset:step;}
+.step{display:flex;gap:16px;margin-bottom:20px;}
+.step-n{min-width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-b h3{margin-top:4px;}
+.metric-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px;border-left:4px solid var(--blue);}
+.metric-card h3{color:var(--blue);margin-top:0;}
+.metric-card .formula{background:#F8FAFC;border-radius:6px;padding:10px 14px;font-family:monospace;font-size:13px;margin:8px 0;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;}
+.b-pass{background:#DCFCE7;color:#166534;}
+.b-fail{background:#FEE2E2;color:#991B1B;}
+.b-warn{background:#FEF9C3;color:#854D0E;}
+.page{display:none;}
+.page.active{display:block;}
+</style></head><body>
+<div class="sidebar"><div class="logo">RAGAS Fundamentals<br><span>API Governance Platform</span></div><nav><div class="sec-label">Concepts</div><a href="#" id="nav-f-intro" onclick="show('f-intro');return false;">📐 What RAGAS Measures</a><a href="#" id="nav-f-vs-standard" onclick="show('f-vs-standard');return false;">⚖️  vs Standard Validation</a><a href="#" id="nav-f-thresholds" onclick="show('f-thresholds');return false;">🎯 Thresholds & Calibration</a></nav></div><div class="topbar"><span id="topbar-title"></span></div><div class="page" id="f-intro"><div class="main">
+<h1>RAGAS Fundamentals</h1>
+<p>RAGAS (Retrieval Augmented Generation Assessment) is an evaluation framework
+specifically designed to measure RAG pipeline quality. It does not treat the
+system as a black box — it measures each stage separately.</p>
+
+<h2>Why standard metrics are not enough</h2>
+<p>Before RAGAS, teams measured RAG systems with simple accuracy:
+"did the final answer match the expected answer?" This misses the real diagnostic
+question: <em>why</em> did it fail?</p>
+
+<table>
+<tr><th>Failure type</th><th>Standard accuracy</th><th>RAGAS diagnoses</th></tr>
+<tr><td>Retrieved the wrong APIs</td><td>Fails — but you don't know why</td><td>Context Precision + Recall identify the retrieval failure specifically</td></tr>
+<tr><td>Retrieved the right APIs but ranked them badly</td><td>Fails — but looks like retrieval failure</td><td>Context Precision low, Recall high — ranking problem, not embedding problem</td></tr>
+<tr><td>Retrieved correctly but LLM made up extra claims</td><td>May pass — answer looks right</td><td>Faithfulness catches hallucinated rationale even when the band is correct</td></tr>
+<tr><td>Correct band but wrong APIs named in rationale</td><td>Passes — band matches</td><td>Context Entity Recall catches this</td></tr>
+</table>
+
+<h2>The RAG pipeline stages</h2>
+<p>This platform has a 4-stage RAG pipeline. RAGAS measures each stage:</p>
+<pre><code>Stage 1: QUERY PROCESSING
+  Developer types: "process recurring NACH mandate debit"
+  LLM Point 1 expands to 3 semantic variants
+       |
+       ↓ Measure: does expansion help retrieval? (Context Precision pre/post)
+
+Stage 2: RETRIEVAL
+  pgvector/ChromaDB returns top-5 APIs by cosine similarity
+       |
+       ↓ Measure: Context Precision, Context Recall, Context Entity Recall
+
+Stage 3: SCORING
+  Deterministic formula: 0.40*similarity + 0.35*schema + 0.25*domain
+       |
+       ↓ Measure: Answer Correctness (does the band match ground truth?)
+
+Stage 4: LLM GENERATION
+  LLM Point 3 writes the rationale for the recommendation
+       |
+       ↓ Measure: Faithfulness (is rationale grounded in retrieved APIs?)
+            Answer Relevancy (does the top result actually address the query?)</code></pre>
+
+<h2>The six RAGAS metrics for this platform</h2>
+<div class="metric-card">
+<h3>1. Context Precision</h3>
+<p>Are the CORRECT APIs ranked at the TOP of the retrieved list?
+A system that retrieves the right API at position 5 is worse than one that
+retrieves it at position 1, even though both "recalled" it.</p>
+<div class="formula">CP = mean(precision@k for each k where a relevant item appears)</div>
+<p><strong>Threshold: ≥ 0.70</strong> — if below, the ranking function needs tuning,
+not the embedding model. Check if better purpose_text phrasing moves the correct API higher.</p>
+</div>
+
+<div class="metric-card">
+<h3>2. Context Recall</h3>
+<p>Are ALL correct APIs present somewhere in the retrieved top-K results?
+For COMPOSE requirements, both APIs must be retrieved — missing one means
+the composition cannot be proposed.</p>
+<div class="formula">CR = |ground_truth_apis ∩ retrieved_apis| / |ground_truth_apis|</div>
+<p><strong>Threshold: ≥ 0.70</strong> — if below and Context Precision is fine,
+the issue is coverage, not ranking. Lower the similarity threshold or increase top_k.</p>
+</div>
+
+<div class="metric-card">
+<h3>3. Answer Relevancy</h3>
+<p>Does the TOP retrieved API actually address the developer's requirement?
+This is scored by the LLM (1-5 scale, normalised to 0-1), not by string matching.
+Catches cases where a topically-adjacent but functionally-different API is returned.</p>
+<div class="formula">AR = LLM_score(question, top_retrieved_api_context) / 4  [1-5 → 0-1]</div>
+<p><strong>Threshold: ≥ 0.60</strong> — lower threshold than precision because
+there is inherent subjectivity in relevance judgement at the boundary.</p>
+</div>
+
+<div class="metric-card">
+<h3>4. Faithfulness</h3>
+<p>Does the LLM rationale (in merge_candidates.llm_rationale and
+composition_candidates.llm_rationale) only make claims that are supported
+by the retrieved API context? Catches hallucination.</p>
+<div class="formula">F = supported_claims / total_claims_in_rationale</div>
+<p><strong>Threshold: ≥ 0.80</strong> — high threshold because faithfulness
+violations destroy architect trust. A rationale that says "this API processes
+payments" when the API is actually a customer lookup is a serious failure.</p>
+</div>
+
+<div class="metric-card">
+<h3>5. Answer Correctness (Band Accuracy)</h3>
+<p>Does the DIRECT_MATCH / COMPOSE / NEW_BUILD recommendation match the
+ground truth? This is the end-to-end quality metric — it reflects the
+combined quality of embedding + scoring + LLM decision.</p>
+<div class="formula">AC = exact_match(predicted_band, ground_truth_band)  [partial credit for adjacent bands]</div>
+<p><strong>Threshold: ≥ 0.75</strong> — 75% of requirements should get the
+correct band. DIRECT_MATCH ↔ COMPOSE confusions score 0.5 (adjacent bands).
+DIRECT_MATCH ↔ NEW_BUILD scores 0.0 (maximum error).</p>
+</div>
+
+<div class="metric-card">
+<h3>6. Context Entity Recall</h3>
+<p>Are the ground-truth API names actually mentioned in the retrieved
+context text? Simpler and faster than full context recall — checks surface
+form rather than semantics. A low score here with high Context Recall
+means the right APIs are retrieved but their names are not in the
+purpose_text being embedded.</p>
+<div class="formula">CER = apis_named_in_context / |ground_truth_apis|</div>
+<p><strong>Threshold: ≥ 0.80</strong> — API names should be in purpose_text.
+If not, update the extraction prompt to include the project_name in purpose_text.</p>
+</div>
+
+<h2>Interpreting results together</h2>
+<table>
+<tr><th>Pattern</th><th>Diagnosis</th><th>Fix</th></tr>
+<tr><td>Precision high, Recall low</td><td>Top result is correct but other correct APIs not retrieved</td><td>Increase top_k, lower similarity threshold</td></tr>
+<tr><td>Recall high, Precision low</td><td>Correct APIs retrieved but ranked too low</td><td>Improve purpose_text specificity, re-embed</td></tr>
+<tr><td>Both high, Relevancy low</td><td>Correct API retrieved but LLM scores it as not relevant</td><td>Check purpose_text quality for those specific APIs</td></tr>
+<tr><td>Retrieval good, Faithfulness low</td><td>LLM adding information not in the API context</td><td>Tighten composition decision prompt — add explicit grounding instruction</td></tr>
+<tr><td>Everything high, Correctness low</td><td>Retrieval is fine but band thresholds are miscalibrated</td><td>Adjust DIRECT_MATCH_THRESHOLD and COMPOSE_THRESHOLD in core/composition.py</td></tr>
+<tr><td>Entity Recall low, Recall high</td><td>Right APIs retrieved but names not in purpose_text</td><td>Update extraction prompt to include project_name in purpose_text field</td></tr>
+</table>
+</div></div><div class="page" id="f-vs-standard"><div class="main">
+<h1>RAGAS vs Standard Validation</h1>
+<p>This platform uses both standard validation (8 layers) and RAGAS. They are complementary,
+not redundant. Understanding when to use each prevents double-counting effort.</p>
+
+<h2>What each covers</h2>
+<table>
+<tr><th>Check</th><th>Standard validation</th><th>RAGAS</th></tr>
+<tr><td>Schema correctness</td><td>Layer 1 automated check</td><td>Not covered</td></tr>
+<tr><td>Graph correctness</td><td>Layer 5 flow trace</td><td>Not covered</td></tr>
+<tr><td>Audit trail integrity</td><td>Layer 7 workflow tests</td><td>Not covered</td></tr>
+<tr><td>Structural finding quality</td><td>Layer 6 architect review</td><td>Not covered</td></tr>
+<tr><td>LLM band stability</td><td>Layer 8 (5 runs, same band)</td><td>Answer Correctness (ground truth comparison)</td></tr>
+<tr><td>Retrieval recall</td><td>Layer 2 recall@K (binary hit)</td><td>Context Precision + Recall (ranked quality)</td></tr>
+<tr><td>Composition quality</td><td>Layer 3 architect review</td><td>Faithfulness + Answer Correctness</td></tr>
+<tr><td>LLM output grounding</td><td>Not covered</td><td>Faithfulness</td></tr>
+<tr><td>Ranking quality</td><td>Not covered</td><td>Context Precision</td></tr>
+<tr><td>Relevance (LLM-judged)</td><td>Not covered</td><td>Answer Relevancy</td></tr>
+</table>
+
+<div class="tip"><p><strong>Rule:</strong> Standard validation covers the infrastructure
+and governance layers. RAGAS covers the AI quality layers. Run standard validation first
+(it is faster and has no LLM cost). Only run RAGAS after all 8 standard layers pass.</p></div>
+
+<h2>Sequencing</h2>
+<div class="steps">
+<div class="step"><div class="step-n">1</div><div class="step-b">
+<h3>Run 01-automated-checks.ipynb (standard)</h3>
+<p>Verify schema, ingestion counts, embedding coverage, graph correctness,
+audit trail. These are pre-conditions for RAGAS — if the embeddings are not
+even populated, RAGAS metrics are meaningless.</p>
+</div></div>
+<div class="step"><div class="step-n">2</div><div class="step-b">
+<h3>Run 02-retrieval-labelled-test.ipynb (standard)</h3>
+<p>Quick binary recall@K check. If recall@3 is below 72%, fix retrieval before
+running RAGAS — RAGAS will just confirm the same problem with more detail.</p>
+</div></div>
+<div class="step"><div class="step-n">3</div><div class="step-b">
+<h3>Build EVAL_DATASET for RAGAS</h3>
+<p>This takes time to do properly. Write 17+ requirements from your own knowledge
+before running any searches. The dataset is reusable across future RAGAS runs.</p>
+</div></div>
+<div class="step"><div class="step-n">4</div><div class="step-b">
+<h3>Run 04-ragas-evaluation.ipynb</h3>
+<p>Run sections 2-7 in order. LLM-based metrics (Answer Relevancy, Faithfulness)
+will incur LLM API calls — roughly 2-5 calls per sample per metric.</p>
+</div></div>
+<div class="step"><div class="step-n">5</div><div class="step-b">
+<h3>Act on failures</h3>
+<p>Each metric failure points to a specific stage of the pipeline. See the
+Diagnosis Guide in the Fundamentals overview for the fix per metric.</p>
+</div></div>
+</div>
+
+<h2>Cost estimate</h2>
+<table>
+<tr><th>Notebook</th><th>LLM calls</th><th>Estimated time</th></tr>
+<tr><td>01-automated-checks</td><td>0 (no LLM)</td><td>~2 min</td></tr>
+<tr><td>02-retrieval-labelled-test</td><td>N (embeddings only)</td><td>~5 min for 25 samples</td></tr>
+<tr><td>03-workflow-audit-checks</td><td>0</td><td>~1 min</td></tr>
+<tr><td>04-ragas (Sections 2-3)</td><td>0 (no LLM)</td><td>~3 min</td></tr>
+<tr><td>04-ragas (Section 4 - Relevancy)</td><td>1 per sample</td><td>~8 min for 17 samples</td></tr>
+<tr><td>04-ragas (Section 5 - Faithfulness)</td><td>3-8 per rationale</td><td>~20 min for 10 rationales</td></tr>
+<tr><td>04-ragas (Section 6 - Correctness)</td><td>1 per sample (composition call)</td><td>~10 min for 17 samples</td></tr>
+<tr><td>04-ragas (Section 7 - Entity Recall)</td><td>0</td><td>~2 min</td></tr>
+</table>
+</div></div><div class="page" id="f-thresholds"><div class="main">
+<h1>Thresholds & Calibration</h1>
+<p>All thresholds in the RAGAS notebook are starting points, not fixed rules.
+This page explains how to adjust them for your specific platform at full scale.</p>
+
+<h2>Default thresholds and their rationale</h2>
+<table>
+<tr><th>Metric</th><th>Default</th><th>Why this number</th></tr>
+<tr><td>Context Precision</td><td>0.70</td><td>Balances strictness against the reality that COMPOSE requirements have two correct APIs — ranking both in top-2 out of 5 is realistic</td></tr>
+<tr><td>Context Recall</td><td>0.70</td><td>Same reasoning — COMPOSE cases where only 1 of 2 APIs is retrieved are partial credit (0.50) not zero</td></tr>
+<tr><td>Answer Relevancy</td><td>0.60</td><td>LLM scoring has inherent variance — 0.60 sets a floor without requiring near-perfect relevance for every query</td></tr>
+<tr><td>Faithfulness</td><td>0.80</td><td>High threshold because hallucinated rationale is the most damaging quality failure — it causes architects to distrust the platform</td></tr>
+<tr><td>Answer Correctness</td><td>0.75</td><td>75% band accuracy means 3 in 4 requirements get the correct DIRECT_MATCH/COMPOSE/NEW_BUILD classification — consistent with the composition formula calibration</td></tr>
+<tr><td>Context Entity Recall</td><td>0.80</td><td>API names should almost always be retrievable in context — a low score here is a data quality issue not a model issue</td></tr>
+</table>
+
+<h2>Adjusting after initial run</h2>
+<div class="warn"><p>Wait until you have run RAGAS on at least 30 real requirements before
+adjusting thresholds. Early runs with small datasets have high variance — a single
+outlier can move a metric by 0.10 or more.</p></div>
+
+<h3>When to raise a threshold</h3>
+<ul>
+<li>Your platform consistently scores 0.85+ on a metric — the threshold is too easy</li>
+<li>The platform is being used for high-stakes architecture decisions — raise Faithfulness to 0.90</li>
+<li>Architects are complaining about wrong-band recommendations — raise Answer Correctness to 0.85</li>
+</ul>
+
+<h3>When to lower a threshold</h3>
+<ul>
+<li>A metric is consistently failing despite the underlying retrieval being correct — the threshold may be miscalibrated for your domain</li>
+<li>Context Precision failing because you have many semantically similar APIs in one domain — this is a hard retrieval problem, not a threshold problem, but lowering to 0.60 while you improve embeddings is pragmatic</li>
+</ul>
+
+<h2>Re-running RAGAS after changes</h2>
+<table>
+<tr><th>Change made</th><th>Re-run sections</th></tr>
+<tr><td>Updated purpose_text in source docs + re-embedded</td><td>2, 3, 4, 7 (retrieval metrics)</td></tr>
+<tr><td>Changed similarity threshold in core/composition.py</td><td>2, 3, 6 (precision, recall, correctness)</td></tr>
+<tr><td>Updated composition decision LLM prompt</td><td>5, 6 (faithfulness, correctness)</td></tr>
+<tr><td>Changed scoring weights (0.40/0.35/0.25)</td><td>6 (correctness only)</td></tr>
+<tr><td>Full re-embedding (new embedding model)</td><td>All sections</td></tr>
+</table>
+</div></div>
+<script>
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.remove('active'));
+  var pg=document.getElementById(id);
+  var lnk=document.getElementById('nav-'+id);
+  if(pg)pg.classList.add('active');
+  if(lnk){lnk.classList.add('active');
+    document.getElementById('topbar-title').textContent=lnk.textContent.trim();}
+  window.scrollTo(0,0);
+}
+</script><script>show('f-intro');</script></body></html>

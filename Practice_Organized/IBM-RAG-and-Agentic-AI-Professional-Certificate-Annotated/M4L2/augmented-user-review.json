@@ -1,0 +1,82 @@
+[
+  {
+    "restaurant_name": "The Gilded Artichoke",
+    "reviewer": "FoodieExplorer_LA",
+    "rating": 4.5,
+    "review_text": "Walked into what felt like an enchanted greenhouse in the heart of Silver Lake. The lavender-rubbed roasted chicken was unlike anything I've had — fragrant, tender, and perfectly balanced. The heirloom tomato tarts were a work of art. The bohemian energy of the space, with its reclaimed wood and natural light, made the whole experience feel like a curated escape from the city.",
+    "image_description": "A sunlit interior with floor-to-ceiling windows and reclaimed wood tables. Hanging plants cascade from exposed wooden beams. A plate of golden-brown roasted chicken garnished with lavender sprigs sits on a rustic ceramic plate next to a colorful tomato tart.",
+    "visit_date": "2024-11-15"
+  },
+  {
+    "restaurant_name": "Iron & Embers",
+    "reviewer": "SteakConnoisseur_22",
+    "rating": 4.9,
+    "review_text": "This place is a temple to fire and meat. The 45-day dry-aged ribeye with bone marrow chimichurri was one of the best steaks I have ever eaten. The industrial, moody atmosphere — dark metals, exposed ducts, the scent of white oak smoke — made it feel like dining inside a blacksmith's forge. Worth every penny.",
+    "image_description": "A dimly lit industrial dining room with exposed metal ductwork and dark concrete walls. A thick-cut ribeye steak glistens on a cast-iron plate, topped with a vibrant green chimichurri. A single candle illuminates the table alongside a glass of deep red wine.",
+    "visit_date": "2024-12-02"
+  },
+  {
+    "restaurant_name": "Sakura Garden",
+    "reviewer": "ZenDiner_Tokyo",
+    "rating": 5.0,
+    "review_text": "Sakura Garden is a masterclass in restraint and precision. Each course of the kaiseki-lite menu arrived like a meditation — the buttery bluefin tuna belly practically melted on my tongue. The minimalist space, with its clean lines and quiet atmosphere, allowed every flavor to speak for itself. This is dining as an art form.",
+    "image_description": "A minimalist Japanese dining space with pale wood surfaces and a single ikebana arrangement. A delicate plate holds two pieces of glistening bluefin tuna belly on a bed of shiso leaves, placed on handmade ceramic pottery with a subtle blue glaze.",
+    "visit_date": "2024-10-28"
+  },
+  {
+    "restaurant_name": "Sapphire Soul",
+    "reviewer": "SoulFoodLover_Ingle",
+    "rating": 4.7,
+    "review_text": "Sapphire Soul is everything a soul food restaurant should be and more. The spicy hot-honey fried chicken and waffles had the perfect crunch-to-heat ratio. The room itself is vibrant and welcoming — you feel the soul the moment you walk in. LA flair meets deep Southern roots, and the result is magic.",
+    "image_description": "A vibrant dining room with turquoise walls and warm lighting. A large plate of golden fried chicken drizzled with hot honey sits atop a fluffy waffle. Colorful artwork depicting Southern landscapes lines the walls. Fellow diners smile and laugh at nearby tables.",
+    "visit_date": "2024-11-20"
+  },
+  {
+    "restaurant_name": "The Neon Noodle Bar",
+    "reviewer": "NoodleNerd_SGV",
+    "rating": 4.4,
+    "review_text": "Cyberpunk meets Sichuan in the best way possible. The Dan Dan noodles had that authentic numbing kick, and the cumin lamb skewers were smoky perfection. The space glows with vibrant pink neon and attracts a younger, adventurous crowd. It is fast, loud, and absolutely delicious — everything a street food spot should be.",
+    "image_description": "A neon-lit interior bathed in pink and purple light. Metal countertops reflect the glow. A steaming bowl of Dan Dan noodles sits next to a plate of charred cumin lamb skewers. Young diners sit on high stools, their faces illuminated by the neon ambiance.",
+    "visit_date": "2024-09-14"
+  },
+  {
+    "restaurant_name": "Blue Bayou",
+    "reviewer": "JazzAndJambalaya",
+    "rating": 4.6,
+    "review_text": "Stepping into Blue Bayou felt like being transported to a jazz club in the French Quarter. The gumbo was dark, rich, and deeply complex — layers of roux, andouille, and okra. The crawfish etouffee was spicy perfection. With live jazz on a Saturday evening, the moody, dim-lit room was pure atmosphere. New Orleans on the West Coast.",
+    "image_description": "A moody, dim-lit room with exposed brick walls and a small stage where a jazz trio plays. Candles flicker on tables covered in white cloth. A cast-iron pot of dark gumbo sits in the center of a table, steam rising, next to a plate of bright crawfish etouffee over white rice.",
+    "visit_date": "2024-12-07"
+  },
+  {
+    "restaurant_name": "The Stone Hearth",
+    "reviewer": "NatureChef_Topanga",
+    "rating": 4.8,
+    "review_text": "The Stone Hearth is not just a restaurant — it is an experience of place. Tucked into Topanga Canyon, the dining room opens to the trees. The foraged mushroom tart was earthy and delicate, with flavors that tasted like the canyon itself. The mystical, woodland energy here makes you forget you are anywhere near Los Angeles.",
+    "image_description": "A rustic wooden deck extends into a canopy of oak trees. A beautifully plated mushroom tart with microgreens sits on a live-edge wood serving board. The golden light of late afternoon filters through the leaves. In the background, canyon hills are visible through the trees.",
+    "visit_date": "2024-10-05"
+  },
+  {
+    "restaurant_name": "The Silk Road",
+    "reviewer": "PersianFoodFan",
+    "rating": 4.8,
+    "review_text": "The Silk Road is what fine Persian dining should look like. The saffron-infused Koobideh was juicy and aromatic, and the herb stew (ghormeh sabzi) was deeply layered. The room itself is opulent — Persian carpets, crystal chandeliers, and a regal atmosphere that made a Tuesday dinner feel like a royal feast. Glendale's crown jewel.",
+    "image_description": "An opulent dining room with intricate Persian carpets on the floor and crystal chandeliers overhead. A long table holds plates of saffron rice, charred koobideh kabobs, and a pot of green herb stew. Gold-trimmed tea glasses and fresh herbs complete the scene.",
+    "visit_date": "2024-11-30"
+  },
+  {
+    "restaurant_name": "Common Thread",
+    "reviewer": "ArtsDistrictFoodie",
+    "rating": 4.9,
+    "review_text": "Common Thread is the most exciting restaurant in DTLA. The weekly-changing menu is fearless — I had smoked koji-aged carrots that were more complex than most meat dishes I have eaten. The converted sewing factory with raw concrete and steel bones gives it an authentic industrial soul. This is where chefs eat when they want to be inspired.",
+    "image_description": "A raw industrial space with exposed concrete walls, steel beams, and a long communal table. A beautifully plated dish of smoked carrots with a glossy koji glaze sits on a handmade ceramic plate. Diners in the background lean over their plates in focused appreciation.",
+    "visit_date": "2024-12-14"
+  },
+  {
+    "restaurant_name": "Velvet & Vine",
+    "reviewer": "WineNightOut",
+    "rating": 4.0,
+    "review_text": "A lovely evening in Pasadena. Velvet & Vine has an undeniable romantic charm — exposed brick, soft lighting, and a wine list that rivals places twice its size. The duck confit sliders were rich and satisfying. It is the kind of place you linger at, ordering one more glass of an obscure Rhone blend. Perfect date-night spot, if a bit quiet on weeknights.",
+    "image_description": "An intimate exposed-brick wine bar with dim amber lighting. A small table holds a wooden board of duck confit sliders and a selection of small plates. Two glasses of red wine catch the candlelight. Shelves of wine bottles line the back wall.",
+    "visit_date": "2024-11-08"
+  }
+]
